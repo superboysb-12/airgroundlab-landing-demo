@@ -66,7 +66,7 @@
               <ul>
                 <li>Station siting and route design are multi-million infrastructure bets.</li>
                 <li>Wrong siting or wind-driven route deviation creates expensive rework.</li>
-                <li>The 鈥渂uild first, validate later鈥?model amplifies financial risk.</li>
+                <li>The "build first, validate later" model amplifies financial risk.</li>
               </ul>
             </article>
             <article class="pain-card fade-up">
@@ -79,7 +79,7 @@
               </div>
               <h3>Complex, Uncontrollable Environment</h3>
               <ul>
-                <li>Urban 鈥渂uilding canyons鈥?generate unpredictable low-altitude turbulence.</li>
+                <li>Urban "building canyons" generate unpredictable low-altitude turbulence.</li>
                 <li>Electromagnetic interference degrades communication and navigation stability.</li>
                 <li>Demand is highly volatile, making precise supply-demand matching difficult.</li>
               </ul>
@@ -102,7 +102,7 @@
           </div>
           <blockquote class="fade-up">
             "Fly first, collect data later" is dead. We must see results before we spend.
-            <span>The era of 鈥渇ly first, test later鈥?is over. We must see outcomes before spending.</span>
+            <span>The era of "fly first, test later" is over. We must see outcomes before spending.</span>
           </blockquote>
         </div>
       </section>
@@ -338,62 +338,161 @@
 
       <section class="slide compare" id="slide-compare">
         <div class="stars"></div>
-        <div class="content comp-wrap">
+        <div class="content finale-wrap">
           <h2 class="fade-up">竞品对比总结</h2>
-          <p class="comp-lead fade-up">同类平台对比：我们是唯一同时覆盖“物理飞行 + 物流网络 + 社会需求 + AI 决策”的一体化方案。</p>
-          <div class="comp-grid fade-up">
-            <article class="comp-card" tabindex="0">
-              <h3>AirSim / Project AirSim</h3>
-              <p class="comp-tag">视觉与物理高保真派</p>
-              <p>强在飞控与感知训练，但缺少订单流、车队协同和商业 ROI 分析。</p>
-              <a href="https://microsoft.github.io/AirSim/" target="_blank" rel="noopener noreferrer">microsoft.github.io/AirSim</a>
-              <img
-                class="comp-qr"
-                src="https://api.qrserver.com/v1/create-qr-code/?size=136x136&data=https%3A%2F%2Fmicrosoft.github.io%2FAirSim%2F"
-                alt="AirSim website QR code"
-                loading="lazy"
-              />
-            </article>
-            <article class="comp-card" tabindex="0">
-              <h3>AnyLogic</h3>
-              <p class="comp-tag">宏观物流与运筹学派</p>
-              <p>强在网络与资源规划，但无法模拟真实风场、飞行偏移等低空物理风险。</p>
-              <a href="https://www.anylogic.com/" target="_blank" rel="noopener noreferrer">anylogic.com</a>
-              <img
-                class="comp-qr"
-                src="https://api.qrserver.com/v1/create-qr-code/?size=136x136&data=https%3A%2F%2Fwww.anylogic.com%2F"
-                alt="AnyLogic website QR code"
-                loading="lazy"
-              />
-            </article>
-            <article class="comp-card" tabindex="0">
-              <h3>NASA UTM / ANRA</h3>
-              <p class="comp-tag">城市低空空域管理派</p>
-              <p>强在合规与防冲突，但不面向商业运营，不解决空地协同配送效率问题。</p>
-              <a href="https://www.anratechnologies.com/" target="_blank" rel="noopener noreferrer">anratechnologies.com</a>
-              <img
-                class="comp-qr"
-                src="https://api.qrserver.com/v1/create-qr-code/?size=136x136&data=https%3A%2F%2Fwww.anratechnologies.com%2F"
-                alt="ANRA website QR code"
-                loading="lazy"
-              />
-            </article>
-            <article class="comp-card ours" tabindex="0">
-              <h3>AirGroundLAB（Our Platform）</h3>
-              <p class="comp-tag">全场景协同决策派</p>
-              <p>融合高保真物理仿真、真实路网与 LLM 用户画像，输出端到端 AI 洞察报告。</p>
-              <a href="https://superboysb-12.github.io/airgroundlab-landing-demo/" target="_blank" rel="noopener noreferrer"
-                >airgroundlab demo</a
-              >
-              <img
-                class="comp-qr"
-                src="https://api.qrserver.com/v1/create-qr-code/?size=136x136&data=https%3A%2F%2Fsuperboysb-12.github.io%2Fairgroundlab-landing-demo%2F"
-                alt="AirGroundLAB demo QR code"
-                loading="lazy"
-              />
-            </article>
+          <p class="finale-lead fade-up">对比结果一目了然：AirGroundLAB 在四项核心能力上实现全覆盖。</p>
+
+          <div class="finale-layout fade-up">
+            <section class="matrix-panel" aria-label="Comparison matrix">
+              <h3 class="matrix-title">Comparison Matrix</h3>
+              <div class="matrix-scroll">
+                <table class="matrix-table">
+                  <thead>
+                    <tr>
+                      <th class="feature-col">能力维度</th>
+                      <th>AirSim</th>
+                      <th>AnyLogic</th>
+                      <th>NASA UTM</th>
+                      <th class="col-our">AirGroundLAB</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>
+                        <div class="feature-title">高保真物理/风场仿真</div>
+                        <div class="feature-desc">真实模拟复杂城市低空风切变与无人机受力</div>
+                      </th>
+                      <td>
+                        <span class="m-yes" aria-label="yes">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="m-no" aria-label="no">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="m-no" aria-label="no">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                        </span>
+                      </td>
+                      <td class="col-our">
+                        <span class="m-yes" aria-label="yes">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        <div class="feature-title">城市级路网仿真</div>
+                        <div class="feature-desc">支持千万级人口都市圈的空地协同调度网络</div>
+                      </th>
+                      <td>
+                        <span class="m-no" aria-label="no">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="m-yes" aria-label="yes">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="m-no" aria-label="no">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                        </span>
+                      </td>
+                      <td class="col-our">
+                        <span class="m-yes" aria-label="yes">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        <div class="feature-title">生成式社会需求模拟</div>
+                        <div class="feature-desc">基于大模型还原真实居民点单习惯与时空分布</div>
+                      </th>
+                      <td>
+                        <span class="m-no" aria-label="no">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="m-no" aria-label="no">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="m-no" aria-label="no">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                        </span>
+                      </td>
+                      <td class="col-our">
+                        <span class="m-yes" aria-label="yes">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        <div class="feature-title">端到端 AI 决策/ROI 分析</div>
+                        <div class="feature-desc">一键输出多策略对比与投入产出比预测报告</div>
+                      </th>
+                      <td>
+                        <span class="m-no" aria-label="no">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="m-no" aria-label="no">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="m-no" aria-label="no">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                        </span>
+                      </td>
+                      <td class="col-our">
+                        <span class="m-yes" aria-label="yes">
+                          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <aside class="action-card" aria-label="AirGroundLAB action card">
+              <p class="action-kicker">AirGroundLAB</p>
+              <h3>从“能飞”到“能运营”</h3>
+              <p class="action-summary">我们提供真正可落地的低空商业决策底座。</p>
+              <ul class="action-points" aria-label="Why scan">
+                <li>零代码开箱即用体验</li>
+                <li>节省 90% 早期试错成本</li>
+                <li>跨平台多终端直接访问</li>
+              </ul>
+              <div class="action-qr-wrap">
+                <img
+                  id="finale-qr"
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=placeholder"
+                  alt="QR placeholder"
+                  loading="lazy"
+                />
+                <p>扫描探索 Demo (Scan to Explore)</p>
+              </div>
+            </aside>
           </div>
-          <p class="comp-note fade-up">结论：从“能飞”到“能运营”，我们提供真正可落地的低空商业决策底座。</p>
+
+          <footer class="finale-footer fade-up">
+            <div class="footer-left">
+              <img src="./assets/image3.png" alt="The Hong Kong University of Science and Technology (Guangzhou)" />
+            </div>
+            <p class="footer-right">© 2024 AirGroundLAB Team. All rights reserved.</p>
+          </footer>
         </div>
       </section>
     </main>
