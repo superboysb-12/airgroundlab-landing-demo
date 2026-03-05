@@ -5,17 +5,22 @@ const chipButtons = document.querySelectorAll(".chip");
 const simPanel = document.querySelector(".sim-panel");
 const simCopy = document.getElementById("sim-copy");
 const fadeNodes = document.querySelectorAll(".fade-up");
-const flowSteps = Array.from(document.querySelectorAll(".flow-step"));
-const reports = document.getElementById("reports");
-const insightSlide = document.getElementById("slide-insight");
 const featureButtons = Array.from(document.querySelectorAll(".switch-btn"));
 const featurePanels = Array.from(document.querySelectorAll(".feature-panel"));
 const featureStage = document.getElementById("feature-stage");
+const insightButtons = Array.from(document.querySelectorAll(".insight-btn"));
+const insightTrack = document.getElementById("insight-track");
+const insightText = document.getElementById("insight-text");
+const insightStepTitle = document.getElementById("insight-step-title");
+const insightStepDesc = document.getElementById("insight-step-desc");
+const insightStage = document.getElementById("insight-stage");
 
 let activeIndex = 0;
 let wheelLock = false;
-let flowPlaying = false;
 let featureIndex = 0;
+let insightIndex = 0;
+let insightTouchStartY = 0;
+let insightWheelLock = false;
 
 function pad(value) {
   return String(value + 1).padStart(2, "0");
@@ -41,26 +46,6 @@ function detectActiveSlide() {
     activeIndex = Math.max(0, Math.min(current, slides.length - 1));
     updatePager(activeIndex);
   }
-}
-
-function playInsightFlow() {
-  if (flowPlaying || !flowSteps.length) return;
-  flowPlaying = true;
-  reports?.classList.remove("show");
-  flowSteps.forEach((step) => step.classList.remove("active"));
-
-  let i = 0;
-  const timer = window.setInterval(() => {
-    if (i > 0) flowSteps[i - 1].classList.remove("active");
-    if (i < flowSteps.length) {
-      flowSteps[i].classList.add("active");
-      i += 1;
-      return;
-    }
-    window.clearInterval(timer);
-    reports?.classList.add("show");
-    flowPlaying = false;
-  }, 680);
 }
 
 if (deck) {
@@ -120,18 +105,6 @@ const fadeObserver = new IntersectionObserver(
 
 fadeNodes.forEach((node) => fadeObserver.observe(node));
 
-if (insightSlide) {
-  const insightObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) playInsightFlow();
-      });
-    },
-    { threshold: 0.46 }
-  );
-  insightObserver.observe(insightSlide);
-}
-
 function setFeaturePanel(index) {
   if (!featurePanels.length) return;
   featureIndex = (index + featurePanels.length) % featurePanels.length;
@@ -164,5 +137,84 @@ if (featureStage && featurePanels.length) {
   );
 }
 
+const insightSteps = [
+  {
+    title: "Module 1 · Simulation Launch",
+    desc: "Set mission goals, urban context, and initial constraints. The system bootstraps the digital twin scene and loads baseline operational assumptions."
+  },
+  {
+    title: "Module 2 · Policy Input",
+    desc: "Inject policy rules and operating parameters, including low-altitude zoning, speed limits, time windows, and safety boundaries for compliant planning."
+  },
+  {
+    title: "Module 3 · Simulation Execution",
+    desc: "Run accelerated multi-agent delivery scenarios with synchronized UAV/UGV behaviors, then observe route dynamics, bottlenecks, and system response in real time."
+  },
+  {
+    title: "Module 4 · Report Generation",
+    desc: "Generate end-to-end AI insight reports for strategy comparison, highlighting cost-efficiency tradeoffs, risk hotspots, and deployment recommendations."
+  }
+];
+
+function setInsightStep(index) {
+  if (!insightSteps.length || !insightTrack) return;
+  insightIndex = (index + insightSteps.length) % insightSteps.length;
+  const current = insightSteps[insightIndex];
+  insightButtons.forEach((btn, i) => btn.classList.toggle("active", i === insightIndex));
+
+  if (insightText && insightStepTitle && insightStepDesc) {
+    insightText.classList.add("is-switching");
+    window.setTimeout(() => {
+      insightStepTitle.textContent = current.title;
+      insightStepDesc.textContent = current.desc;
+      insightText.classList.remove("is-switching");
+    }, 130);
+  }
+
+  insightTrack.style.transform = `translateY(-${(insightIndex * 100) / insightSteps.length}%)`;
+}
+
+insightButtons.forEach((button, i) => {
+  button.addEventListener("click", () => setInsightStep(i));
+});
+
+if (insightStage) {
+  insightStage.addEventListener(
+    "wheel",
+    (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (insightWheelLock) return;
+      if (Math.abs(event.deltaY) < 12) return;
+      insightWheelLock = true;
+      setInsightStep(insightIndex + (event.deltaY > 0 ? 1 : -1));
+      window.setTimeout(() => {
+        insightWheelLock = false;
+      }, 460);
+    },
+    { passive: false }
+  );
+
+  insightStage.addEventListener(
+    "touchstart",
+    (event) => {
+      insightTouchStartY = event.changedTouches[0].clientY;
+    },
+    { passive: true }
+  );
+
+  insightStage.addEventListener(
+    "touchend",
+    (event) => {
+      const endY = event.changedTouches[0].clientY;
+      const deltaY = endY - insightTouchStartY;
+      if (Math.abs(deltaY) < 36) return;
+      setInsightStep(insightIndex + (deltaY < 0 ? 1 : -1));
+    },
+    { passive: true }
+  );
+}
+
 setFeaturePanel(0);
+setInsightStep(0);
 updatePager(activeIndex);
