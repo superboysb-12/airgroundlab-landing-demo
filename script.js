@@ -1,6 +1,7 @@
 ﻿const deck = document.getElementById("deck");
 const slides = Array.from(document.querySelectorAll(".slide"));
-const pageIndex = document.getElementById("page-index");
+const pager = document.getElementById("pager");
+let pagerButtons = [];
 const chipButtons = document.querySelectorAll(".chip");
 const simPanel = document.querySelector(".sim-panel");
 const simCopy = document.getElementById("sim-copy");
@@ -23,13 +24,39 @@ let insightTouchStartY = 0;
 let insightWheelLock = false;
 let insightTextToken = 0;
 
-function pad(value) {
-  return String(value + 1).padStart(2, "0");
+function updateDeckScale() {
+  const designWidth = 1920;
+  const designHeight = 1080;
+  const widthRatio = window.innerWidth / designWidth;
+  const heightRatio = window.innerHeight / designHeight;
+  const scale = Math.min(1, widthRatio, heightRatio);
+  document.documentElement.style.setProperty("--deck-scale", String(scale));
 }
 
 function updatePager(index) {
-  if (!pageIndex) return;
-  pageIndex.textContent = pad(index);
+  if (!pagerButtons.length) return;
+  pagerButtons.forEach((button, i) => {
+    const isActive = i === index;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-current", isActive ? "page" : "false");
+  });
+}
+
+function initPager() {
+  if (!pager || !slides.length) return;
+  const fragment = document.createDocumentFragment();
+  pagerButtons = slides.map((_, i) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "page-dot";
+    button.textContent = String(i + 1);
+    button.setAttribute("aria-label", `Jump to slide ${i + 1}`);
+    button.addEventListener("click", () => goToSlide(i));
+    fragment.appendChild(button);
+    return button;
+  });
+  pager.innerHTML = "";
+  pager.appendChild(fragment);
 }
 
 function goToSlide(index) {
@@ -50,6 +77,8 @@ function detectActiveSlide() {
 }
 
 if (deck) {
+  updateDeckScale();
+
   // Desktop wheel is quantized to one full slide per interaction.
   deck.addEventListener(
     "wheel",
@@ -69,6 +98,8 @@ if (deck) {
 
   deck.addEventListener("scroll", detectActiveSlide, { passive: true });
 }
+
+window.addEventListener("resize", updateDeckScale, { passive: true });
 
 window.addEventListener("keydown", (event) => {
   if (["ArrowDown", "PageDown", "Space"].includes(event.code)) {
@@ -290,5 +321,6 @@ if (insightStage) {
 setFeaturePanel(0);
 setInsightStep(0, { instant: true });
 
+initPager();
 updatePager(activeIndex);
 
