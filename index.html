@@ -14,7 +14,7 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020712'/%3E%3Cpath d='M14 40L32 18l18 22' stroke='%233d7dff' stroke-width='6' fill='none'/%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260306-11" />
+    <link rel="stylesheet" href="./styles.css?v=20260306-12" />
   </head>
   <body>
     <main id="deck" aria-label="Single-page demo">
@@ -468,21 +468,27 @@
 
             <aside class="action-card" aria-label="AirGroundLAB action card">
               <p class="action-kicker">AirGroundLAB</p>
-              <h3>From "Can Fly" to "Can Operate"</h3>
-              <p class="action-summary">We provide a truly implementable low-altitude business decision foundation.</p>
-              <ul class="action-points" aria-label="Why scan">
-                <li>Zero-code out-of-the-box experience</li>
-                <li>Save 90% of early trial-and-error costs</li>
-                <li>Cross-platform multi-terminal direct access</li>
+              <h3>Ready for Pilot Validation</h3>
+              <p class="action-summary">Use one integrated workflow to evaluate feasibility, risk, and ROI before committing physical resources.</p>
+              <ul class="action-points" aria-label="Core outcomes">
+                <li>Scenario setup in minutes, no-code operation</li>
+                <li>Decision reports with transparent assumptions</li>
+                <li>Fast team collaboration across terminals</li>
               </ul>
-              <div class="action-qr-wrap">
-                <img
-                  id="finale-qr"
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=placeholder"
-                  alt="QR placeholder"
-                  loading="lazy"
-                />
-                <p>Scan to Explore Demo</p>
+              <div class="action-cta-block">
+                <div class="action-cta-copy">
+                  <p class="action-cta-title">Try the demo flow</p>
+                  <p class="action-cta-desc">Scan when convenient to preview the experience and request a tailored setup.</p>
+                </div>
+                <div class="action-qr-wrap">
+                  <img
+                    id="finale-qr"
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=placeholder"
+                    alt="QR placeholder"
+                    loading="lazy"
+                  />
+                  <p>Scan for demo access</p>
+                </div>
               </div>
             </aside>
           </div>
@@ -498,6 +504,13 @@
     </main>
 
     <nav class="pager" id="pager" aria-label="Slide navigation"></nav>
+    <div class="auto-scroll-toggle-wrap" aria-label="Auto scroll switch">
+      <label class="auto-scroll-toggle" for="auto-scroll-toggle">
+        <input type="checkbox" id="auto-scroll-toggle" />
+        <span class="auto-scroll-toggle-slider" aria-hidden="true"></span>
+        <span class="auto-scroll-toggle-text">AUTO</span>
+      </label>
+    </div>
     <script src="./script.js"></script>
   </body>
 </html>

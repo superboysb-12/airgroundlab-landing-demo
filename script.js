@@ -15,6 +15,7 @@ const insightText = document.getElementById("insight-text");
 const insightStepTitle = document.getElementById("insight-step-title");
 const insightStepDesc = document.getElementById("insight-step-desc");
 const insightStage = document.getElementById("insight-stage");
+const autoScrollToggle = document.getElementById("auto-scroll-toggle");
 
 let activeIndex = 0;
 let wheelLock = false;
@@ -23,6 +24,9 @@ let insightIndex = 0;
 let insightTouchStartY = 0;
 let insightWheelLock = false;
 let insightTextToken = 0;
+let autoScrollTimer = null;
+
+const AUTO_SCROLL_INTERVAL_MS = 5000;
 
 function updateDeckScale() {
   const designWidth = 1920;
@@ -65,6 +69,29 @@ function goToSlide(index) {
   activeIndex = target;
   slides[target].scrollIntoView({ behavior: "smooth", block: "start" });
   updatePager(target);
+}
+
+function stopAutoScroll() {
+  if (!autoScrollTimer) return;
+  window.clearInterval(autoScrollTimer);
+  autoScrollTimer = null;
+}
+
+function startAutoScroll() {
+  stopAutoScroll();
+  if (!slides.length) return;
+  autoScrollTimer = window.setInterval(() => {
+    goToSlide((activeIndex + 1) % slides.length);
+  }, AUTO_SCROLL_INTERVAL_MS);
+}
+
+function syncAutoScrollState() {
+  if (!autoScrollToggle) return;
+  if (autoScrollToggle.checked) {
+    startAutoScroll();
+    return;
+  }
+  stopAutoScroll();
 }
 
 function detectActiveSlide() {
@@ -323,4 +350,18 @@ setInsightStep(0, { instant: true });
 
 initPager();
 updatePager(activeIndex);
+
+if (autoScrollToggle) {
+  autoScrollToggle.addEventListener("change", syncAutoScrollState);
+  syncAutoScrollState();
+}
+
+window.addEventListener("visibilitychange", () => {
+  if (!autoScrollToggle) return;
+  if (document.hidden) {
+    stopAutoScroll();
+    return;
+  }
+  syncAutoScrollState();
+});
 
