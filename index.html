@@ -185,34 +185,59 @@
       </section>
 
       <section class="slide detail agent" id="slide-agent">
-        <div class="split">
-          <div class="left">
-            <h2 class="fade-up">Generative Agents</h2>
-            <p class="fade-up">
-              LLM-driven social simulation turns orders into dynamic behavioral portraits based on real human habits,
-              preferences, and feedback.
-            </p>
+        <div class="content feature-showcase">
+          <h2 class="fade-up">功能介绍</h2>
+          <div class="feature-switch fade-up" role="tablist" aria-label="模块切换">
+            <button class="switch-btn active" data-feature-index="0">模块一</button>
+            <button class="switch-btn" data-feature-index="1">模块二</button>
+            <button class="switch-btn" data-feature-index="2">模块三</button>
+            <button class="switch-btn" data-feature-index="3">模块四</button>
           </div>
-          <div class="right agent-board fade-up">
-            <div class="sandbox">
-              <h3>Urban Sandbox Heat Distribution</h3>
-              <span style="left: 22%; top: 31%"></span>
-              <span style="left: 40%; top: 52%"></span>
-              <span style="left: 57%; top: 34%"></span>
-              <span style="left: 73%; top: 56%"></span>
-              <span style="left: 34%; top: 68%"></span>
-            </div>
-            <div class="profile">
-              <h3>User Persona Card</h3>
-              <p>Type: Time-sensitive buyer</p>
-              <p>Preference: Delivery within 35 minutes</p>
-              <p>Tolerance: Medium price elasticity at peak hours</p>
-            </div>
-            <div class="feedback">
-              <h3>Order Experience Feedback</h3>
-              <p>Order 14:20 -> Delivered 14:43</p>
-              <p>Feedback: Stable delivery, add more transfer hubs at peaks</p>
-            </div>
+          <div class="feature-stage fade-up" id="feature-stage">
+            <article class="feature-panel active">
+              <img src="./assets/image4.png" alt="无人机物理仿真" loading="lazy" />
+              <div class="feature-copy">
+                <h3>模块一 · 无人机物理仿真</h3>
+                <p>
+                  基于高保真物理引擎模拟无人机在风场中的姿态、速度、载重与能耗变化，
+                  让飞行策略在上线前完成可视化验证。
+                </p>
+              </div>
+            </article>
+            <article class="feature-panel">
+              <img
+                src="https://images.pexels.com/photos/1756957/pexels-photo-1756957.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt="地图路网数据"
+                loading="lazy"
+              />
+              <div class="feature-copy">
+                <h3>模块二 · 地图路网数据</h3>
+                <p>
+                  接入真实城市路网数据，统一呈现地面车辆路径与低空航线关系，
+                  支持跨区域、跨城市的配送网络规划与瓶颈分析。
+                </p>
+              </div>
+            </article>
+            <article class="feature-panel">
+              <img src="./assets/image2.jpeg" alt="大语言模型用户画像模拟" loading="lazy" />
+              <div class="feature-copy">
+                <h3>模块三 · LLM 真实用户画像模拟</h3>
+                <p>
+                  利用大语言模型模拟用户评论、作息时间、点单习惯与人群分布，
+                  构建更接近真实需求波动的订单行为场景。
+                </p>
+              </div>
+            </article>
+            <article class="feature-panel">
+              <img src="./assets/image1.jpeg" alt="端到端 AI 报告生成" loading="lazy" />
+              <div class="feature-copy">
+                <h3>模块四 · 端到端 AI 洞察报告生成</h3>
+                <p>
+                  从参数输入、模拟运行到结果对比自动完成，输出可解释的洞察报告，
+                  帮助团队快速选出最优策略与资源配置方案。
+                </p>
+              </div>
+            </article>
           </div>
         </div>
       </section>

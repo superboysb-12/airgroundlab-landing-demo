@@ -660,6 +660,96 @@ blockquote span {
     0 2px 12px rgba(0, 0, 0, 0.48);
 }
 
+.feature-showcase {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  height: 100vh;
+}
+
+.feature-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.switch-btn {
+  border: 1px solid rgba(130, 186, 255, 0.4);
+  background: rgba(12, 24, 41, 0.75);
+  color: #c7daf6;
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.switch-btn.active {
+  color: #f2fbff;
+  border-color: rgba(145, 210, 255, 0.88);
+  background: linear-gradient(120deg, rgba(54, 121, 200, 0.72), rgba(79, 163, 255, 0.72));
+}
+
+.feature-stage {
+  position: relative;
+  border: 1px solid rgba(118, 170, 248, 0.35);
+  border-radius: 18px;
+  background: rgba(10, 18, 31, 0.62);
+  min-height: clamp(390px, 58vh, 640px);
+  overflow: hidden;
+}
+
+.feature-panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1.04fr 1fr;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(26px);
+  transition: opacity 0.36s ease, transform 0.36s ease;
+}
+
+.feature-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.feature-panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.feature-copy {
+  padding: clamp(18px, 2.4vw, 38px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 15% 22%, rgba(80, 158, 248, 0.2), transparent 46%),
+    linear-gradient(165deg, rgba(12, 21, 37, 0.88), rgba(8, 14, 26, 0.9));
+}
+
+.feature-copy h3 {
+  font-size: clamp(1.45rem, 2.3vw, 2.3rem);
+  color: #e8f3ff;
+  text-shadow:
+    0 0 8px rgba(132, 204, 255, 0.4),
+    0 0 20px rgba(82, 178, 255, 0.2);
+}
+
+.feature-copy p {
+  margin-top: 14px;
+  font-size: clamp(1rem, 1.34vw, 1.28rem);
+  line-height: 1.58;
+  color: #bfd2ec;
+  max-width: 40ch;
+}
+
 .agent-board {
   display: grid;
   grid-template-columns: 1fr 0.9fr;
@@ -936,6 +1026,14 @@ blockquote span {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .feature-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-panel img {
+    height: 48%;
+  }
+
   .flow {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -972,6 +1070,15 @@ blockquote span {
   .flow,
   .sim-city-grid {
     grid-template-columns: 1fr;
+  }
+
+  .feature-switch {
+    gap: 6px;
+  }
+
+  .switch-btn {
+    padding: 8px 12px;
+    font-size: 0.84rem;
   }
 
   .agent-board {

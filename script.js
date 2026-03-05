@@ -8,10 +8,14 @@ const fadeNodes = document.querySelectorAll(".fade-up");
 const flowSteps = Array.from(document.querySelectorAll(".flow-step"));
 const reports = document.getElementById("reports");
 const insightSlide = document.getElementById("slide-insight");
+const featureButtons = Array.from(document.querySelectorAll(".switch-btn"));
+const featurePanels = Array.from(document.querySelectorAll(".feature-panel"));
+const featureStage = document.getElementById("feature-stage");
 
 let activeIndex = 0;
 let wheelLock = false;
 let flowPlaying = false;
+let featureIndex = 0;
 
 function pad(value) {
   return String(value + 1).padStart(2, "0");
@@ -128,4 +132,37 @@ if (insightSlide) {
   insightObserver.observe(insightSlide);
 }
 
+function setFeaturePanel(index) {
+  if (!featurePanels.length) return;
+  featureIndex = (index + featurePanels.length) % featurePanels.length;
+  featurePanels.forEach((panel, i) => panel.classList.toggle("active", i === featureIndex));
+  featureButtons.forEach((btn, i) => btn.classList.toggle("active", i === featureIndex));
+}
+
+featureButtons.forEach((button, i) => {
+  button.addEventListener("click", () => setFeaturePanel(i));
+});
+
+if (featureStage && featurePanels.length) {
+  let startX = 0;
+  featureStage.addEventListener(
+    "touchstart",
+    (event) => {
+      startX = event.changedTouches[0].clientX;
+    },
+    { passive: true }
+  );
+  featureStage.addEventListener(
+    "touchend",
+    (event) => {
+      const endX = event.changedTouches[0].clientX;
+      const delta = endX - startX;
+      if (Math.abs(delta) < 40) return;
+      setFeaturePanel(featureIndex + (delta < 0 ? 1 : -1));
+    },
+    { passive: true }
+  );
+}
+
+setFeaturePanel(0);
 updatePager(activeIndex);
