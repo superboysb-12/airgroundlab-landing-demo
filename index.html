@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Air-Ground Collaborative Low-Altitude Simulation Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020712'/%3E%3Cpath d='M14 40L32 18l18 22' stroke='%233d7dff' stroke-width='6' fill='none'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./styles.css?v=20260305-2" />
+  </head>
+  <body>
+    <main id="deck" aria-label="Single-page demo">
+      <section class="slide cover" id="slide-cover">
+        <div class="cover-school-logo" aria-label="HKUST-GZ logo">
+          <img src="./assets/image3.png" alt="The Hong Kong University of Science and Technology (Guangzhou)" />
+        </div>
+        <video
+          class="cover-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          poster="./assets/image4.png"
+          preload="metadata"
+        >
+          <source
+            src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div class="cover-shade"></div>
+        <div class="cover-grid"></div>
+        <div class="content hero-left">
+          <h1 class="fade-up product-name">AirGroundLAB</h1>
+          <p class="subtitle fade-up slogan-glow">Zero Real World Waste!</p>
+          <p class="hero-detail fade-up">
+            The Low-Altitude Economy Air-Ground Collaborative Delivery Digital Twin Platform
+          </p>
+        </div>
+      </section>
+
+      <section class="slide problem" id="slide-problem">
+        <div class="content">
+          <h2 class="warn fade-up">Critical Pain Points</h2>
+          <p class="problem-lead fade-up">
+            Build-first and validate-later means high capital exposure, high uncertainty, and high waste.
+          </p>
+          <div class="pain-grid">
+            <article class="pain-card fade-up">
+              <div class="pain-media">
+                <img
+                  src="https://images.pexels.com/photos/5893061/pexels-photo-5893061.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                  alt="City-scale infrastructure and network investment"
+                  loading="lazy"
+                />
+              </div>
+              <h3>High Decision Cost</h3>
+              <ul>
+                <li>Station siting and route design are multi-million infrastructure bets.</li>
+                <li>Wrong siting or wind-driven route deviation creates expensive rework.</li>
+                <li>The “build first, validate later” model amplifies financial risk.</li>
+              </ul>
+            </article>
+            <article class="pain-card fade-up">
+              <div class="pain-media">
+                <img
+                  src="https://images.pexels.com/photos/28770426/pexels-photo-28770426.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                  alt="Stormy urban atmosphere and unpredictable environment"
+                  loading="lazy"
+                />
+              </div>
+              <h3>Complex, Uncontrollable Environment</h3>
+              <ul>
+                <li>Urban “building canyons” generate unpredictable low-altitude turbulence.</li>
+                <li>Electromagnetic interference degrades communication and navigation stability.</li>
+                <li>Demand is highly volatile, making precise supply-demand matching difficult.</li>
+              </ul>
+            </article>
+            <article class="pain-card fade-up">
+              <div class="pain-media">
+                <img
+                  src="https://images.pexels.com/photos/9953442/pexels-photo-9953442.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                  alt="Electronic waste and discarded equipment"
+                  loading="lazy"
+                />
+              </div>
+              <h3>Severe Resource Waste</h3>
+              <ul>
+                <li>Failed infrastructure quickly turns into electronic waste.</li>
+                <li>Redundant construction and ineffective investment can burn millions of dollars.</li>
+                <li>Manual planning alone cannot keep up with dynamic urban conditions.</li>
+              </ul>
+            </article>
+          </div>
+          <blockquote class="fade-up">
+            "Fly first, collect data later" is dead. We must see results before we spend.
+            <span>The era of “fly first, test later” is over. We must see outcomes before spending.</span>
+          </blockquote>
+        </div>
+      </section>
+
+      <section class="slide modules" id="slide-modules">
+        <div class="content">
+          <h2 class="fade-up">From Digital Twin to Cognitive Decisions: A Three-in-One Innovation Stack</h2>
+          <p class="problem-lead fade-up">A compact view of the three core engines behind AirGroundLAB.</p>
+          <div class="module-grid">
+            <article class="module-card fade-up">
+              <div class="pain-media">
+                <img src="./assets/image4.png" alt="High-fidelity simulation scene" loading="lazy" />
+              </div>
+              <h3>High-Fidelity Simulation</h3>
+              <ul>
+                <li>Physics-accurate wind-field and payload behavior.</li>
+                <li>2D/3D linked visualization for route risk checks.</li>
+              </ul>
+            </article>
+            <article class="module-card fade-up">
+              <div class="pain-media">
+                <img src="./assets/image2.jpeg" alt="Generative social simulation scene" loading="lazy" />
+              </div>
+              <h3>Generative Agents for Social Simulation</h3>
+              <ul>
+                <li>LLM agents model household-level demand patterns.</li>
+                <li>Preference-aware orders improve planning realism.</li>
+              </ul>
+            </article>
+            <article class="module-card fade-up">
+              <div class="pain-media">
+                <img src="./assets/image1.jpeg" alt="AI insight and reporting workflow" loading="lazy" />
+              </div>
+              <h3>End-to-End AI Insights</h3>
+              <ul>
+                <li>Fast-forward simulation with policy parameter sweeps.</li>
+                <li>Auto reports for cross-strategy ROI comparison.</li>
+              </ul>
+            </article>
+          </div>
+          <p class="hint fade-up">
+            Scroll down to explore each module in depth (Unity + Python dual-engine architecture).
+          </p>
+        </div>
+      </section>
+
+      <section class="slide detail sim" id="slide-sim">
+        <div class="content sim-global-layout">
+          <div class="sim-world-map fade-up">
+            <h2>worldwide simulationI</h2>
+            <p>Run city-scale delivery simulations across global metropolitan regions.</p>
+          </div>
+          <div class="sim-city-grid">
+            <article class="sim-city-card fade-up">
+              <img
+                src="https://images.pexels.com/photos/753337/pexels-photo-753337.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt="Geneva simulation module"
+                loading="lazy"
+              />
+              <h3>Geneva</h3>
+            </article>
+            <article class="sim-city-card fade-up">
+              <img
+                src="https://images.pexels.com/photos/2115367/pexels-photo-2115367.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt="Shanghai simulation module"
+                loading="lazy"
+              />
+              <h3>Shanghai</h3>
+            </article>
+            <article class="sim-city-card fade-up">
+              <img
+                src="https://images.pexels.com/photos/802024/pexels-photo-802024.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt="New York simulation module"
+                loading="lazy"
+              />
+              <h3>New York</h3>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide detail agent" id="slide-agent">
+        <div class="split">
+          <div class="left">
+            <h2 class="fade-up">Generative Agents</h2>
+            <p class="fade-up">
+              LLM-driven social simulation turns orders into dynamic behavioral portraits based on real human habits,
+              preferences, and feedback.
+            </p>
+          </div>
+          <div class="right agent-board fade-up">
+            <div class="sandbox">
+              <h3>Urban Sandbox Heat Distribution</h3>
+              <span style="left: 22%; top: 31%"></span>
+              <span style="left: 40%; top: 52%"></span>
+              <span style="left: 57%; top: 34%"></span>
+              <span style="left: 73%; top: 56%"></span>
+              <span style="left: 34%; top: 68%"></span>
+            </div>
+            <div class="profile">
+              <h3>User Persona Card</h3>
+              <p>Type: Time-sensitive buyer</p>
+              <p>Preference: Delivery within 35 minutes</p>
+              <p>Tolerance: Medium price elasticity at peak hours</p>
+            </div>
+            <div class="feedback">
+              <h3>Order Experience Feedback</h3>
+              <p>Order 14:20 -> Delivered 14:43</p>
+              <p>Feedback: Stable delivery, add more transfer hubs at peaks</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide detail insight" id="slide-insight">
+        <div class="split">
+          <div class="left">
+            <h2 class="fade-up">End-to-End AI Insights</h2>
+            <p class="fade-up">
+              A fully automated workflow that compares algorithms like a horse race and quickly identifies optimal layouts
+              across maps and operating conditions.
+            </p>
+          </div>
+          <div class="right insight-board fade-up">
+            <div class="flow">
+              <div class="flow-step">1. Start Simulation</div>
+              <div class="flow-step">2. Input Policy / Parameters</div>
+              <div class="flow-step">3. Run &amp; Fast-Forward</div>
+              <div class="flow-step">4. Report &amp; Comparison</div>
+            </div>
+            <div class="reports" id="reports">
+              <article>
+                <h3>Algorithm Comparison (Same Map)</h3>
+                <p>A* vs PPO: Coverage +18%</p>
+              </article>
+              <article>
+                <h3>Map Comparison (Same Algorithm)</h3>
+                <p>Core-district waiting time -22%</p>
+              </article>
+              <article>
+                <h3>Recommended Strategy</h3>
+                <p>Time-sliced air-ground energy replenishment</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide vision" id="slide-vision">
+        <div class="stars"></div>
+        <div class="content center-copy">
+          <h2 class="fade-up">A Simulation-Driven Efficiency Revolution</h2>
+          <div class="rings fade-up">
+            <div class="ring ring-1">
+              <h3>For Operators</h3>
+              <p>An intuitive decision safety rail that lowers operational decision barriers.</p>
+            </div>
+            <div class="ring ring-2">
+              <h3>For Enterprises</h3>
+              <p>Simulate first, build later. Improve efficiency and maximize ROA.</p>
+            </div>
+            <div class="ring ring-3">
+              <h3>For Communities &amp; Government</h3>
+              <p>More scientific air-route planning, lower risk, and better public resource allocation.</p>
+            </div>
+          </div>
+          <p class="tagline fade-up">Master the Sky, Foresee the Future.</p>
+        </div>
+      </section>
+    </main>
+
+    <div class="pager"><span id="page-index">01</span><span>/07</span></div>
+    <script src="./script.js"></script>
+  </body>
+</html>
