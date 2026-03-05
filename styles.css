@@ -270,13 +270,22 @@ h2 {
     linear-gradient(165deg, rgba(35, 18, 14, 0.62) 0%, rgba(22, 16, 20, 0.6) 58%, rgba(18, 20, 31, 0.64) 100%);
   backdrop-filter: blur(12px);
   padding: 12px 12px 14px;
-  transition: transform 0.28s ease, border-color 0.28s ease;
+  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+  cursor: pointer;
 }
 
 .pain-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 145, 108, 0.68);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(255, 145, 108, 0.9);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.42),
+    0 0 28px rgba(255, 122, 74, 0.26);
+}
+
+.pain-card:focus-visible {
+  outline: none;
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(255, 145, 108, 0.95);
 }
 
 .pain-media {
@@ -369,13 +378,22 @@ blockquote span {
     linear-gradient(165deg, rgba(14, 26, 45, 0.66) 0%, rgba(12, 18, 34, 0.64) 58%, rgba(10, 16, 30, 0.68) 100%);
   backdrop-filter: blur(12px);
   padding: 12px 12px 14px;
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 .module-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(150, 199, 255, 0.8);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(150, 199, 255, 0.95);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.42),
+    0 0 30px rgba(102, 166, 255, 0.26);
+}
+
+.module-card:focus-visible {
+  outline: none;
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(150, 199, 255, 0.98);
 }
 
 .module-card h3 {
@@ -614,13 +632,23 @@ blockquote span {
   border-radius: 16px;
   overflow: hidden;
   background: linear-gradient(170deg, rgba(13, 23, 40, 0.72), rgba(10, 18, 30, 0.75));
-  transition: transform 0.25s ease, border-color 0.25s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
   min-height: clamp(180px, 24vh, 280px);
 }
 
 .sim-city-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(145, 200, 255, 0.75);
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(145, 200, 255, 0.95);
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.42),
+    0 0 30px rgba(92, 171, 255, 0.28);
+}
+
+.sim-city-card:focus-visible {
+  outline: none;
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(145, 200, 255, 0.98);
 }
 
 .sim-city-card img {
@@ -950,12 +978,22 @@ blockquote span {
   background: rgba(12, 20, 34, 0.74);
   padding: 16px;
   min-height: 220px;
-  transition: transform 0.28s ease, border-color 0.28s ease;
+  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+  cursor: pointer;
 }
 
 .adv-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(174, 214, 255, 0.84);
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(174, 214, 255, 0.96);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.42),
+    0 0 30px rgba(111, 184, 255, 0.24);
+}
+
+.adv-card:focus-visible {
+  outline: none;
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(174, 214, 255, 0.98);
 }
 
 .adv-icon {
@@ -1087,6 +1125,11 @@ blockquote span {
     rgba(10, 14, 24, 0.86);
   padding: 12px 12px 10px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition:
+    transform 0.24s ease,
+    border-color 0.24s ease,
+    box-shadow 0.24s ease,
+    background-color 0.24s ease;
 }
 
 .comp-card h3 {
@@ -1138,6 +1181,27 @@ blockquote span {
   background:
     linear-gradient(180deg, rgba(73, 236, 255, 0.16) 0 44px, transparent 44px),
     rgba(9, 22, 35, 0.9);
+}
+
+.comp-card:hover,
+.comp-card:focus-visible,
+.comp-card.active {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(168, 214, 255, 0.95);
+  box-shadow:
+    0 0 0 1px rgba(169, 214, 255, 0.55),
+    0 14px 34px rgba(0, 0, 0, 0.46),
+    0 0 36px rgba(90, 167, 255, 0.28);
+}
+
+.comp-card.ours:hover,
+.comp-card.ours:focus-visible,
+.comp-card.ours.active {
+  border-color: rgba(116, 245, 255, 0.98);
+  box-shadow:
+    0 0 0 1px rgba(118, 245, 255, 0.62),
+    0 16px 36px rgba(0, 0, 0, 0.5),
+    0 0 44px rgba(76, 233, 255, 0.4);
 }
 
 .comp-note {

@@ -14,6 +14,7 @@ const insightText = document.getElementById("insight-text");
 const insightStepTitle = document.getElementById("insight-step-title");
 const insightStepDesc = document.getElementById("insight-step-desc");
 const insightStage = document.getElementById("insight-stage");
+const compareCards = Array.from(document.querySelectorAll(".comp-card"));
 
 let activeIndex = 0;
 let wheelLock = false;
@@ -217,4 +218,21 @@ if (insightStage) {
 
 setFeaturePanel(0);
 setInsightStep(0);
+
+if (compareCards.length) {
+  compareCards.forEach((card, index) => {
+    card.addEventListener("click", () => {
+      compareCards.forEach((item) => item.classList.remove("active"));
+      card.classList.add("active");
+    });
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      compareCards.forEach((item) => item.classList.remove("active"));
+      card.classList.add("active");
+    });
+    if (index === compareCards.length - 1) card.classList.add("active");
+  });
+}
+
 updatePager(activeIndex);
