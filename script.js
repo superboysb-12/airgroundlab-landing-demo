@@ -31,14 +31,37 @@ let compareChart = null;
 let vizChart = null;
 
 const AUTO_SCROLL_INTERVAL_MS = 5000;
+const COMPACT_LAYOUT_QUERY = "(max-width: 1180px), (max-height: 720px)";
+
+function isCompactLayout() {
+  return window.matchMedia(COMPACT_LAYOUT_QUERY).matches;
+}
 
 function updateDeckScale() {
+  if (isCompactLayout()) {
+    document.documentElement.style.setProperty("--deck-scale", "1");
+    return;
+  }
+
   const designWidth = 1920;
   const designHeight = 1080;
   const widthRatio = window.innerWidth / designWidth;
   const heightRatio = window.innerHeight / designHeight;
   const scale = Math.min(1, widthRatio, heightRatio);
   document.documentElement.style.setProperty("--deck-scale", String(scale));
+}
+
+function syncResponsiveState() {
+  const compact = isCompactLayout();
+  document.documentElement.classList.toggle("compact-layout", compact);
+
+  if (!autoScrollToggle) return;
+  autoScrollToggle.disabled = compact;
+
+  if (compact) {
+    autoScrollToggle.checked = false;
+    stopAutoScroll();
+  }
 }
 
 function updatePager(index) {
@@ -90,7 +113,10 @@ function startAutoScroll() {
 }
 
 function syncAutoScrollState() {
-  if (!autoScrollToggle) return;
+  if (!autoScrollToggle || autoScrollToggle.disabled) {
+    stopAutoScroll();
+    return;
+  }
   if (autoScrollToggle.checked) {
     startAutoScroll();
     return;
@@ -100,7 +126,20 @@ function syncAutoScrollState() {
 
 function detectActiveSlide() {
   if (!deck || !slides.length) return;
-  const current = Math.round(deck.scrollTop / deck.clientHeight);
+
+  const viewportMid = deck.scrollTop + deck.clientHeight / 2;
+  let current = activeIndex;
+  let closestDistance = Number.POSITIVE_INFINITY;
+
+  slides.forEach((slide, index) => {
+    const slideMid = slide.offsetTop + slide.offsetHeight / 2;
+    const distance = Math.abs(slideMid - viewportMid);
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      current = index;
+    }
+  });
+
   if (current !== activeIndex) {
     activeIndex = Math.max(0, Math.min(current, slides.length - 1));
     updatePager(activeIndex);
@@ -109,6 +148,7 @@ function detectActiveSlide() {
 
 if (deck) {
   updateDeckScale();
+  syncResponsiveState();
 
   // Desktop wheel is quantized to one full slide per interaction.
   deck.addEventListener(
@@ -131,7 +171,15 @@ if (deck) {
   deck.addEventListener("scroll", detectActiveSlide, { passive: true });
 }
 
-window.addEventListener("resize", updateDeckScale, { passive: true });
+window.addEventListener(
+  "resize",
+  () => {
+    updateDeckScale();
+    syncResponsiveState();
+    detectActiveSlide();
+  },
+  { passive: true }
+);
 
 window.addEventListener("keydown", (event) => {
   if (["ArrowDown", "PageDown", "Space"].includes(event.code)) {
