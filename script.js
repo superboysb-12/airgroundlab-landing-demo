@@ -16,6 +16,7 @@ const insightStepTitle = document.getElementById("insight-step-title");
 const insightStepDesc = document.getElementById("insight-step-desc");
 const insightStage = document.getElementById("insight-stage");
 const autoScrollToggle = document.getElementById("auto-scroll-toggle");
+const vizChartDom = document.getElementById("viz-chart3d");
 
 let activeIndex = 0;
 let wheelLock = false;
@@ -25,6 +26,7 @@ let insightTouchStartY = 0;
 let insightWheelLock = false;
 let insightTextToken = 0;
 let autoScrollTimer = null;
+let vizChart = null;
 
 const AUTO_SCROLL_INTERVAL_MS = 5000;
 
@@ -111,6 +113,7 @@ if (deck) {
     "wheel",
     (event) => {
       if (window.matchMedia("(pointer: coarse)").matches) return;
+      if (event.target instanceof Element && event.target.closest(".viz-chart-shell")) return;
       event.preventDefault();
       if (wheelLock) return;
       if (Math.abs(event.deltaY) < 6) return;
@@ -348,6 +351,251 @@ if (insightStage) {
 setFeaturePanel(0);
 setInsightStep(0, { instant: true });
 
+function buildVizSeriesData() {
+  const lineData = [];
+  const scatterData = [];
+  const totalPoints = 260;
+
+  for (let i = 0; i < totalPoints; i += 1) {
+    const t = i * 0.18;
+    const radius = 16 + i * 0.24;
+    const x = Math.cos(t) * radius;
+    const y = Math.sin(t) * radius;
+    const z = -40 + i * 0.42 + Math.sin(t * 1.8) * 4.5;
+
+    lineData.push([x, y, z]);
+
+    if (i % 4 === 0) {
+      scatterData.push([x, y, z, i / totalPoints]);
+    }
+  }
+
+  return { lineData, scatterData };
+}
+
+function resizeVizChart() {
+  if (!vizChart) return;
+  vizChart.resize();
+}
+
+function initVizChart() {
+  if (!vizChartDom || typeof echarts === "undefined") return;
+
+  const { lineData, scatterData } = buildVizSeriesData();
+  vizChart = echarts.init(vizChartDom, null, { renderer: "canvas" });
+
+  const option = {
+    /* =========================
+       背景色：修改这里
+       图表本体背景设为透明，实际视觉主背景由页面 CSS 控制；
+       如果你希望图表区域单独换底色，可以修改这里的 backgroundColor。
+       ========================= */
+    backgroundColor: "transparent",
+    tooltip: {
+      backgroundColor: "rgba(7, 14, 24, 0.92)",
+      borderColor: "rgba(114, 164, 255, 0.26)",
+      borderWidth: 1,
+      textStyle: {
+        color: "#e9f2ff",
+        fontSize: 12
+      },
+      formatter(params) {
+        const value = params.value;
+        return [
+          params.seriesName,
+          `X: ${Number(value[0]).toFixed(2)}`,
+          `Y: ${Number(value[1]).toFixed(2)}`,
+          `Z: ${Number(value[2]).toFixed(2)}`
+        ].join("<br/>");
+      }
+    },
+    animationDuration: 1800,
+    animationEasing: "cubicOut",
+    grid3D: {
+      show: true,
+      boxWidth: 170,
+      boxDepth: 170,
+      boxHeight: 120,
+      environment: "transparent",
+
+      /* =========================
+         鼠标交互参数：修改这里
+         alpha / beta：初始观察角度
+         distance：初始观察距离
+         rotateMouseButton：左键旋转
+         panMouseButton：右键平移
+         zoomSensitivity：滚轮缩放灵敏度
+         ========================= */
+      viewControl: {
+        projection: "perspective",
+        alpha: 22,
+        beta: 36,
+        distance: 210,
+        minDistance: 120,
+        maxDistance: 320,
+        rotateSensitivity: 1.1,
+        zoomSensitivity: 1.15,
+        panSensitivity: 1.05,
+        rotateMouseButton: "left",
+        panMouseButton: "right",
+        autoRotate: false
+      },
+      light: {
+        main: {
+          intensity: 1,
+          alpha: 40,
+          beta: 35
+        },
+        ambient: {
+          intensity: 0.55
+        }
+      }
+    },
+    xAxis3D: {
+      type: "value",
+      name: "X Axis",
+      min: -90,
+      max: 90,
+      interval: 30,
+
+      /* =========================
+         坐标轴颜色：修改这里
+         axisLine 控制坐标轴线颜色
+         axisLabel 控制刻度文字颜色
+         splitLine 控制三维网格线颜色
+         xAxis3D / yAxis3D / zAxis3D 三处都可以分别调整
+         ========================= */
+      nameTextStyle: {
+        color: "rgba(229, 239, 255, 0.88)",
+        fontSize: 14
+      },
+      axisLine: {
+        lineStyle: {
+          color: "rgba(135, 178, 255, 0.72)",
+          width: 2
+        }
+      },
+      axisLabel: {
+        color: "rgba(220, 232, 255, 0.72)",
+        fontSize: 12
+      },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: "rgba(145, 178, 225, 0.18)",
+          width: 1
+        }
+      }
+    },
+    yAxis3D: {
+      type: "value",
+      name: "Y Axis",
+      min: -90,
+      max: 90,
+      interval: 30,
+      nameTextStyle: {
+        color: "rgba(229, 239, 255, 0.88)",
+        fontSize: 14
+      },
+      axisLine: {
+        lineStyle: {
+          color: "rgba(135, 178, 255, 0.72)",
+          width: 2
+        }
+      },
+      axisLabel: {
+        color: "rgba(220, 232, 255, 0.72)",
+        fontSize: 12
+      },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: "rgba(145, 178, 225, 0.18)",
+          width: 1
+        }
+      }
+    },
+    zAxis3D: {
+      type: "value",
+      name: "Z Axis",
+      min: -50,
+      max: 80,
+      interval: 15,
+      nameTextStyle: {
+        color: "rgba(229, 239, 255, 0.88)",
+        fontSize: 14
+      },
+      axisLine: {
+        lineStyle: {
+          color: "rgba(135, 178, 255, 0.72)",
+          width: 2
+        }
+      },
+      axisLabel: {
+        color: "rgba(220, 232, 255, 0.72)",
+        fontSize: 12
+      },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: "rgba(145, 178, 225, 0.18)",
+          width: 1
+        }
+      }
+    },
+    series: [
+      {
+        name: "Spiral Line",
+        type: "line3D",
+        data: lineData,
+        blendMode: "lighter",
+        lineStyle: {
+          width: 4,
+          color: "#59d6ff",
+          opacity: 0.95
+        }
+      },
+      {
+        name: "Spiral Nodes",
+        type: "scatter3D",
+        data: scatterData,
+        symbolSize(value) {
+          return 7 + value[3] * 8;
+        },
+        itemStyle: {
+          color: "#c7f4ff",
+          opacity: 0.95,
+          borderColor: "rgba(95, 214, 255, 0.45)",
+          borderWidth: 1
+        },
+        emphasis: {
+          itemStyle: {
+            color: "#ffffff",
+            borderColor: "#6ce2ff",
+            borderWidth: 2
+          }
+        }
+      }
+    ]
+  };
+
+  vizChart.setOption(option);
+
+  vizChartDom.addEventListener(
+    "wheel",
+    (event) => {
+      event.stopPropagation();
+    },
+    { passive: false }
+  );
+
+  vizChartDom.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+  });
+}
+
+initVizChart();
+
 initPager();
 updatePager(activeIndex);
 
@@ -364,4 +612,6 @@ window.addEventListener("visibilitychange", () => {
   }
   syncAutoScrollState();
 });
+
+window.addEventListener("resize", resizeVizChart, { passive: true });
 

@@ -14,7 +14,9 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020712'/%3E%3Cpath d='M14 40L32 18l18 22' stroke='%233d7dff' stroke-width='6' fill='none'/%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260306-12" />
+    <link rel="stylesheet" href="./styles.css?v=20260306-13" />
+    <script src="./assets/vendor/echarts/echarts.min.js"></script>
+    <script src="./assets/vendor/echarts/echarts-gl.min.js"></script>
   </head>
   <body>
     <main id="deck" aria-label="Single-page demo">
@@ -501,6 +503,60 @@
           </footer>
         </div>
       </section>
+
+      <section class="slide viz-slide" id="slide-visual-3d">
+        <div class="content viz-wrap">
+          <div class="viz-header fade-up">
+            <p class="viz-kicker">Interactive 3D Module</p>
+            <h2>3D Airspace Data View</h2>
+            <p class="viz-lead">
+              A lightweight Apache ECharts GL scene is embedded as the final page, allowing live orbit, pan, and zoom
+              interaction directly inside the presentation.
+            </p>
+          </div>
+
+          <div class="viz-layout">
+            <aside class="viz-copy-panel fade-up" aria-label="3D visualization summary">
+              <h3>Interaction Notes</h3>
+              <ul class="viz-points">
+                <li>Left mouse: rotate the 3D camera around the coordinate system.</li>
+                <li>Right mouse: pan the scene without changing perspective.</li>
+                <li>Mouse wheel: zoom in and out to inspect local details.</li>
+              </ul>
+
+              <div class="viz-metric-grid">
+                <article class="viz-metric-card">
+                  <span class="viz-metric-label">Geometry</span>
+                  <strong>Spiral Path</strong>
+                  <p>Generated with a for-loop plus sine and cosine functions.</p>
+                </article>
+                <article class="viz-metric-card">
+                  <span class="viz-metric-label">Axes</span>
+                  <strong>X / Y / Z</strong>
+                  <p>Soft-contrast grid lines tuned for long-form viewing.</p>
+                </article>
+                <article class="viz-metric-card">
+                  <span class="viz-metric-label">Runtime</span>
+                  <strong>Pure Static</strong>
+                  <p>No framework, no build step, CDN-only dependency loading.</p>
+                </article>
+              </div>
+            </aside>
+
+            <div class="viz-chart-shell fade-up">
+              <div class="viz-chart-head">
+                <span class="viz-chart-chip">ECharts GL</span>
+                <span class="viz-chart-chip">Mouse Interactive</span>
+                <span class="viz-chart-chip">Scatter + Line</span>
+              </div>
+              <div id="viz-chart3d" aria-label="3D interactive chart"></div>
+              <div class="viz-chart-note">
+                Drag to rotate. Right-drag to pan. Wheel to zoom.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <nav class="pager" id="pager" aria-label="Slide navigation"></nav>
@@ -511,7 +567,7 @@
         <span class="auto-scroll-toggle-text">AUTO</span>
       </label>
     </div>
-    <script src="./script.js"></script>
+    <script src="./script.js?v=20260306-13"></script>
   </body>
 </html>
 
