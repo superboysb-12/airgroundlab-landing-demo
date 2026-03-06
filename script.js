@@ -16,6 +16,7 @@ const insightStepTitle = document.getElementById("insight-step-title");
 const insightStepDesc = document.getElementById("insight-step-desc");
 const insightStage = document.getElementById("insight-stage");
 const autoScrollToggle = document.getElementById("auto-scroll-toggle");
+const compareChartDom = document.getElementById("compare-chart3d");
 const vizChartDom = document.getElementById("viz-chart3d");
 
 let activeIndex = 0;
@@ -26,6 +27,7 @@ let insightTouchStartY = 0;
 let insightWheelLock = false;
 let insightTextToken = 0;
 let autoScrollTimer = null;
+let compareChart = null;
 let vizChart = null;
 
 const AUTO_SCROLL_INTERVAL_MS = 5000;
@@ -113,7 +115,7 @@ if (deck) {
     "wheel",
     (event) => {
       if (window.matchMedia("(pointer: coarse)").matches) return;
-      if (event.target instanceof Element && event.target.closest(".viz-chart-shell")) return;
+      if (event.target instanceof Element && event.target.closest(".echarts-wheel-zone")) return;
       event.preventDefault();
       if (wheelLock) return;
       if (Math.abs(event.deltaY) < 6) return;
@@ -373,9 +375,323 @@ function buildVizSeriesData() {
   return { lineData, scatterData };
 }
 
-function resizeVizChart() {
-  if (!vizChart) return;
-  vizChart.resize();
+function bindChartDomInteractions(chartDom) {
+  if (!chartDom) return;
+
+  chartDom.addEventListener(
+    "wheel",
+    (event) => {
+      event.stopPropagation();
+    },
+    { passive: false }
+  );
+
+  chartDom.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+  });
+}
+
+function resizeCharts() {
+  if (compareChart) compareChart.resize();
+  if (vizChart) vizChart.resize();
+}
+
+function initCompareChart() {
+  if (!compareChartDom || typeof echarts === "undefined") return;
+
+  const compareNodes = [
+    {
+      name: "AirSim",
+      value: [88, 28, 18],
+      itemStyle: {
+        color: "#66d8ff",
+        borderColor: "rgba(214, 242, 255, 0.52)",
+        borderWidth: 1
+      }
+    },
+    {
+      name: "AnyLogic",
+      value: [34, 94, 24],
+      itemStyle: {
+        color: "#ffd166",
+        borderColor: "rgba(255, 236, 190, 0.52)",
+        borderWidth: 1
+      }
+    },
+    {
+      name: "NASA UTM",
+      value: [18, 44, 34],
+      itemStyle: {
+        color: "#97adc6",
+        borderColor: "rgba(221, 234, 248, 0.42)",
+        borderWidth: 1
+      }
+    }
+  ];
+  const highlightedNode = {
+    name: "AirGroundLAB",
+    value: [94, 96, 88],
+    itemStyle: {
+      color: "#43f3a6",
+      borderColor: "rgba(240, 255, 248, 0.92)",
+      borderWidth: 2
+    }
+  };
+  const allCompareNodes = [...compareNodes, highlightedNode];
+
+  const linkSeries = allCompareNodes.map((node) => ({
+    name: `${node.name} Link`,
+    type: "line3D",
+    data: [
+      [0, 0, 0],
+      node.value
+    ],
+    silent: true,
+    tooltip: {
+      show: false
+    },
+    lineStyle: {
+      width: node.name === "AirGroundLAB" ? 5 : 2.5,
+      color: node.itemStyle.color,
+      opacity: node.name === "AirGroundLAB" ? 0.92 : 0.45
+    }
+  }));
+
+  compareChart = echarts.init(compareChartDom, null, { renderer: "canvas" });
+
+  compareChart.setOption({
+    backgroundColor: "transparent",
+    tooltip: {
+      backgroundColor: "rgba(7, 14, 24, 0.92)",
+      borderColor: "rgba(114, 164, 255, 0.26)",
+      borderWidth: 1,
+      textStyle: {
+        color: "#e9f2ff",
+        fontSize: 12
+      },
+      formatter(params) {
+        if (!params.data || !params.data.value) return params.seriesName;
+        const [x, y, z] = params.data.value;
+        return [
+          `<strong>${params.data.name}</strong>`,
+          `Physical Fidelity: ${x}`,
+          `Logistics Scale: ${y}`,
+          `Social Dynamics: ${z}`
+        ].join("<br/>");
+      }
+    },
+    animationDuration: 1500,
+    animationEasing: "cubicOut",
+    grid3D: {
+      show: true,
+      boxWidth: 140,
+      boxDepth: 140,
+      boxHeight: 100,
+      environment: "transparent",
+      viewControl: {
+        projection: "perspective",
+        alpha: 20,
+        beta: 36,
+        distance: 235,
+        minDistance: 140,
+        maxDistance: 340,
+        rotateSensitivity: 1.1,
+        zoomSensitivity: 1.05,
+        panSensitivity: 1.05,
+        rotateMouseButton: "left",
+        panMouseButton: "right",
+        autoRotate: false
+      },
+      light: {
+        main: {
+          intensity: 1.05,
+          alpha: 42,
+          beta: 28
+        },
+        ambient: {
+          intensity: 0.58
+        }
+      }
+    },
+    xAxis3D: {
+      type: "value",
+      name: "X Physical Fidelity",
+      min: 0,
+      max: 100,
+      interval: 20,
+      nameTextStyle: {
+        color: "rgba(100, 216, 255, 0.96)",
+        fontSize: 15,
+        fontWeight: 700
+      },
+      axisLine: {
+        lineStyle: {
+          color: "rgba(100, 216, 255, 0.85)",
+          width: 3
+        }
+      },
+      axisLabel: {
+        color: "rgba(218, 247, 255, 0.96)",
+        fontSize: 13,
+        fontWeight: 700
+      },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: "rgba(145, 178, 225, 0.22)",
+          width: 1
+        }
+      }
+    },
+    yAxis3D: {
+      type: "value",
+      name: "Y Logistics Scale",
+      min: 0,
+      max: 100,
+      interval: 20,
+      nameTextStyle: {
+        color: "rgba(255, 209, 102, 0.98)",
+        fontSize: 15,
+        fontWeight: 700
+      },
+      axisLine: {
+        lineStyle: {
+          color: "rgba(255, 209, 102, 0.85)",
+          width: 3
+        }
+      },
+      axisLabel: {
+        color: "rgba(255, 241, 199, 0.98)",
+        fontSize: 13,
+        fontWeight: 700
+      },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: "rgba(145, 178, 225, 0.22)",
+          width: 1
+        }
+      }
+    },
+    zAxis3D: {
+      type: "value",
+      name: "Z Social Dynamics",
+      min: 0,
+      max: 100,
+      interval: 20,
+      nameTextStyle: {
+        color: "rgba(255, 138, 101, 0.98)",
+        fontSize: 15,
+        fontWeight: 700
+      },
+      axisLine: {
+        lineStyle: {
+          color: "rgba(255, 138, 101, 0.85)",
+          width: 3
+        }
+      },
+      axisLabel: {
+        color: "rgba(255, 221, 210, 0.98)",
+        fontSize: 13,
+        fontWeight: 700
+      },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: "rgba(145, 178, 225, 0.22)",
+          width: 1
+        }
+      }
+    },
+    series: [
+      ...linkSeries,
+      {
+        name: "Capability Nodes",
+        type: "scatter3D",
+        data: compareNodes,
+        symbolSize: 14,
+        label: {
+          show: true,
+          formatter(params) {
+            return params.data.name;
+          },
+          color: "#ecf7ff",
+          fontSize: 12,
+          backgroundColor: "rgba(7, 18, 30, 0.74)",
+          borderColor: "rgba(132, 184, 255, 0.18)",
+          borderWidth: 1,
+          borderRadius: 999,
+          padding: [6, 10]
+        },
+        emphasis: {
+          label: {
+            color: "#ffffff"
+          },
+          itemStyle: {
+            borderColor: "#ffffff",
+            borderWidth: 2
+          }
+        }
+      },
+      {
+        name: "AirGroundLAB Glow",
+        type: "scatter3D",
+        data: [highlightedNode],
+        silent: true,
+        tooltip: {
+          show: false
+        },
+        symbolSize: 38,
+        itemStyle: {
+          color: "#43f3a6",
+          opacity: 0.16
+        }
+      },
+      {
+        name: "AirGroundLAB Highlight",
+        type: "scatter3D",
+        data: [highlightedNode],
+        symbolSize: 24,
+        label: {
+          show: true,
+          formatter() {
+            return "{project|AirGroundLAB}";
+          },
+          rich: {
+            project: {
+              color: "#f2fff8",
+              fontSize: 13,
+              fontWeight: 800,
+              backgroundColor: "rgba(5, 26, 17, 0.48)",
+              borderColor: "rgba(67, 243, 166, 0.42)",
+              borderWidth: 1,
+              borderRadius: 999,
+              padding: [7, 12],
+              shadowBlur: 28,
+              shadowColor: "rgba(67, 243, 166, 0.34)",
+              textShadowBlur: 24,
+              textShadowColor: "rgba(132, 255, 208, 0.98)",
+              textShadowOffsetX: 0,
+              textShadowOffsetY: 0
+            }
+          }
+        },
+        emphasis: {
+          label: {
+            formatter() {
+              return "{project|AirGroundLAB}";
+            }
+          },
+          itemStyle: {
+            borderColor: "#ffffff",
+            borderWidth: 2.5
+          }
+        }
+      }
+    ]
+  });
+
+  bindChartDomInteractions(compareChartDom);
 }
 
 function initVizChart() {
@@ -580,20 +896,10 @@ function initVizChart() {
   };
 
   vizChart.setOption(option);
-
-  vizChartDom.addEventListener(
-    "wheel",
-    (event) => {
-      event.stopPropagation();
-    },
-    { passive: false }
-  );
-
-  vizChartDom.addEventListener("contextmenu", (event) => {
-    event.preventDefault();
-  });
+  bindChartDomInteractions(vizChartDom);
 }
 
+initCompareChart();
 initVizChart();
 
 initPager();
@@ -613,5 +919,5 @@ window.addEventListener("visibilitychange", () => {
   syncAutoScrollState();
 });
 
-window.addEventListener("resize", resizeVizChart, { passive: true });
+window.addEventListener("resize", resizeCharts, { passive: true });
 

@@ -14,7 +14,7 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020712'/%3E%3Cpath d='M14 40L32 18l18 22' stroke='%233d7dff' stroke-width='6' fill='none'/%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260306-13" />
+    <link rel="stylesheet" href="./styles.css?v=20260306-15" />
     <script src="./assets/vendor/echarts/echarts.min.js"></script>
     <script src="./assets/vendor/echarts/echarts-gl.min.js"></script>
   </head>
@@ -349,12 +349,24 @@
           <p class="finale-lead fade-up">Comparison results at a glance: AirGroundLAB achieves full coverage across four core capabilities.</p>
 
           <div class="finale-layout fade-up">
-            <iframe
-              class="compare-module-frame"
-              src="./compare-module.html"
-              title="3D capability comparison"
-              loading="lazy"
-            ></iframe>
+            <section class="matrix-panel compare-3d-panel echarts-wheel-zone" aria-label="3D capability comparison">
+              <h3 class="matrix-title">3D Capability Field</h3>
+              <p class="compare-axis-lead">Point position indicates relative capability on X, Y, and Z axes.</p>
+              <div class="compare-axis-tags" aria-label="Axis legend">
+                <span class="compare-axis-chip axis-chip-x">X Physical Fidelity</span>
+                <span class="compare-axis-chip axis-chip-y">Y Logistics Scale</span>
+                <span class="compare-axis-chip axis-chip-z">Z Social Dynamics</span>
+              </div>
+
+              <div class="compare-3d-scene echarts-wheel-zone">
+                <div id="compare-chart3d" aria-label="Interactive 3D capability chart"></div>
+              </div>
+
+              <div class="compare-roi-note">
+                <span class="roi-chip">ROI</span>
+                <p>End-to-end AI decision and ROI analysis is supported only by AirGroundLAB.</p>
+              </div>
+            </section>
 
             <aside class="action-card" aria-label="AirGroundLAB action card">
               <p class="action-kicker">AirGroundLAB</p>
@@ -391,60 +403,6 @@
           </footer>
         </div>
       </section>
-
-      <section class="slide viz-slide" id="slide-visual-3d">
-        <div class="content viz-wrap">
-          <div class="viz-header fade-up">
-            <p class="viz-kicker">Interactive 3D Module</p>
-            <h2>3D Airspace Data View</h2>
-            <p class="viz-lead">
-              A lightweight Apache ECharts GL scene is embedded as the final page, allowing live orbit, pan, and zoom
-              interaction directly inside the presentation.
-            </p>
-          </div>
-
-          <div class="viz-layout">
-            <aside class="viz-copy-panel fade-up" aria-label="3D visualization summary">
-              <h3>Interaction Notes</h3>
-              <ul class="viz-points">
-                <li>Left mouse: rotate the 3D camera around the coordinate system.</li>
-                <li>Right mouse: pan the scene without changing perspective.</li>
-                <li>Mouse wheel: zoom in and out to inspect local details.</li>
-              </ul>
-
-              <div class="viz-metric-grid">
-                <article class="viz-metric-card">
-                  <span class="viz-metric-label">Geometry</span>
-                  <strong>Spiral Path</strong>
-                  <p>Generated with a for-loop plus sine and cosine functions.</p>
-                </article>
-                <article class="viz-metric-card">
-                  <span class="viz-metric-label">Axes</span>
-                  <strong>X / Y / Z</strong>
-                  <p>Soft-contrast grid lines tuned for long-form viewing.</p>
-                </article>
-                <article class="viz-metric-card">
-                  <span class="viz-metric-label">Runtime</span>
-                  <strong>Pure Static</strong>
-                  <p>No framework, no build step, CDN-only dependency loading.</p>
-                </article>
-              </div>
-            </aside>
-
-            <div class="viz-chart-shell fade-up">
-              <div class="viz-chart-head">
-                <span class="viz-chart-chip">ECharts GL</span>
-                <span class="viz-chart-chip">Mouse Interactive</span>
-                <span class="viz-chart-chip">Scatter + Line</span>
-              </div>
-              <div id="viz-chart3d" aria-label="3D interactive chart"></div>
-              <div class="viz-chart-note">
-                Drag to rotate. Right-drag to pan. Wheel to zoom.
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
 
     <nav class="pager" id="pager" aria-label="Slide navigation"></nav>
@@ -455,7 +413,7 @@
         <span class="auto-scroll-toggle-text">AUTO</span>
       </label>
     </div>
-    <script src="./script.js?v=20260306-13"></script>
+    <script src="./script.js?v=20260306-15"></script>
   </body>
 </html>
 

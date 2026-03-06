@@ -1214,6 +1214,8 @@ blockquote span {
 
 .compare-3d-panel {
   gap: 12px;
+  justify-content: flex-start;
+  min-height: clamp(620px, calc(var(--deck-vh) * 0.74), 860px);
 }
 
 .compare-axis-lead {
@@ -1221,6 +1223,35 @@ blockquote span {
   color: #afcaea;
   line-height: 1.45;
   font-size: 0.94rem;
+}
+
+.compare-axis-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.compare-axis-chip {
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(168, 206, 239, 0.28);
+  background: rgba(7, 20, 34, 0.46);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.axis-chip-x {
+  color: #64d8ff;
+}
+
+.axis-chip-y {
+  color: #ffd166;
+}
+
+.axis-chip-z {
+  color: #ff8a65;
 }
 
 .compare-3d-scene {
@@ -1233,12 +1264,14 @@ blockquote span {
     linear-gradient(165deg, rgba(11, 28, 47, 0.76), rgba(7, 19, 32, 0.84));
   min-height: clamp(280px, calc(var(--deck-vh) * 0.38), 420px);
   overflow: hidden;
+  flex: 1;
 }
 
 .compare-3d-scene::before {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 0;
   background:
     repeating-linear-gradient(
       90deg,
@@ -1253,8 +1286,32 @@ blockquote span {
       rgba(218, 236, 255, 0.03) 1px,
       transparent 1px,
       transparent 46px
-    );
+  );
   pointer-events: none;
+}
+
+#compare-chart3d {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.compare-chart-hint {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 2;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(142, 188, 234, 0.18);
+  background: rgba(8, 18, 28, 0.54);
+  color: rgba(224, 238, 255, 0.82);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  backdrop-filter: blur(12px);
 }
 
 .compare-origin {
