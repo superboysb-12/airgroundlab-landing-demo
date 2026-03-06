@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Capability Comparison</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Sora:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --c-bg-a: #071223;
+        --c-bg-b: #0a1f2d;
+        --c-grid: rgba(208, 230, 250, 0.08);
+        --c-text: #dceeff;
+        --c-sub: #a8c8e5;
+        --c-our: #59f2b8;
+        --c-x: #64d8ff;
+        --c-y: #ffd166;
+        --c-z: #ff8a65;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: transparent;
+        font-family: "Sora", "Segoe UI", sans-serif;
+        color: var(--c-text);
+      }
+
+      .module {
+        min-height: 100vh;
+        border: 1px solid rgba(146, 190, 226, 0.34);
+        border-radius: 16px;
+        background:
+          radial-gradient(circle at 86% 8%, rgba(86, 198, 255, 0.24), transparent 36%),
+          radial-gradient(circle at 10% 92%, rgba(255, 153, 102, 0.12), transparent 34%),
+          linear-gradient(160deg, var(--c-bg-a) 0%, var(--c-bg-b) 100%);
+        overflow: hidden;
+        padding: clamp(20px, 3vw, 30px);
+      }
+
+      .headline {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 12px;
+      }
+
+      .title {
+        margin: 0;
+        font-family: "Orbitron", "Sora", sans-serif;
+        font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .subtitle {
+        margin: 4px 0 0;
+        color: var(--c-sub);
+        font-size: 0.82rem;
+        line-height: 1.4;
+      }
+
+      .axes {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .axis-chip {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        border-radius: 999px;
+        padding: 5px 10px;
+        border: 1px solid rgba(170, 206, 236, 0.45);
+        background: rgba(7, 20, 34, 0.54);
+      }
+
+      .axis-chip.x {
+        color: var(--c-x);
+      }
+
+      .axis-chip.y {
+        color: var(--c-y);
+      }
+
+      .axis-chip.z {
+        color: var(--c-z);
+      }
+
+      .layout {
+        margin-top: 18px;
+        display: block;
+      }
+
+      .stage {
+        position: relative;
+        min-height: clamp(430px, 62vh, 620px);
+        padding: 20px;
+        border-radius: 14px;
+        border: 1px solid rgba(149, 193, 230, 0.26);
+        background:
+          linear-gradient(0deg, var(--c-grid) 1px, transparent 1px) 0 0 / 100% 40px,
+          linear-gradient(90deg, var(--c-grid) 1px, transparent 1px) 0 0 / 40px 100%,
+          linear-gradient(170deg, rgba(11, 31, 46, 0.82), rgba(9, 21, 35, 0.88));
+        overflow: hidden;
+      }
+
+      .axis-line {
+        position: absolute;
+        left: 17%;
+        bottom: 16%;
+        height: 2px;
+        border-radius: 999px;
+        transform-origin: left center;
+      }
+
+      .axis-line span {
+        position: absolute;
+        right: -4px;
+        top: -26px;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .axis-line.x {
+        width: 66%;
+        background: linear-gradient(90deg, rgba(100, 216, 255, 0.95), rgba(100, 216, 255, 0.2));
+      }
+
+      .axis-line.x span {
+        color: var(--c-x);
+      }
+
+      .axis-line.y {
+        width: 52%;
+        transform: rotate(-90deg);
+        background: linear-gradient(90deg, rgba(255, 209, 102, 0.95), rgba(255, 209, 102, 0.2));
+      }
+
+      .axis-line.y span {
+        color: var(--c-y);
+      }
+
+      .axis-line.z {
+        width: 48%;
+        transform: rotate(-33deg);
+        background: linear-gradient(90deg, rgba(255, 138, 101, 0.95), rgba(255, 138, 101, 0.2));
+      }
+
+      .axis-line.z span {
+        color: var(--c-z);
+      }
+
+      .origin {
+        position: absolute;
+        left: 17%;
+        bottom: 16%;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #f0f8ff;
+        box-shadow: 0 0 0 7px rgba(129, 193, 241, 0.24);
+      }
+
+      .node {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        display: inline-flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        color: #9cc8ec;
+      }
+
+      .node-dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: currentColor;
+        box-shadow:
+          0 0 0 7px rgba(158, 214, 255, 0.2),
+          0 0 26px currentColor;
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+
+      .node-card {
+        min-width: 168px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(151, 196, 230, 0.28);
+        background: rgba(7, 22, 34, 0.84);
+        box-shadow: 0 10px 24px rgba(2, 8, 16, 0.48);
+      }
+
+      .node-card h4 {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.2;
+        color: #e7f6ff;
+      }
+
+      .node.airsim {
+        color: #67d7ff;
+        left: 58%;
+        top: 60%;
+      }
+
+      .node.anylogic {
+        color: #ffd166;
+        left: 30%;
+        top: 34%;
+      }
+
+      .node.nasa {
+        color: #96acc5;
+        left: 28%;
+        top: 70%;
+      }
+
+      .node.our {
+        color: var(--c-our);
+        left: 66%;
+        top: 24%;
+      }
+
+      .node.our .node-card {
+        border-color: rgba(89, 242, 184, 0.55);
+        box-shadow:
+          0 12px 26px rgba(2, 10, 17, 0.54),
+          0 0 20px rgba(89, 242, 184, 0.25);
+      }
+
+      .roi {
+        margin-top: 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(140, 188, 223, 0.28);
+        background: rgba(9, 23, 36, 0.72);
+        padding: 12px 14px;
+        font-size: 0.9rem;
+        line-height: 1.45;
+      }
+
+      .roi strong {
+        color: #8ff0c5;
+        margin-right: 4px;
+      }
+
+      .roi span {
+        color: #aecce8;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.25);
+        }
+      }
+
+      @media (max-width: 980px) {
+        .stage {
+          min-height: 480px;
+          padding: 16px;
+        }
+
+        .node-card {
+          min-width: 150px;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .headline {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .stage {
+          min-height: 430px;
+          padding: 12px;
+        }
+
+        .axis-line span {
+          font-size: 0.72rem;
+        }
+
+        .node {
+          gap: 3px;
+        }
+
+        .node-card {
+          min-width: 132px;
+          padding: 10px 11px;
+        }
+
+        .node-card h4 {
+          font-size: 0.88rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="module" aria-label="3D capability comparison module">
+      <header class="headline">
+        <div>
+          <h1 class="title">3D Capability Field</h1>
+          <p class="subtitle">Point position indicates relative capability on X, Y, and Z axes.</p>
+        </div>
+        <div class="axes" aria-label="Axis legend">
+          <span class="axis-chip x">X Physical Fidelity</span>
+          <span class="axis-chip y">Y Logistics Scale</span>
+          <span class="axis-chip z">Z Social Dynamics</span>
+        </div>
+      </header>
+
+      <section class="layout">
+        <div class="stage" role="img" aria-label="3D comparison map for AirSim, AnyLogic, NASA UTM, and AirGroundLAB">
+          <div class="axis-line x"><span>X</span></div>
+          <div class="axis-line y"><span>Y</span></div>
+          <div class="axis-line z"><span>Z</span></div>
+          <div class="origin" aria-hidden="true"></div>
+
+          <article class="node airsim" aria-label="AirSim">
+            <span class="node-dot" aria-hidden="true"></span>
+            <div class="node-card">
+              <h4>AirSim</h4>
+            </div>
+          </article>
+
+          <article class="node anylogic" aria-label="AnyLogic">
+            <span class="node-dot" aria-hidden="true"></span>
+            <div class="node-card">
+              <h4>AnyLogic</h4>
+            </div>
+          </article>
+
+          <article class="node nasa" aria-label="NASA UTM">
+            <span class="node-dot" aria-hidden="true"></span>
+            <div class="node-card">
+              <h4>NASA UTM</h4>
+            </div>
+          </article>
+
+          <article class="node our" aria-label="AirGroundLAB">
+            <span class="node-dot" aria-hidden="true"></span>
+            <div class="node-card">
+              <h4>AirGroundLAB</h4>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div class="roi"><strong>ROI:</strong><span> End-to-end AI decision and ROI analysis is supported only by AirGroundLAB.</span></div>
+    </main>
+  </body>
+</html>

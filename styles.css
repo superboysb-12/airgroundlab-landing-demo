@@ -311,12 +311,17 @@ h3,
   background: rgba(22, 28, 42, 0.6);
 }
 
-.pain-media img {
+.pain-media img,
+.pain-media video {
   width: 100%;
   aspect-ratio: 16 / 9;
   display: block;
   object-fit: cover;
   filter: saturate(0.92) contrast(1.03);
+}
+
+#slide-problem .pain-media img {
+  aspect-ratio: 1 / 1;
 }
 
 .pain-card h3 {
@@ -1175,6 +1180,16 @@ blockquote span {
   grid-template-columns: minmax(0, 1.34fr) minmax(0, 0.86fr);
   gap: 14px;
   align-items: start;
+  min-height: clamp(620px, calc(var(--deck-vh) * 0.74), 860px);
+}
+
+.compare-module-frame {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 16px;
+  background: transparent;
+  min-height: clamp(620px, calc(var(--deck-vh) * 0.74), 860px);
 }
 
 .matrix-panel {
@@ -1197,93 +1212,222 @@ blockquote span {
   letter-spacing: 0.08em;
 }
 
-.matrix-scroll {
-  margin-top: 10px;
-  overflow-x: auto;
-  flex: 0 0 auto;
+.compare-3d-panel {
+  gap: 12px;
 }
 
-.matrix-table {
-  width: 100%;
-  min-width: 760px;
-  border-collapse: collapse;
-  table-layout: fixed;
+.compare-axis-lead {
+  margin-top: 8px;
+  color: #afcaea;
+  line-height: 1.45;
+  font-size: 0.94rem;
 }
 
-.matrix-table th,
-.matrix-table td {
-  padding: 16px 12px;
-  border-bottom: 1px solid rgba(124, 154, 193, 0.22);
-  text-align: center;
-  font-size: 1rem;
+.compare-3d-scene {
+  margin-top: 6px;
+  position: relative;
+  border: 1px solid rgba(133, 182, 232, 0.28);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 84% 16%, rgba(83, 210, 255, 0.2), transparent 44%),
+    linear-gradient(165deg, rgba(11, 28, 47, 0.76), rgba(7, 19, 32, 0.84));
+  min-height: clamp(280px, calc(var(--deck-vh) * 0.38), 420px);
+  overflow: hidden;
 }
 
-.matrix-table thead th {
-  color: rgba(207, 223, 246, 0.76);
-  font-weight: 700;
-  background: rgba(10, 24, 43, 0.66);
+.compare-3d-scene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(218, 236, 255, 0.045) 0,
+      rgba(218, 236, 255, 0.045) 1px,
+      transparent 1px,
+      transparent 46px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(218, 236, 255, 0.03) 0,
+      rgba(218, 236, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 46px
+    );
+  pointer-events: none;
 }
 
-.matrix-table .feature-col,
-.matrix-table tbody th {
-  text-align: left;
-  width: 36%;
-  color: #e1eeff;
+.compare-origin {
+  position: absolute;
+  left: 17%;
+  bottom: 16%;
+  width: 10px;
+  aspect-ratio: 1/1;
+  border-radius: 999px;
+  background: #d8eaff;
+  box-shadow: 0 0 0 4px rgba(140, 204, 255, 0.25);
+}
+
+.compare-axis {
+  position: absolute;
+  transform-origin: left center;
+  height: 2px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, rgba(118, 198, 255, 0.86), rgba(178, 229, 255, 0.16));
+}
+
+.compare-axis span {
+  position: absolute;
+  right: -6px;
+  top: -26px;
+  color: #daf0ff;
+  font-size: 0.72rem;
   font-weight: 600;
-  vertical-align: top;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
-.feature-title {
-  font-size: 1rem;
-  line-height: 1.3;
+.axis-x {
+  left: 17%;
+  bottom: 16%;
+  width: 60%;
 }
 
-.feature-desc {
-  margin-top: 5px;
-  font-size: 0.82rem;
+.axis-y {
+  left: 17%;
+  bottom: 16%;
+  width: 46%;
+  transform: rotate(-90deg);
+}
+
+.axis-y span {
+  top: -24px;
+  right: 0;
+}
+
+.axis-z {
+  left: 17%;
+  bottom: 16%;
+  width: 44%;
+  transform: rotate(-33deg);
+}
+
+.compare-point {
+  position: absolute;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(140, 194, 239, 0.28);
+  background: rgba(10, 25, 42, 0.82);
+  backdrop-filter: blur(2px);
+  min-width: 118px;
+  box-shadow: 0 8px 18px rgba(1, 7, 18, 0.42);
+}
+
+.compare-point::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  width: 8px;
+  aspect-ratio: 1/1;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 0 4px rgba(138, 204, 255, 0.24);
+}
+
+.compare-point h4 {
+  color: #e9f7ff;
+  font-size: 0.84rem;
+  line-height: 1.2;
+}
+
+.compare-point p {
+  margin-top: 4px;
+  color: #afc9e4;
+  font-size: 0.72rem;
   line-height: 1.38;
-  color: rgba(194, 212, 235, 0.68);
 }
 
-.matrix-table .col-our {
-  background: rgba(75, 219, 255, 0.12);
-  color: #e8fcff;
-  box-shadow: inset 0 0 0 1px rgba(94, 228, 255, 0.26);
+.point-nasa {
+  left: 18.5%;
+  bottom: 18%;
+  color: #8b9fbb;
 }
 
-.m-yes,
-.m-no {
-  width: 20px;
-  height: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.point-airsim {
+  left: 64%;
+  bottom: 15%;
+  color: #66d8ff;
 }
 
-.m-yes svg,
-.m-no svg {
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke-width: 2.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.point-anylogic {
+  left: 18%;
+  top: 16%;
+  color: #ffd36f;
 }
 
-.m-yes {
-  color: #34d399;
+.point-our {
+  left: 58%;
+  top: 16%;
+  color: #43f3a6;
+  border-color: rgba(67, 243, 166, 0.5);
+  box-shadow:
+    0 10px 24px rgba(5, 15, 28, 0.54),
+    0 0 18px rgba(67, 243, 166, 0.25);
 }
 
-.m-no {
-  color: #7d8da7;
+.compare-roi-note {
+  margin-top: 2px;
+  border: 1px solid rgba(126, 182, 232, 0.26);
+  border-radius: 12px;
+  background: rgba(7, 21, 38, 0.56);
+  padding: 10px 12px;
+  display: grid;
+  gap: 6px;
 }
 
-.m-yes svg {
-  stroke: #34d399;
+.roi-chip {
+  width: fit-content;
+  border-radius: 999px;
+  background: rgba(99, 222, 255, 0.17);
+  border: 1px solid rgba(130, 217, 255, 0.38);
+  color: #c9f2ff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
 }
 
-.m-no svg {
-  stroke: #7d8da7;
+.compare-roi-note p {
+  color: #b8d2ec;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 1080px) {
+  .compare-point {
+    min-width: 104px;
+    padding: 7px 9px;
+  }
+
+  .compare-point h4 {
+    font-size: 0.78rem;
+  }
+
+  .compare-point p {
+    font-size: 0.68rem;
+  }
+
+  .point-our {
+    left: 54%;
+    top: 14%;
+  }
+
+  .point-airsim {
+    left: 62%;
+  }
 }
 
 .action-card {
@@ -1295,24 +1439,24 @@ blockquote span {
   box-shadow:
     0 14px 30px rgba(0, 0, 0, 0.36),
     0 0 28px rgba(76, 233, 255, 0.13);
-  padding: 16px;
+  padding: 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 12px;
-  min-height: clamp(440px, calc(var(--deck-vh) * 0.58), 620px);
+  gap: 16px;
+  min-height: clamp(620px, calc(var(--deck-vh) * 0.74), 860px);
 }
 
 .action-kicker {
   color: #8df7ff;
-  font-size: 0.84rem;
+  font-size: 0.92rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .action-card h3 {
   margin-top: 4px;
-  font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
   color: #f4fbff;
   line-height: 1.2;
 }
@@ -1321,7 +1465,7 @@ blockquote span {
   margin-top: 2px;
   color: #ccdef4;
   line-height: 1.5;
-  font-size: 0.98rem;
+  font-size: 1.08rem;
 }
 
 .action-points {
@@ -1335,7 +1479,7 @@ blockquote span {
 .action-points li {
   position: relative;
   padding-left: 20px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #bed0e4;
   line-height: 1.4;
 }
@@ -1354,11 +1498,11 @@ blockquote span {
   border: 1px solid rgba(140, 188, 236, 0.24);
   border-radius: 12px;
   background: rgba(8, 18, 30, 0.62);
-  padding: 10px;
+  padding: 14px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .action-cta-copy {
@@ -1367,7 +1511,7 @@ blockquote span {
 
 .action-cta-title {
   color: #dff3ff;
-  font-size: 0.92rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -1376,7 +1520,7 @@ blockquote span {
 .action-cta-desc {
   margin-top: 5px;
   color: #9eb9d8;
-  font-size: 0.84rem;
+  font-size: 0.92rem;
   line-height: 1.45;
 }
 
@@ -1389,7 +1533,7 @@ blockquote span {
 }
 
 .action-qr-wrap img {
-  width: clamp(96px, 8.4vw, 122px);
+  width: clamp(118px, 9.8vw, 146px);
   height: auto;
   display: block;
   margin: 0 auto;
@@ -1401,7 +1545,7 @@ blockquote span {
 .action-qr-wrap p {
   margin-top: 6px;
   color: #93b6d6;
-  font-size: 0.77rem;
+  font-size: 0.84rem;
 }
 
 :root {
