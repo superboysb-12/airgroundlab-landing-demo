@@ -450,7 +450,7 @@ blockquote span {
 
 .module-showcase {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: 14px;
   height: var(--deck-vh);
   padding-top: clamp(18px, calc(var(--deck-vh) * 0.03), 36px);
@@ -508,15 +508,7 @@ blockquote span {
   height: 100%;
   display: block;
   object-fit: cover;
-  filter: saturate(0.9) brightness(0.82) contrast(1.05);
-}
-
-.module-visual::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: transparent;
-  pointer-events: none;
+  filter: none;
 }
 
 .module-cta {
@@ -868,13 +860,41 @@ blockquote span {
   transform: translateX(0);
 }
 
-.feature-panel img {
+.feature-panel img,
+.feature-panel video {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.feature-panel.reverse img {
+.feature-rich-media {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(170deg, rgba(8, 16, 28, 0.9), rgba(8, 14, 24, 0.88));
+}
+
+.feature-sim-layout {
+  height: 100%;
+  min-height: 0;
+  padding: clamp(12px, 1.2vw, 18px);
+  grid-template-rows: 1fr 1fr;
+}
+
+.feature-sim-layout .sim-world-map h2 {
+  font-size: clamp(1.4rem, 2.3vw, 2.2rem);
+}
+
+.feature-sim-layout .sim-world-map p {
+  font-size: clamp(0.9rem, 1.05vw, 1.02rem);
+  max-width: 52ch;
+}
+
+.feature-sim-layout .sim-city-card {
+  min-height: clamp(120px, 20vh, 180px);
+}
+
+.feature-panel.reverse img,
+.feature-panel.reverse video {
   order: 2;
 }
 
@@ -896,7 +916,8 @@ blockquote span {
 }
 
 .feature-copy h3 {
-  font-size: var(--title-card-size);
+  font-size: clamp(1.54rem, 2.2vw, 2.38rem);
+  font-weight: 500;
   color: #e8f3ff;
   text-shadow:
     0 0 8px rgba(132, 204, 255, 0.4),
@@ -905,10 +926,34 @@ blockquote span {
 
 .feature-copy p {
   margin-top: 14px;
-  font-size: clamp(1rem, 1.34vw, 1.28rem);
+  font-size: clamp(1.16rem, 1.58vw, 1.52rem);
+  font-weight: 400;
   line-height: 1.58;
   color: #bfd2ec;
   max-width: 40ch;
+}
+
+.feature-bullets {
+  margin: 14px 0 0;
+  padding-left: 1.2em;
+  color: #bfd2ec;
+  display: grid;
+  gap: 10px;
+}
+
+.feature-bullets li {
+  font-size: clamp(1.14rem, 1.34vw, 1.38rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #d8e8fb;
+  line-height: 1.6;
+  text-shadow: none;
+}
+
+.feature-bullets strong {
+  color: #f2f8ff;
+  font-weight: 500;
 }
 
 .agent-board {
@@ -1807,6 +1852,14 @@ blockquote span {
   text-align: right;
 }
 
+.footer-right a,
+.footer-right a:visited,
+.footer-right a:hover,
+.footer-right a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
 .viz-slide {
   background: linear-gradient(180deg, #04101a 0%, #02060c 100%);
 }
@@ -2378,7 +2431,7 @@ blockquote.fade-up.in:focus-visible {
   }
 
   .module-showcase {
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto auto auto;
     height: auto;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -2452,8 +2505,13 @@ blockquote.fade-up.in:focus-visible {
     display: grid;
   }
 
-  .feature-panel img {
+  .feature-panel img,
+  .feature-panel video {
     height: 100%;
+    min-height: 260px;
+  }
+
+  .feature-rich-media {
     min-height: 260px;
   }
 
@@ -2633,6 +2691,18 @@ blockquote.fade-up.in:focus-visible {
   .feature-panel img {
     min-height: 220px;
     height: clamp(220px, 48vw, 300px);
+  }
+
+  .feature-rich-media {
+    min-height: 220px;
+  }
+
+  .feature-sim-layout {
+    grid-template-rows: auto auto;
+  }
+
+  .feature-sim-layout .sim-city-grid {
+    grid-template-columns: 1fr;
   }
 
   .feature-panel.reverse img,
