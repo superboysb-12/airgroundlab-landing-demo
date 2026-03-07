@@ -14,6 +14,7 @@
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
   --title-main-size: clamp(2.8rem, 7.2vw, 6.6rem);
   --title-section-size: clamp(2.7rem, 6.4vw, 6rem);
+  --title-card-size: clamp(1.2rem, 1.9vw, 1.7rem);
   --subtitle-size: clamp(0.9rem, 2.13vw, 2rem);
 }
 
@@ -382,7 +383,7 @@ h3,
 
 .pain-card h3 {
   margin-top: 12px;
-  font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+  font-size: var(--title-card-size);
   color: #ffe1d4;
   letter-spacing: 0.01em;
 }
@@ -793,7 +794,7 @@ blockquote span {
   z-index: 1;
   text-align: center;
   width: 90%;
-  font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+  font-size: var(--title-card-size);
   font-weight: 800;
   color: #f2f8ff;
   -webkit-text-stroke: 0;
@@ -895,7 +896,7 @@ blockquote span {
 }
 
 .feature-copy h3 {
-  font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+  font-size: var(--title-card-size);
   color: #e8f3ff;
   text-shadow:
     0 0 8px rgba(132, 204, 255, 0.4),
@@ -930,7 +931,7 @@ blockquote span {
 }
 
 .sandbox h3 {
-  font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+  font-size: var(--title-card-size);
 }
 
 .sandbox span {
@@ -953,7 +954,7 @@ blockquote span {
 
 .profile h3,
 .feedback h3 {
-  font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+  font-size: var(--title-card-size);
 }
 
 .profile p,
@@ -1027,7 +1028,7 @@ blockquote span {
 }
 
 .insight-text h3 {
-  font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+  font-size: var(--title-card-size);
   color: #edf6ff;
 }
 
@@ -1141,7 +1142,7 @@ blockquote span {
 
 .adv-card h3 {
   margin-top: 10px;
-  font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+  font-size: var(--title-card-size);
 }
 
 .adv-card p {
@@ -1298,7 +1299,7 @@ blockquote span {
 }
 
 .matrix-title {
-  font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+  font-size: var(--title-card-size);
   color: #b6d3f4;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -2046,7 +2047,7 @@ blockquote span {
 }
 
 .ring h3 {
-  font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+  font-size: var(--title-card-size);
 }
 
 .ring p {

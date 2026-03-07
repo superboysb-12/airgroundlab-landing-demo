@@ -1,45 +1,134 @@
-﻿const deck = document.getElementById("deck");
+const deck = document.getElementById("deck");
 const slides = Array.from(document.querySelectorAll(".slide"));
 const pager = document.getElementById("pager");
 let pagerButtons = [];
+
 const chipButtons = document.querySelectorAll(".chip");
 const simPanel = document.querySelector(".sim-panel");
 const simCopy = document.getElementById("sim-copy");
+
 const fadeNodes = document.querySelectorAll(".fade-up");
+
 const moduleButtons = Array.from(document.querySelectorAll(".module-btn"));
 const modulePanels = Array.from(document.querySelectorAll(".module-panel"));
 const moduleStage = document.getElementById("module-stage");
-const featureButtons = Array.from(document.querySelectorAll(".switch-btn"));
+
+const featureButtons = Array.from(document.querySelectorAll(".feature-switch .switch-btn"));
 const featurePanels = Array.from(document.querySelectorAll(".feature-panel"));
 const featureStage = document.getElementById("feature-stage");
+
 const insightButtons = Array.from(document.querySelectorAll(".insight-btn"));
 const insightTrack = document.getElementById("insight-track");
 const insightText = document.getElementById("insight-text");
 const insightStepTitle = document.getElementById("insight-step-title");
 const insightStepDesc = document.getElementById("insight-step-desc");
 const insightStage = document.getElementById("insight-stage");
+
 const autoScrollToggle = document.getElementById("auto-scroll-toggle");
 const compareChartDom = document.getElementById("compare-chart3d");
 const vizChartDom = document.getElementById("viz-chart3d");
 
+const CONFIG = {
+  AUTO_SCROLL_INTERVAL_MS: 5000,
+  COMPACT_LAYOUT_QUERY: "(max-width: 1180px), (max-height: 720px)",
+  DECK_WHEEL_MIN_DELTA: 6,
+  DECK_WHEEL_LOCK_MS: 700,
+  TOUCH_SWITCH_X_THRESHOLD: 40,
+  TOUCH_SWITCH_Y_THRESHOLD: 36,
+  INSIGHT_WHEEL_MIN_DELTA: 12,
+  INSIGHT_WHEEL_LOCK_MS: 460,
+  FADE_OBSERVER_THRESHOLD: 0.22,
+  CHART_RESIZE_DEBOUNCE_MS: 180
+};
+
+const coarsePointerMedia = window.matchMedia("(pointer: coarse)");
+
 let activeIndex = 0;
 let wheelLock = false;
 let moduleIndex = 0;
-let moduleTouchStartX = 0;
 let featureIndex = 0;
 let insightIndex = 0;
-let insightTouchStartY = 0;
 let insightWheelLock = false;
 let insightTextToken = 0;
 let autoScrollTimer = null;
 let compareChart = null;
 let vizChart = null;
 
-const AUTO_SCROLL_INTERVAL_MS = 5000;
-const COMPACT_LAYOUT_QUERY = "(max-width: 1180px), (max-height: 720px)";
+const insightSteps = [
+  {
+    title: "Module 1 - Simulation Launch",
+    desc: "Set mission goals, urban context, and initial constraints. The system bootstraps the digital twin scene and loads baseline operational assumptions."
+  },
+  {
+    title: "Module 2 - Policy Input",
+    desc: "Inject policy rules and operating parameters, including low-altitude zoning, speed limits, time windows, and safety boundaries for compliant planning."
+  },
+  {
+    title: "Module 3 - Simulation Execution",
+    desc: "Run accelerated multi-agent delivery scenarios with synchronized UAV/UGV behaviors, then observe route dynamics, bottlenecks, and system response in real time."
+  },
+  {
+    title: "Module 4 - Report Generation",
+    desc: "Generate end-to-end AI insight reports for strategy comparison, highlighting cost-efficiency tradeoffs, risk hotspots, and deployment recommendations."
+  }
+];
 
 function isCompactLayout() {
-  return window.matchMedia(COMPACT_LAYOUT_QUERY).matches;
+  return window.matchMedia(CONFIG.COMPACT_LAYOUT_QUERY).matches;
+}
+
+function clampIndex(index, total) {
+  if (!total) return 0;
+  return (index + total) % total;
+}
+
+function debounce(fn, waitMs) {
+  let timer = null;
+  return (...args) => {
+    if (timer) window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      timer = null;
+      fn(...args);
+    }, waitMs);
+  };
+}
+
+function toggleActiveState(nodes, activeIdx) {
+  nodes.forEach((node, i) => node.classList.toggle("active", i === activeIdx));
+}
+
+function bindIndexedButtons(buttons, onSelect) {
+  buttons.forEach((button, i) => {
+    button.addEventListener("click", () => onSelect(i));
+  });
+}
+
+function bindTouchSwitch(element, axis, threshold, onStep) {
+  if (!element) return;
+
+  let startPos = 0;
+  const isX = axis === "x";
+
+  element.addEventListener(
+    "touchstart",
+    (event) => {
+      const touch = event.changedTouches[0];
+      startPos = isX ? touch.clientX : touch.clientY;
+    },
+    { passive: true }
+  );
+
+  element.addEventListener(
+    "touchend",
+    (event) => {
+      const touch = event.changedTouches[0];
+      const endPos = isX ? touch.clientX : touch.clientY;
+      const delta = endPos - startPos;
+      if (Math.abs(delta) < threshold) return;
+      onStep(delta);
+    },
+    { passive: true }
+  );
 }
 
 function updateDeckScale() {
@@ -80,6 +169,7 @@ function updatePager(index) {
 
 function initPager() {
   if (!pager || !slides.length) return;
+
   const fragment = document.createDocumentFragment();
   pagerButtons = slides.map((_, i) => {
     const button = document.createElement("button");
@@ -91,6 +181,7 @@ function initPager() {
     fragment.appendChild(button);
     return button;
   });
+
   pager.innerHTML = "";
   pager.appendChild(fragment);
 }
@@ -114,7 +205,7 @@ function startAutoScroll() {
   if (!slides.length) return;
   autoScrollTimer = window.setInterval(() => {
     goToSlide((activeIndex + 1) % slides.length);
-  }, AUTO_SCROLL_INTERVAL_MS);
+  }, CONFIG.AUTO_SCROLL_INTERVAL_MS);
 }
 
 function syncAutoScrollState() {
@@ -122,10 +213,12 @@ function syncAutoScrollState() {
     stopAutoScroll();
     return;
   }
+
   if (autoScrollToggle.checked) {
     startAutoScroll();
     return;
   }
+
   stopAutoScroll();
 }
 
@@ -151,159 +244,19 @@ function detectActiveSlide() {
   }
 }
 
-if (deck) {
-  updateDeckScale();
-  syncResponsiveState();
-
-  // Desktop wheel is quantized to one full slide per interaction.
-  deck.addEventListener(
-    "wheel",
-    (event) => {
-      if (window.matchMedia("(pointer: coarse)").matches) return;
-      if (event.target instanceof Element && event.target.closest(".echarts-wheel-zone")) return;
-      event.preventDefault();
-      if (wheelLock) return;
-      if (Math.abs(event.deltaY) < 6) return;
-      wheelLock = true;
-      goToSlide(activeIndex + (event.deltaY > 0 ? 1 : -1));
-      window.setTimeout(() => {
-        wheelLock = false;
-      }, 700);
-    },
-    { passive: false }
-  );
-
-  deck.addEventListener("scroll", detectActiveSlide, { passive: true });
-}
-
-window.addEventListener(
-  "resize",
-  () => {
-    updateDeckScale();
-    syncResponsiveState();
-    detectActiveSlide();
-  },
-  { passive: true }
-);
-
-window.addEventListener("keydown", (event) => {
-  if (["ArrowDown", "PageDown", "Space"].includes(event.code)) {
-    event.preventDefault();
-    goToSlide(activeIndex + 1);
-  }
-  if (["ArrowUp", "PageUp"].includes(event.code)) {
-    event.preventDefault();
-    goToSlide(activeIndex - 1);
-  }
-});
-
-chipButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const mode = button.getAttribute("data-mode");
-    chipButtons.forEach((chip) => chip.classList.remove("active"));
-    button.classList.add("active");
-    if (!simPanel || !simCopy) return;
-    simPanel.dataset.mode = mode;
-    simCopy.textContent =
-      mode === "physics"
-        ? "2D to 3D drill: wind-field delivery physics, flight telemetry, road-network transfer, and global zoom-out."
-        : "ArcGIS + OSM real road network: UGV follows streets, UAV flies straight paths, strategy scales to global view.";
-  });
-});
-
-const fadeObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) entry.target.classList.add("in");
-    });
-  },
-  { threshold: 0.22 }
-);
-
-fadeNodes.forEach((node) => fadeObserver.observe(node));
-
 function setFeaturePanel(index) {
   if (!featurePanels.length) return;
-  featureIndex = (index + featurePanels.length) % featurePanels.length;
-  featurePanels.forEach((panel, i) => panel.classList.toggle("active", i === featureIndex));
-  featureButtons.forEach((btn, i) => btn.classList.toggle("active", i === featureIndex));
+  featureIndex = clampIndex(index, featurePanels.length);
+  toggleActiveState(featurePanels, featureIndex);
+  toggleActiveState(featureButtons, featureIndex);
 }
 
 function setModulePanel(index) {
   if (!modulePanels.length) return;
-  moduleIndex = (index + modulePanels.length) % modulePanels.length;
-  modulePanels.forEach((panel, i) => panel.classList.toggle("active", i === moduleIndex));
-  moduleButtons.forEach((btn, i) => btn.classList.toggle("active", i === moduleIndex));
+  moduleIndex = clampIndex(index, modulePanels.length);
+  toggleActiveState(modulePanels, moduleIndex);
+  toggleActiveState(moduleButtons, moduleIndex);
 }
-
-moduleButtons.forEach((button, i) => {
-  button.addEventListener("click", () => setModulePanel(i));
-});
-
-if (moduleStage && modulePanels.length) {
-  moduleStage.addEventListener(
-    "touchstart",
-    (event) => {
-      moduleTouchStartX = event.changedTouches[0].clientX;
-    },
-    { passive: true }
-  );
-
-  moduleStage.addEventListener(
-    "touchend",
-    (event) => {
-      const endX = event.changedTouches[0].clientX;
-      const deltaX = endX - moduleTouchStartX;
-      if (Math.abs(deltaX) < 40) return;
-      setModulePanel(moduleIndex + (deltaX < 0 ? 1 : -1));
-    },
-    { passive: true }
-  );
-}
-
-featureButtons.forEach((button, i) => {
-  button.addEventListener("click", () => setFeaturePanel(i));
-});
-
-if (featureStage && featurePanels.length) {
-  let startX = 0;
-  featureStage.addEventListener(
-    "touchstart",
-    (event) => {
-      startX = event.changedTouches[0].clientX;
-    },
-    { passive: true }
-  );
-  featureStage.addEventListener(
-    "touchend",
-    (event) => {
-      const endX = event.changedTouches[0].clientX;
-      const delta = endX - startX;
-      if (Math.abs(delta) < 40) return;
-      setFeaturePanel(featureIndex + (delta < 0 ? 1 : -1));
-    },
-    { passive: true }
-  );
-}
-
-const insightSteps = [
-  {
-    title: "Module 1 - Simulation Launch",
-    desc: "Set mission goals, urban context, and initial constraints. The system bootstraps the digital twin scene and loads baseline operational assumptions."
-  },
-  {
-    title: "Module 2 - Policy Input",
-    desc: "Inject policy rules and operating parameters, including low-altitude zoning, speed limits, time windows, and safety boundaries for compliant planning."
-  },
-  {
-    title: "Module 3 - Simulation Execution",
-    desc: "Run accelerated multi-agent delivery scenarios with synchronized UAV/UGV behaviors, then observe route dynamics, bottlenecks, and system response in real time."
-  },
-  {
-    title: "Module 4 - Report Generation",
-    desc: "Generate end-to-end AI insight reports for strategy comparison, highlighting cost-efficiency tradeoffs, risk hotspots, and deployment recommendations."
-  }
-];
 
 function renderInsightText(step) {
   if (!step || !insightStepTitle || !insightStepDesc) return;
@@ -378,11 +331,11 @@ function setInsightStep(index, options = {}) {
 
   const { instant = false } = options;
   const prevIndex = insightIndex;
-  const nextIndex = (index + insightSteps.length) % insightSteps.length;
+  const nextIndex = clampIndex(index, insightSteps.length);
   const current = insightSteps[nextIndex];
 
   insightIndex = nextIndex;
-  insightButtons.forEach((btn, i) => btn.classList.toggle("active", i === insightIndex));
+  toggleActiveState(insightButtons, insightIndex);
   insightTrack.style.transform = `translateY(-${(insightIndex * 100) / insightSteps.length}%)`;
 
   if (instant || prevIndex === nextIndex) {
@@ -393,51 +346,6 @@ function setInsightStep(index, options = {}) {
   const direction = getInsightDirection(prevIndex, nextIndex, insightSteps.length);
   animateInsightText(current, direction);
 }
-
-insightButtons.forEach((button, i) => {
-  button.addEventListener("click", () => setInsightStep(i));
-});
-
-if (insightStage) {
-  insightStage.addEventListener(
-    "wheel",
-    (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (insightWheelLock) return;
-      if (Math.abs(event.deltaY) < 12) return;
-      insightWheelLock = true;
-      setInsightStep(insightIndex + (event.deltaY > 0 ? 1 : -1));
-      window.setTimeout(() => {
-        insightWheelLock = false;
-      }, 460);
-    },
-    { passive: false }
-  );
-
-  insightStage.addEventListener(
-    "touchstart",
-    (event) => {
-      insightTouchStartY = event.changedTouches[0].clientY;
-    },
-    { passive: true }
-  );
-
-  insightStage.addEventListener(
-    "touchend",
-    (event) => {
-      const endY = event.changedTouches[0].clientY;
-      const deltaY = endY - insightTouchStartY;
-      if (Math.abs(deltaY) < 36) return;
-      setInsightStep(insightIndex + (deltaY < 0 ? 1 : -1));
-    },
-    { passive: true }
-  );
-}
-
-setModulePanel(0);
-setFeaturePanel(0);
-setInsightStep(0, { instant: true });
 
 function buildVizSeriesData() {
   const lineData = [];
@@ -482,6 +390,74 @@ function resizeCharts() {
   if (vizChart) vizChart.resize();
 }
 
+const debouncedResizeCharts = debounce(resizeCharts, CONFIG.CHART_RESIZE_DEBOUNCE_MS);
+
+function createTooltipOption(formatter) {
+  return {
+    backgroundColor: "rgba(7, 14, 24, 0.92)",
+    borderColor: "rgba(114, 164, 255, 0.26)",
+    borderWidth: 1,
+    textStyle: {
+      color: "#e9f2ff",
+      fontSize: 12
+    },
+    formatter
+  };
+}
+
+function createGrid3D(config) {
+  return {
+    show: true,
+    boxWidth: config.boxWidth,
+    boxDepth: config.boxDepth,
+    boxHeight: config.boxHeight,
+    environment: "transparent",
+    viewControl: {
+      projection: "perspective",
+      alpha: config.alpha,
+      beta: config.beta,
+      distance: config.distance,
+      minDistance: config.minDistance,
+      maxDistance: config.maxDistance,
+      rotateSensitivity: config.rotateSensitivity,
+      zoomSensitivity: config.zoomSensitivity,
+      panSensitivity: config.panSensitivity,
+      rotateMouseButton: "left",
+      panMouseButton: "right",
+      autoRotate: false
+    },
+    light: {
+      main: {
+        intensity: config.mainLightIntensity,
+        alpha: config.mainLightAlpha,
+        beta: config.mainLightBeta
+      },
+      ambient: {
+        intensity: config.ambientLightIntensity
+      }
+    }
+  };
+}
+
+function createAxis3D(axisConfig) {
+  return {
+    type: "value",
+    name: axisConfig.name,
+    min: axisConfig.min,
+    max: axisConfig.max,
+    interval: axisConfig.interval,
+    nameTextStyle: axisConfig.nameTextStyle,
+    axisLine: {
+      lineStyle: axisConfig.axisLineStyle
+    },
+    axisLabel: axisConfig.axisLabel,
+    splitLine: {
+      show: true,
+      lineStyle: axisConfig.splitLineStyle
+    }
+  };
+}
+
 function initCompareChart() {
   if (!compareChartDom || typeof echarts === "undefined") return;
 
@@ -514,6 +490,7 @@ function initCompareChart() {
       }
     }
   ];
+
   const highlightedNode = {
     name: "AirGroundLAB",
     value: [94, 96, 88],
@@ -523,6 +500,7 @@ function initCompareChart() {
       borderWidth: 2
     }
   };
+
   const allCompareNodes = [...compareNodes, highlightedNode];
 
   const linkSeries = allCompareNodes.map((node) => ({
@@ -547,60 +525,36 @@ function initCompareChart() {
 
   compareChart.setOption({
     backgroundColor: "transparent",
-    tooltip: {
-      backgroundColor: "rgba(7, 14, 24, 0.92)",
-      borderColor: "rgba(114, 164, 255, 0.26)",
-      borderWidth: 1,
-      textStyle: {
-        color: "#e9f2ff",
-        fontSize: 12
-      },
-      formatter(params) {
-        if (!params.data || !params.data.value) return params.seriesName;
-        const [x, y, z] = params.data.value;
-        return [
-          `<strong>${params.data.name}</strong>`,
-          `Physical Fidelity: ${x}`,
-          `Logistics Scale: ${y}`,
-          `Social Dynamics: ${z}`
-        ].join("<br/>");
-      }
-    },
+    tooltip: createTooltipOption((params) => {
+      if (!params.data || !params.data.value) return params.seriesName;
+      const [x, y, z] = params.data.value;
+      return [
+        `<strong>${params.data.name}</strong>`,
+        `Physical Fidelity: ${x}`,
+        `Logistics Scale: ${y}`,
+        `Social Dynamics: ${z}`
+      ].join("<br/>");
+    }),
     animationDuration: 1500,
     animationEasing: "cubicOut",
-    grid3D: {
-      show: true,
+    grid3D: createGrid3D({
       boxWidth: 140,
       boxDepth: 140,
       boxHeight: 100,
-      environment: "transparent",
-      viewControl: {
-        projection: "perspective",
-        alpha: 20,
-        beta: 36,
-        distance: 235,
-        minDistance: 140,
-        maxDistance: 340,
-        rotateSensitivity: 1.1,
-        zoomSensitivity: 1.05,
-        panSensitivity: 1.05,
-        rotateMouseButton: "left",
-        panMouseButton: "right",
-        autoRotate: false
-      },
-      light: {
-        main: {
-          intensity: 1.05,
-          alpha: 42,
-          beta: 28
-        },
-        ambient: {
-          intensity: 0.58
-        }
-      }
-    },
-    xAxis3D: {
-      type: "value",
+      alpha: 20,
+      beta: 36,
+      distance: 235,
+      minDistance: 140,
+      maxDistance: 340,
+      rotateSensitivity: 1.1,
+      zoomSensitivity: 1.05,
+      panSensitivity: 1.05,
+      mainLightIntensity: 1.05,
+      mainLightAlpha: 42,
+      mainLightBeta: 28,
+      ambientLightIntensity: 0.58
+    }),
+    xAxis3D: createAxis3D({
       name: "X Physical Fidelity",
       min: 0,
       max: 100,
@@ -610,27 +564,21 @@ function initCompareChart() {
         fontSize: 15,
         fontWeight: 700
       },
-      axisLine: {
-        lineStyle: {
-          color: "rgba(100, 216, 255, 0.85)",
-          width: 3
-        }
+      axisLineStyle: {
+        color: "rgba(100, 216, 255, 0.85)",
+        width: 3
       },
       axisLabel: {
         color: "rgba(218, 247, 255, 0.96)",
         fontSize: 13,
         fontWeight: 700
       },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          color: "rgba(145, 178, 225, 0.22)",
-          width: 1
-        }
+      splitLineStyle: {
+        color: "rgba(145, 178, 225, 0.22)",
+        width: 1
       }
-    },
-    yAxis3D: {
-      type: "value",
+    }),
+    yAxis3D: createAxis3D({
       name: "Y Logistics Scale",
       min: 0,
       max: 100,
@@ -640,27 +588,21 @@ function initCompareChart() {
         fontSize: 15,
         fontWeight: 700
       },
-      axisLine: {
-        lineStyle: {
-          color: "rgba(255, 209, 102, 0.85)",
-          width: 3
-        }
+      axisLineStyle: {
+        color: "rgba(255, 209, 102, 0.85)",
+        width: 3
       },
       axisLabel: {
         color: "rgba(255, 241, 199, 0.98)",
         fontSize: 13,
         fontWeight: 700
       },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          color: "rgba(145, 178, 225, 0.22)",
-          width: 1
-        }
+      splitLineStyle: {
+        color: "rgba(145, 178, 225, 0.22)",
+        width: 1
       }
-    },
-    zAxis3D: {
-      type: "value",
+    }),
+    zAxis3D: createAxis3D({
       name: "Z Social Dynamics",
       min: 0,
       max: 100,
@@ -670,25 +612,20 @@ function initCompareChart() {
         fontSize: 15,
         fontWeight: 700
       },
-      axisLine: {
-        lineStyle: {
-          color: "rgba(255, 138, 101, 0.85)",
-          width: 3
-        }
+      axisLineStyle: {
+        color: "rgba(255, 138, 101, 0.85)",
+        width: 3
       },
       axisLabel: {
         color: "rgba(255, 221, 210, 0.98)",
         fontSize: 13,
         fontWeight: 700
       },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          color: "rgba(145, 178, 225, 0.22)",
-          width: 1
-        }
+      splitLineStyle: {
+        color: "rgba(145, 178, 225, 0.22)",
+        width: 1
       }
-    },
+    }),
     series: [
       ...linkSeries,
       {
@@ -786,111 +723,59 @@ function initVizChart() {
   const { lineData, scatterData } = buildVizSeriesData();
   vizChart = echarts.init(vizChartDom, null, { renderer: "canvas" });
 
-  const option = {
-    /* =========================
-       背景色：修改这里
-       图表本体背景设为透明，实际视觉主背景由页面 CSS 控制；
-       如果你希望图表区域单独换底色，可以修改这里的 backgroundColor。
-       ========================= */
+  vizChart.setOption({
     backgroundColor: "transparent",
-    tooltip: {
-      backgroundColor: "rgba(7, 14, 24, 0.92)",
-      borderColor: "rgba(114, 164, 255, 0.26)",
-      borderWidth: 1,
-      textStyle: {
-        color: "#e9f2ff",
-        fontSize: 12
-      },
-      formatter(params) {
-        const value = params.value;
-        return [
-          params.seriesName,
-          `X: ${Number(value[0]).toFixed(2)}`,
-          `Y: ${Number(value[1]).toFixed(2)}`,
-          `Z: ${Number(value[2]).toFixed(2)}`
-        ].join("<br/>");
-      }
-    },
+    tooltip: createTooltipOption((params) => {
+      const value = params.value;
+      return [
+        params.seriesName,
+        `X: ${Number(value[0]).toFixed(2)}`,
+        `Y: ${Number(value[1]).toFixed(2)}`,
+        `Z: ${Number(value[2]).toFixed(2)}`
+      ].join("<br/>");
+    }),
     animationDuration: 1800,
     animationEasing: "cubicOut",
-    grid3D: {
-      show: true,
+    grid3D: createGrid3D({
       boxWidth: 170,
       boxDepth: 170,
       boxHeight: 120,
-      environment: "transparent",
-
-      /* =========================
-         鼠标交互参数：修改这里
-         alpha / beta：初始观察角度
-         distance：初始观察距离
-         rotateMouseButton：左键旋转
-         panMouseButton：右键平移
-         zoomSensitivity：滚轮缩放灵敏度
-         ========================= */
-      viewControl: {
-        projection: "perspective",
-        alpha: 22,
-        beta: 36,
-        distance: 210,
-        minDistance: 120,
-        maxDistance: 320,
-        rotateSensitivity: 1.1,
-        zoomSensitivity: 1.15,
-        panSensitivity: 1.05,
-        rotateMouseButton: "left",
-        panMouseButton: "right",
-        autoRotate: false
-      },
-      light: {
-        main: {
-          intensity: 1,
-          alpha: 40,
-          beta: 35
-        },
-        ambient: {
-          intensity: 0.55
-        }
-      }
-    },
-    xAxis3D: {
-      type: "value",
+      alpha: 22,
+      beta: 36,
+      distance: 210,
+      minDistance: 120,
+      maxDistance: 320,
+      rotateSensitivity: 1.1,
+      zoomSensitivity: 1.15,
+      panSensitivity: 1.05,
+      mainLightIntensity: 1,
+      mainLightAlpha: 40,
+      mainLightBeta: 35,
+      ambientLightIntensity: 0.55
+    }),
+    xAxis3D: createAxis3D({
       name: "X Axis",
       min: -90,
       max: 90,
       interval: 30,
-
-      /* =========================
-         坐标轴颜色：修改这里
-         axisLine 控制坐标轴线颜色
-         axisLabel 控制刻度文字颜色
-         splitLine 控制三维网格线颜色
-         xAxis3D / yAxis3D / zAxis3D 三处都可以分别调整
-         ========================= */
       nameTextStyle: {
         color: "rgba(229, 239, 255, 0.88)",
         fontSize: 14
       },
-      axisLine: {
-        lineStyle: {
-          color: "rgba(135, 178, 255, 0.72)",
-          width: 2
-        }
+      axisLineStyle: {
+        color: "rgba(135, 178, 255, 0.72)",
+        width: 2
       },
       axisLabel: {
         color: "rgba(220, 232, 255, 0.72)",
         fontSize: 12
       },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          color: "rgba(145, 178, 225, 0.18)",
-          width: 1
-        }
+      splitLineStyle: {
+        color: "rgba(145, 178, 225, 0.18)",
+        width: 1
       }
-    },
-    yAxis3D: {
-      type: "value",
+    }),
+    yAxis3D: createAxis3D({
       name: "Y Axis",
       min: -90,
       max: 90,
@@ -899,26 +784,20 @@ function initVizChart() {
         color: "rgba(229, 239, 255, 0.88)",
         fontSize: 14
       },
-      axisLine: {
-        lineStyle: {
-          color: "rgba(135, 178, 255, 0.72)",
-          width: 2
-        }
+      axisLineStyle: {
+        color: "rgba(135, 178, 255, 0.72)",
+        width: 2
       },
       axisLabel: {
         color: "rgba(220, 232, 255, 0.72)",
         fontSize: 12
       },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          color: "rgba(145, 178, 225, 0.18)",
-          width: 1
-        }
+      splitLineStyle: {
+        color: "rgba(145, 178, 225, 0.18)",
+        width: 1
       }
-    },
-    zAxis3D: {
-      type: "value",
+    }),
+    zAxis3D: createAxis3D({
       name: "Z Axis",
       min: -50,
       max: 80,
@@ -927,24 +806,19 @@ function initVizChart() {
         color: "rgba(229, 239, 255, 0.88)",
         fontSize: 14
       },
-      axisLine: {
-        lineStyle: {
-          color: "rgba(135, 178, 255, 0.72)",
-          width: 2
-        }
+      axisLineStyle: {
+        color: "rgba(135, 178, 255, 0.72)",
+        width: 2
       },
       axisLabel: {
         color: "rgba(220, 232, 255, 0.72)",
         fontSize: 12
       },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          color: "rgba(145, 178, 225, 0.18)",
-          width: 1
-        }
+      splitLineStyle: {
+        color: "rgba(145, 178, 225, 0.18)",
+        width: 1
       }
-    },
+    }),
     series: [
       {
         name: "Spiral Line",
@@ -979,11 +853,128 @@ function initVizChart() {
         }
       }
     ]
-  };
+  });
 
-  vizChart.setOption(option);
   bindChartDomInteractions(vizChartDom);
 }
+
+if (deck) {
+  updateDeckScale();
+  syncResponsiveState();
+
+  deck.addEventListener(
+    "wheel",
+    (event) => {
+      if (coarsePointerMedia.matches) return;
+      if (event.target instanceof Element && event.target.closest(".echarts-wheel-zone")) return;
+      event.preventDefault();
+      if (wheelLock) return;
+      if (Math.abs(event.deltaY) < CONFIG.DECK_WHEEL_MIN_DELTA) return;
+
+      wheelLock = true;
+      goToSlide(activeIndex + (event.deltaY > 0 ? 1 : -1));
+      window.setTimeout(() => {
+        wheelLock = false;
+      }, CONFIG.DECK_WHEEL_LOCK_MS);
+    },
+    { passive: false }
+  );
+
+  deck.addEventListener("scroll", detectActiveSlide, { passive: true });
+}
+
+window.addEventListener(
+  "resize",
+  () => {
+    updateDeckScale();
+    syncResponsiveState();
+    detectActiveSlide();
+  },
+  { passive: true }
+);
+
+window.addEventListener("keydown", (event) => {
+  if (["ArrowDown", "PageDown", "Space"].includes(event.code)) {
+    event.preventDefault();
+    goToSlide(activeIndex + 1);
+  }
+  if (["ArrowUp", "PageUp"].includes(event.code)) {
+    event.preventDefault();
+    goToSlide(activeIndex - 1);
+  }
+});
+
+chipButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const mode = button.getAttribute("data-mode");
+    chipButtons.forEach((chip) => chip.classList.remove("active"));
+    button.classList.add("active");
+
+    if (!simPanel || !simCopy) return;
+
+    simPanel.dataset.mode = mode;
+    simCopy.textContent =
+      mode === "physics"
+        ? "2D to 3D drill: wind-field delivery physics, flight telemetry, road-network transfer, and global zoom-out."
+        : "ArcGIS + OSM real road network: UGV follows streets, UAV flies straight paths, strategy scales to global view.";
+  });
+});
+
+const fadeObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("in");
+      fadeObserver.unobserve(entry.target);
+    });
+  },
+  { threshold: CONFIG.FADE_OBSERVER_THRESHOLD }
+);
+
+fadeNodes.forEach((node) => fadeObserver.observe(node));
+
+bindIndexedButtons(moduleButtons, setModulePanel);
+bindIndexedButtons(featureButtons, setFeaturePanel);
+bindIndexedButtons(insightButtons, setInsightStep);
+
+if (moduleStage && modulePanels.length) {
+  bindTouchSwitch(moduleStage, "x", CONFIG.TOUCH_SWITCH_X_THRESHOLD, (delta) => {
+    setModulePanel(moduleIndex + (delta < 0 ? 1 : -1));
+  });
+}
+
+if (featureStage && featurePanels.length) {
+  bindTouchSwitch(featureStage, "x", CONFIG.TOUCH_SWITCH_X_THRESHOLD, (delta) => {
+    setFeaturePanel(featureIndex + (delta < 0 ? 1 : -1));
+  });
+}
+
+if (insightStage) {
+  insightStage.addEventListener(
+    "wheel",
+    (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (insightWheelLock) return;
+      if (Math.abs(event.deltaY) < CONFIG.INSIGHT_WHEEL_MIN_DELTA) return;
+
+      insightWheelLock = true;
+      setInsightStep(insightIndex + (event.deltaY > 0 ? 1 : -1));
+      window.setTimeout(() => {
+        insightWheelLock = false;
+      }, CONFIG.INSIGHT_WHEEL_LOCK_MS);
+    },
+    { passive: false }
+  );
+
+  bindTouchSwitch(insightStage, "y", CONFIG.TOUCH_SWITCH_Y_THRESHOLD, (delta) => {
+    setInsightStep(insightIndex + (delta < 0 ? 1 : -1));
+  });
+}
+
+setModulePanel(0);
+setFeaturePanel(0);
+setInsightStep(0, { instant: true });
 
 initCompareChart();
 initVizChart();
@@ -1005,5 +996,4 @@ window.addEventListener("visibilitychange", () => {
   syncAutoScrollState();
 });
 
-window.addEventListener("resize", resizeCharts, { passive: true });
-
+window.addEventListener("resize", debouncedResizeCharts, { passive: true });
