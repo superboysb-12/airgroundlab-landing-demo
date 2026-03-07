@@ -154,7 +154,7 @@ h3,
 .feature-title,
 .matrix-title,
 .action-kicker {
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .subtitle {
@@ -304,7 +304,7 @@ h3,
   color: #87a6d7;
   font-size: 0.82rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .problem-lead {
@@ -718,7 +718,7 @@ blockquote span {
   text-shadow:
     0 0 9px rgba(108, 243, 255, 0.58),
     0 0 28px rgba(85, 228, 255, 0.35);
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .sim-world-map p {
@@ -1119,7 +1119,71 @@ blockquote span {
 }
 
 .vision {
-  background: linear-gradient(180deg, #050810 0%, #020307 100%);
+  background:
+    radial-gradient(circle at 82% 18%, rgba(76, 146, 255, 0.16), transparent 35%),
+    radial-gradient(circle at 18% 82%, rgba(57, 120, 255, 0.14), transparent 38%),
+    linear-gradient(180deg, #050810 0%, #020307 100%);
+}
+
+#slide-vision .content {
+  align-self: stretch;
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  gap: clamp(10px, 1.5vh, 20px);
+  align-content: center;
+  padding-top: clamp(30px, 6vh, 78px);
+  padding-bottom: clamp(12px, 2.2vh, 28px);
+}
+
+#slide-vision .warn {
+  color: #8eb5ff;
+  max-width: none;
+  white-space: nowrap;
+  text-shadow:
+    0 0 10px rgba(122, 168, 255, 0.46),
+    0 0 24px rgba(78, 136, 255, 0.26);
+}
+
+#slide-vision .finale-lead {
+  margin-top: 12px;
+  color: #d0ddf1;
+  font-size: var(--subtitle-size);
+}
+
+#slide-vision .pain-grid {
+  margin-top: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+#slide-vision .pain-card {
+  border-color: rgba(133, 174, 246, 0.38);
+  background:
+    linear-gradient(168deg, rgba(13, 22, 38, 0.84) 0%, rgba(12, 18, 32, 0.82) 58%, rgba(9, 14, 27, 0.84) 100%);
+}
+
+#slide-vision .pain-card h3 {
+  color: #e9f2ff;
+}
+
+#slide-vision .pain-card ul {
+  color: #c4d4e9;
+}
+
+#slide-vision .pain-media {
+  border-color: rgba(133, 174, 246, 0.34);
+}
+
+#slide-vision .pain-card li::before {
+  background: #8db4ff;
+}
+
+#slide-vision blockquote {
+  margin-top: clamp(14px, 2.8vh, 28px);
+  border: 1px solid rgba(131, 220, 141, 0.72);
+  box-shadow: 0 0 34px rgba(118, 224, 125, 0.2);
+  color: #dcf7d9;
+  background: rgba(24, 46, 27, 0.64);
 }
 
 .stars {
@@ -1349,7 +1413,7 @@ blockquote span {
 .matrix-title {
   font-size: var(--title-card-size);
   color: #b6d3f4;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 0.08em;
 }
 
@@ -1380,7 +1444,7 @@ blockquote span {
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.05em;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .axis-chip-x {
@@ -1594,7 +1658,7 @@ blockquote span {
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
+  text-transform: none;
   padding: 3px 10px;
 }
 
@@ -1649,7 +1713,7 @@ blockquote span {
   color: #8df7ff;
   font-size: 0.92rem;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .action-card h3 {
@@ -1712,7 +1776,7 @@ blockquote span {
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.03em;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .action-cta-desc {
@@ -1904,7 +1968,7 @@ blockquote span {
   font-size: 0.84rem;
   font-weight: 800;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .viz-lead {
@@ -1992,7 +2056,7 @@ blockquote span {
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .viz-metric-card strong {
@@ -2045,7 +2109,7 @@ blockquote span {
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
+  text-transform: none;
   backdrop-filter: blur(10px);
 }
 
@@ -2414,6 +2478,14 @@ blockquote.fade-up.in:focus-visible {
   }
 
   #slide-problem .content {
+    display: block;
+    align-self: auto;
+    gap: 0;
+    padding-top: clamp(16px, 2.6vh, 28px);
+    padding-bottom: clamp(16px, 2.6vh, 28px);
+  }
+
+  #slide-vision .content {
     display: block;
     align-self: auto;
     gap: 0;
