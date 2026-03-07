@@ -842,7 +842,7 @@ blockquote span {
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: 1.04fr 1fr;
+  grid-template-columns: 1.24fr 0.76fr;
   opacity: 0;
   pointer-events: none;
   transform: translateX(26px);
@@ -850,7 +850,7 @@ blockquote span {
 }
 
 .feature-panel.reverse {
-  grid-template-columns: 1fr 1.04fr;
+  grid-template-columns: 0.76fr 1.24fr;
   transform: translateX(-26px);
 }
 
@@ -2494,7 +2494,7 @@ blockquote.fade-up.in:focus-visible {
     position: relative;
     inset: auto;
     display: none;
-    grid-template-columns: minmax(280px, 1.04fr) minmax(280px, 1fr);
+    grid-template-columns: minmax(320px, 1.24fr) minmax(240px, 0.76fr);
     min-height: clamp(360px, 62svh, 520px);
     opacity: 1;
     transform: none;
