@@ -1,421 +1,377 @@
 ﻿<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Air-Ground Collaborative Low-Altitude Simulation Platform</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020712'/%3E%3Cpath d='M14 40L32 18l18 22' stroke='%233d7dff' stroke-width='6' fill='none'/%3E%3C/svg%3E"
-    />
-    <link rel="stylesheet" href="./styles.css?v=20260306-16" />
-    <script src="./assets/vendor/echarts/echarts.min.js"></script>
-    <script src="./assets/vendor/echarts/echarts-gl.min.js"></script>
-  </head>
-  <body>
-    <main id="deck" aria-label="Single-page demo">
-      <section class="slide cover" id="slide-cover">
-        <div class="cover-school-logo" aria-label="HKUST-GZ logo">
-          <img src="./assets/image3.png" alt="The Hong Kong University of Science and Technology (Guangzhou)" />
-        </div>
-        <video
-          class="cover-video"
-          autoplay
-          muted
-          loop
-          playsinline
-          poster="./assets/image4.png"
-          preload="metadata"
-        >
-          <source
-            src="./assets/首页背景视频/首页背景视频.mp4"
-            type="video/mp4"
-          />
-        </video>
-        <div class="cover-shade"></div>
-        <div class="cover-grid"></div>
-        <div class="content hero-left">
-          <h1 class="fade-up product-name">Air Ground LAB</h1>
-          <p class="subtitle fade-up slogan-glow">Zero Real World Waste!</p>
-          <p class="hero-detail fade-up">
-            The Low-Altitude Economy Air-Ground Collaborative Delivery Digital Twin Platform
-          </p>
-        </div>
-      </section>
 
-      <section class="slide problem" id="slide-problem">
-        <div class="content">
-          <h2 class="warn fade-up">Critical Pain Points</h2>
-          <p class="problem-lead fade-up">
-            Build-first and validate-later means high capital exposure, high uncertainty, and high waste.
-          </p>
-          <div class="pain-grid">
-            <article class="pain-card fade-up">
-              <div class="pain-media">
-                <img
-                  src="./assets/high-decision-cost.png"
-                  alt="City-scale infrastructure and network investment"
-                  loading="lazy"
-                />
-              </div>
-              <h3>High Decision Cost</h3>
-              <ul>
-                <li>Station siting and route design are multi-million infrastructure bets.</li>
-                <li>Wrong siting or wind-driven route deviation creates expensive rework.</li>
-                <li>The "build first, validate later" model amplifies financial risk.</li>
-              </ul>
-            </article>
-            <article class="pain-card fade-up">
-              <div class="pain-media">
-                <img
-                  src="./assets/uncontrollableenv.png"
-                  alt="Stormy urban atmosphere and unpredictable environment"
-                  loading="lazy"
-                />
-              </div>
-              <h3>Uncontrollable Environment</h3>
-              <ul>
-                <li>Urban "building canyons" generate unpredictable low-altitude turbulence.</li>
-                <li>Electromagnetic interference degrades communication and navigation stability.</li>
-                <li>Demand is highly volatile, making precise supply-demand matching difficult.</li>
-              </ul>
-            </article>
-            <article class="pain-card fade-up">
-              <div class="pain-media">
-                <img
-                  src="./assets/Severe Resource Waste.png"
-                  alt="Electronic waste and discarded equipment"
-                  loading="lazy"
-                />
-              </div>
-              <h3>Severe Resource Waste</h3>
-              <ul>
-                <li>Failed infrastructure quickly turns into electronic waste.</li>
-                <li>Redundant construction and ineffective investment can burn millions of dollars.</li>
-                <li>Manual planning alone cannot keep up with dynamic urban conditions.</li>
-              </ul>
-            </article>
-          </div>
-          <blockquote class="fade-up">
-            "Fly first, collect data later" is dead. We must see results before we spend.
-            <span>The era of "fly first, test later" is over. We must see outcomes before spending.</span>
-          </blockquote>
-        </div>
-      </section>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Air-Ground Collaborative Low-Altitude Simulation Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+    rel="stylesheet" />
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020712'/%3E%3Cpath d='M14 40L32 18l18 22' stroke='%233d7dff' stroke-width='6' fill='none'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./styles.css?v=20260307-05" />
+  <script src="./assets/vendor/echarts/echarts.min.js"></script>
+  <script src="./assets/vendor/echarts/echarts-gl.min.js"></script>
+</head>
 
-      <section class="slide modules" id="slide-modules">
-        <div class="content">
-          <h2 class="fade-up">From Digital Twin to Cognitive Decisions: A Three-in-One Innovation Stack</h2>
-          <p class="problem-lead fade-up">A compact view of the three core engines behind AirGroundLAB.</p>
-          <div class="module-grid">
-            <article class="module-card fade-up">
-              <div class="pain-media">
-                <video autoplay muted loop playsinline preload="metadata" aria-label="High-fidelity simulation scene">
-                  <source src="./assets/无人机物理-1.mp4" type="video/mp4" />
-                </video>
-              </div>
-              <h3>High-Fidelity Simulation</h3>
-              <ul>
-                <li>Physics-accurate wind-field and payload behavior.</li>
-                <li>2D/3D linked visualization for route risk checks.</li>
-              </ul>
-            </article>
-            <article class="module-card fade-up">
-              <div class="pain-media">
-                <img src="./assets/image2.jpeg" alt="Generative social simulation scene" loading="lazy" />
-              </div>
-              <h3>Generative Agents for Social Simulation</h3>
-              <ul>
-                <li>LLM agents model household-level demand patterns.</li>
-                <li>Preference-aware orders improve planning realism.</li>
-              </ul>
-            </article>
-            <article class="module-card fade-up">
-              <div class="pain-media">
-                <video autoplay muted loop playsinline preload="metadata" aria-label="AI insight and reporting workflow">
-                  <source src="./assets/Ai report.mp4" type="video/mp4" />
-                </video>
-              </div>
-              <h3>End-to-End AI Insights</h3>
-              <ul>
-                <li>Fast-forward simulation with policy parameter sweeps.</li>
-                <li>Auto reports for cross-strategy ROI comparison.</li>
-              </ul>
-            </article>
-          </div>
-          <p class="hint fade-up">
-            Scroll down to explore each module in depth (Unity + Python dual-engine architecture).
-          </p>
-        </div>
-      </section>
+<body>
+  <main id="deck" aria-label="Single-page demo">
+    <section class="slide cover" id="slide-cover">
+      <div class="cover-school-logo" aria-label="HKUST-GZ logo">
+        <img src="./assets/image3.png" alt="The Hong Kong University of Science and Technology (Guangzhou)" />
+      </div>
+      <video class="cover-video" autoplay muted loop playsinline poster="./assets/image4.png" preload="metadata">
+        <source src="./assets/首页背景视频/首页背景视频.mp4" type="video/mp4" />
+      </video>
+      <div class="cover-shade"></div>
+      <div class="cover-grid"></div>
+      <div class="content hero-left">
+        <h1 class="fade-up product-name">Air Ground LAB</h1>
+        <p class="subtitle fade-up slogan-glow">Zero Real World Waste!</p>
+        <p class="hero-detail fade-up">
+          The Low-Altitude Economy Air-Ground Collaborative Delivery Digital Twin Platform
+        </p>
+      </div>
+    </section>
 
-      <section class="slide detail sim" id="slide-sim">
-        <div class="content sim-global-layout">
-          <div class="sim-world-map fade-up">
-            <h2>WORLDWIDE SIMULATION</h2>
-            <p>Run city-scale delivery simulations across global metropolitan regions.</p>
-          </div>
-          <div class="sim-city-grid">
-            <article class="sim-city-card fade-up">
-              <img
-                src="./assets/geneva.jpg"
-                alt="Geneva simulation module"
-                loading="lazy"
-              />
-              <h3>GENEVA</h3>
-            </article>
-            <article class="sim-city-card fade-up">
-              <img
-                src="./assets/shanghai.jpg"
-                alt="Shanghai simulation module"
-                loading="lazy"
-              />
-              <h3>SHANGHAI</h3>
-            </article>
-            <article class="sim-city-card fade-up">
-              <img
-                src="https://images.pexels.com/photos/802024/pexels-photo-802024.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt="New York simulation module"
-                loading="lazy"
-              />
-              <h3>NEW YORK</h3>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="slide detail agent" id="slide-agent">
-        <div class="content feature-showcase">
-          <h2 class="fade-up">Feature Introduction</h2>
-          <div class="feature-switch fade-up" role="tablist" aria-label="Module Switch">
-            <button class="switch-btn active" data-feature-index="0">Module 1</button>
-            <button class="switch-btn" data-feature-index="1">Module 2</button>
-            <button class="switch-btn" data-feature-index="2">Module 3</button>
-            <button class="switch-btn" data-feature-index="3">Module 4</button>
-          </div>
-          <div class="feature-stage fade-up" id="feature-stage">
-            <article class="feature-panel active">
-              <img src="./assets/image4.png" alt="UAV Physics Simulation" loading="lazy" />
-              <div class="feature-copy">
-                <h3>Module 1 · UAV Physics Simulation</h3>
-                <p>
-                  Simulate UAV attitude, velocity, payload, and energy consumption changes in wind fields using high-fidelity physics engines.
-                  Achieve visual validation of flight strategies before deployment.
-                </p>
-              </div>
-            </article>
-            <article class="feature-panel reverse">
-              <img
-                src="https://images.pexels.com/photos/1756957/pexels-photo-1756957.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt="Map Road Network Data"
-                loading="lazy"
-              />
-              <div class="feature-copy">
-                <h3>Module 2 · Map Road Network Data</h3>
-                <p>
-                  Integrate real city road network data and unified visualization of ground vehicle paths and low-altitude flight routes.
-                  Support cross-region and cross-city delivery network planning and bottleneck analysis.
-                </p>
-              </div>
-            </article>
-            <article class="feature-panel reverse">
-              <img src="./assets/image2.jpeg" alt="LLM User Profile Simulation" loading="lazy" />
-              <div class="feature-copy">
-                <h3>Module 3 · LLM Realistic User Profile Simulation</h3>
-                <p>
-                  Use large language models to simulate user reviews, schedules, ordering habits, and demographics.
-                  Build order behavior scenarios closer to realistic demand fluctuations.
-                </p>
-              </div>
-            </article>
-            <article class="feature-panel">
-              <img src="./assets/image1.jpeg" alt="End-to-End AI Report Generation" loading="lazy" />
-              <div class="feature-copy">
-                <h3>Module 4 · End-to-End AI Insight Report Generation</h3>
-                <p>
-                  Automatically complete from parameter input, simulation execution to result comparison and generate interpretable insight reports.
-                  Help teams quickly select optimal strategies and resource allocation solutions.
-                </p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-      <section class="slide detail insight" id="slide-insight">
-        <div class="content insight-layout">
-          <div class="insight-left">
-            <h2 class="fade-up">Process Flow</h2>
-            <div class="insight-switch fade-up" role="tablist" aria-label="Step switcher">
-              <button class="insight-btn active" data-insight-index="0">Step 1</button>
-              <span class="insight-arrow" aria-hidden="true">→</span>
-              <button class="insight-btn" data-insight-index="1">Step 2</button>
-              <span class="insight-arrow" aria-hidden="true">→</span>
-              <button class="insight-btn" data-insight-index="2">Step 3</button>
-              <span class="insight-arrow" aria-hidden="true">→</span>
-              <button class="insight-btn" data-insight-index="3">Step 4</button>
+    <section class="slide problem" id="slide-problem">
+      <div class="content">
+        <h2 class="warn fade-up">Critical Pain Points</h2>
+        <p class="finale-lead fade-up">
+          The Million-Dollar Problem: The Cost of Trial and Error
+        </p>
+        <div class="pain-grid">
+          <article class="pain-card fade-up">
+            <div class="pain-media">
+              <img src="./assets/high-decision-cost.png" alt="City-scale infrastructure and network investment"
+                loading="lazy" />
             </div>
-            <div class="insight-text fade-up" id="insight-text">
-              <h3 id="insight-step-title">Step 1 · Simulation Launch</h3>
-              <p id="insight-step-desc">
-                Initialize the experiment, load assets, and validate baseline parameters to ensure reproducible
-                simulation conditions.
+            <h3>The Blind Planning Cost</h3>
+            <ul>
+              <li>Blind Infrastructure Investment</li>
+              Companies are blindly investing heavily in drones, landing pads,
+              and smart lockers
+              <li>Inefficient Methodologies</li>
+              The traditional "fly first, collect data later" approach is
+              fundamentally too slow and too expensive.
+            </ul>
+          </article>
+          <article class="pain-card fade-up">
+            <div class="pain-media">
+              <img src="./assets/uncontrollableenv.png" alt="Stormy urban atmosphere and unpredictable environment"
+                loading="lazy" />
+            </div>
+            <h3>The Catastrophic Error Cost</h3>
+            <ul>
+              <li>Unpredictable Local Variables</li>Sudden realizations that deployed fleets cannot handle local wind
+              conditions or lack sufficient district orders.
+              <li>Massive Financial Hemorrhage</li>A failed deployment of drones instantly wastes millions of dollars.
+            </ul>
+          </article>
+        </div>
+        <blockquote class="fade-up">
+          "Fly first, collect data later" is dead. We must see results before we spend.
+        </blockquote>
+      </div>
+    </section>
+
+    <section class="slide modules" id="slide-modules">
+      <div class="content module-showcase">
+        <h2 class="fade-up">Built for Logistics Giants and City Planners</h2>
+        <div class="module-stage fade-up" id="module-stage">
+          <article class="module-panel active" data-module-index="0">
+            <div class="module-visual">
+              <video autoplay muted loop playsinline preload="metadata" aria-label="Policy strategy simulation board">
+                <source src="./assets/无人机物理-1.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <p class="module-cta">We Run the tests</p>
+          </article>
+          <article class="module-panel" data-module-index="1">
+            <div class="module-visual">
+              <img src="https://images.pexels.com/photos/1756957/pexels-photo-1756957.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt="Road network and route planning board" loading="lazy" />
+            </div>
+            <p class="module-cta">Compare route strategies</p>
+          </article>
+          <article class="module-panel" data-module-index="2">
+            <div class="module-visual">
+              <img src="./assets/image2.jpeg" alt="Demand behavior simulation board" loading="lazy" />
+            </div>
+            <p class="module-cta">Generate demand scenarios</p>
+          </article>
+          <article class="module-panel" data-module-index="3">
+            <div class="module-visual">
+              <video autoplay muted loop playsinline preload="metadata" aria-label="AI report generation board">
+                <source src="./assets/Ai report.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <p class="module-cta">Export insight report</p>
+          </article>
+        </div>
+        <div class="module-switch fade-up" role="tablist" aria-label="Module switcher">
+          <button class="module-btn switch-btn active" data-module-index="0">Module 1</button>
+          <button class="module-btn switch-btn" data-module-index="1">Module 2</button>
+          <button class="module-btn switch-btn" data-module-index="2">Module 3</button>
+          <button class="module-btn switch-btn" data-module-index="3">Module 4</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide detail sim" id="slide-sim">
+      <div class="content sim-global-layout">
+        <div class="sim-world-map fade-up">
+          <h2>WORLDWIDE SIMULATION</h2>
+          <p>Run city-scale delivery simulations across global metropolitan regions.</p>
+        </div>
+        <div class="sim-city-grid">
+          <article class="sim-city-card fade-up">
+            <img src="./assets/geneva.jpg" alt="Geneva simulation module" loading="lazy" />
+            <h3>GENEVA</h3>
+          </article>
+          <article class="sim-city-card fade-up">
+            <img src="./assets/shanghai.jpg" alt="Shanghai simulation module" loading="lazy" />
+            <h3>SHANGHAI</h3>
+          </article>
+          <article class="sim-city-card fade-up">
+            <img src="https://images.pexels.com/photos/802024/pexels-photo-802024.jpeg?auto=compress&cs=tinysrgb&w=1600"
+              alt="New York simulation module" loading="lazy" />
+            <h3>NEW YORK</h3>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide detail agent" id="slide-agent">
+      <div class="content feature-showcase">
+        <h2 class="fade-up">Feature Introduction</h2>
+        <div class="feature-switch fade-up" role="tablist" aria-label="Module Switch">
+          <button class="switch-btn active" data-feature-index="0">Module 1</button>
+          <button class="switch-btn" data-feature-index="1">Module 2</button>
+          <button class="switch-btn" data-feature-index="2">Module 3</button>
+          <button class="switch-btn" data-feature-index="3">Module 4</button>
+        </div>
+        <div class="feature-stage fade-up" id="feature-stage">
+          <article class="feature-panel active">
+            <img src="./assets/image4.png" alt="UAV Physics Simulation" loading="lazy" />
+            <div class="feature-copy">
+              <h3>Module 1 · UAV Physics Simulation</h3>
+              <p>
+                Simulate UAV attitude, velocity, payload, and energy consumption changes in wind fields using
+                high-fidelity physics engines.
+                Achieve visual validation of flight strategies before deployment.
               </p>
             </div>
-          </div>
-          <div class="insight-right fade-up" id="insight-stage">
-            <div class="insight-track" id="insight-track">
-              <article class="insight-frame">
-                <img src="./assets/image4.png" alt="Simulation launch stage" loading="lazy" />
-              </article>
-              <article class="insight-frame">
-                <img
-                  src="https://images.pexels.com/photos/669619/pexels-photo-669619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                  alt="Policy input stage"
-                  loading="lazy"
-                />
-              </article>
-              <article class="insight-frame">
-                <img
-                  src="https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                  alt="Simulation execution stage"
-                  loading="lazy"
-                />
-              </article>
-              <article class="insight-frame">
-                <img src="./assets/image1.jpeg" alt="Report generation stage" loading="lazy" />
-              </article>
+          </article>
+          <article class="feature-panel reverse">
+            <img
+              src="https://images.pexels.com/photos/1756957/pexels-photo-1756957.jpeg?auto=compress&cs=tinysrgb&w=1600"
+              alt="Map Road Network Data" loading="lazy" />
+            <div class="feature-copy">
+              <h3>Module 2 · Map Road Network Data</h3>
+              <p>
+                Integrate real city road network data and unified visualization of ground vehicle paths and low-altitude
+                flight routes.
+                Support cross-region and cross-city delivery network planning and bottleneck analysis.
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="slide vision" id="slide-vision">
-        <div class="stars"></div>
-        <div class="content advantage-wrap">
-          <h2 class="fade-up">Advantages</h2>
-          <p class="advantage-lead fade-up">Four Core Advantages with Directly Replaceable Data-Driven Templates</p>
-          <div class="advantage-grid fade-up">
-            <article class="adv-card adv-user">
-              <div class="adv-icon" aria-hidden="true">🫂</div>
-              <h3>User-Friendly</h3>
-              <p>Clear interaction paths with low barrier to entry. Non-technical users can quickly complete simulation configuration and result interpretation.</p>
-              <div class="adv-metric">
-                <strong>85%</strong>
-                <span>Template example: Percentage of users who complete basic solution setup within 30 minutes on first use</span>
-              </div>
-            </article>
-            <article class="adv-card adv-cost">
-              <div class="adv-icon" aria-hidden="true">💲</div>
-              <h3>Cost-Effective</h3>
-              <p>Simulate first, build later. Reduce incorrect site selection and redundant investment by shifting trial-and-error costs to the digital space.</p>
-              <div class="adv-metric">
-                <strong>40%</strong>
-                <span>Template example: Percentage reduction in ineffective infrastructure budget through pre-construction simulation</span>
-              </div>
-            </article>
-            <article class="adv-card adv-green">
-              <div class="adv-icon" aria-hidden="true">♻️</div>
-              <h3>Eco-Friendly</h3>
-              <p>Reduce empty returns and redundant equipment deployment through route optimization and resource coordination, lowering carbon emissions and electronic waste.</p>
-              <div class="adv-metric">
-                <strong>28%</strong>
-                <span>Template example: Carbon emission reduction per order after schedule optimization</span>
-              </div>
-            </article>
-            <article class="adv-card adv-speed">
-              <div class="adv-icon" aria-hidden="true">⚡</div>
-              <h3>Higher Efficiency</h3>
-              <p>End-to-end automated analysis and report generation. Quickly compare results across multiple strategies, shortening decision-making cycle time.</p>
-              <div class="adv-metric">
-                <strong>3.2x</strong>
-                <span>Template example: Solution evaluation and iteration efficiency improvement multiple</span>
-              </div>
-            </article>
-          </div>
-          <p class="advantage-note fade-up">Note: The above data is for template display purposes and can be replaced with project-measured KPIs.</p>
-        </div>
-      </section>
-
-      <section class="slide compare" id="slide-compare">
-        <div class="stars"></div>
-        <div class="content finale-wrap">
-          <h2 class="fade-up">Competitive Comparison</h2>
-          <p class="finale-lead fade-up">Comparison results at a glance: AirGroundLAB achieves full coverage across four core capabilities.</p>
-
-          <div class="finale-layout fade-up">
-            <section class="matrix-panel compare-3d-panel echarts-wheel-zone" aria-label="3D capability comparison">
-              <h3 class="matrix-title">3D Capability Field</h3>
-              <p class="compare-axis-lead">Point position indicates relative capability on X, Y, and Z axes.</p>
-              <div class="compare-axis-tags" aria-label="Axis legend">
-                <span class="compare-axis-chip axis-chip-x">X Physical Fidelity</span>
-                <span class="compare-axis-chip axis-chip-y">Y Logistics Scale</span>
-                <span class="compare-axis-chip axis-chip-z">Z Social Dynamics</span>
-              </div>
-
-              <div class="compare-3d-scene echarts-wheel-zone">
-                <div id="compare-chart3d" aria-label="Interactive 3D capability chart"></div>
-              </div>
-
-              <div class="compare-roi-note">
-                <span class="roi-chip">ROI</span>
-                <p>End-to-end AI decision and ROI analysis is supported only by AirGroundLAB.</p>
-              </div>
-            </section>
-
-            <aside class="action-card" aria-label="AirGroundLAB action card">
-              <p class="action-kicker">AirGroundLAB</p>
-              <h3>Ready for Pilot Validation</h3>
-              <p class="action-summary">Use one integrated workflow to evaluate feasibility, risk, and ROI before committing physical resources.</p>
-              <ul class="action-points" aria-label="Core outcomes">
-                <li>Scenario setup in minutes, no-code operation</li>
-                <li>Decision reports with transparent assumptions</li>
-                <li>Fast team collaboration across terminals</li>
-              </ul>
-              <div class="action-cta-block">
-                <div class="action-cta-copy">
-                  <p class="action-cta-title">Try the demo flow</p>
-                  <p class="action-cta-desc">Scan when convenient to preview the experience and request a tailored setup.</p>
-                </div>
-                <div class="action-qr-wrap">
-                  <img
-                    id="finale-qr"
-                    src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=placeholder"
-                    alt="QR placeholder"
-                    loading="lazy"
-                  />
-                  <p>Scan for demo access</p>
-                </div>
-              </div>
-            </aside>
-          </div>
-
-          <footer class="finale-footer fade-up">
-            <div class="footer-left">
-              <img src="./assets/image3.png" alt="The Hong Kong University of Science and Technology (Guangzhou)" />
+          </article>
+          <article class="feature-panel reverse">
+            <img src="./assets/image2.jpeg" alt="LLM User Profile Simulation" loading="lazy" />
+            <div class="feature-copy">
+              <h3>Module 3 · LLM Realistic User Profile Simulation</h3>
+              <p>
+                Use large language models to simulate user reviews, schedules, ordering habits, and demographics.
+                Build order behavior scenarios closer to realistic demand fluctuations.
+              </p>
             </div>
-            <p class="footer-right">© 2024 AirGroundLAB Team. All rights reserved.</p>
-          </footer>
+          </article>
+          <article class="feature-panel">
+            <img src="./assets/image1.jpeg" alt="End-to-End AI Report Generation" loading="lazy" />
+            <div class="feature-copy">
+              <h3>Module 4 · End-to-End AI Insight Report Generation</h3>
+              <p>
+                Automatically complete from parameter input, simulation execution to result comparison and generate
+                interpretable insight reports.
+                Help teams quickly select optimal strategies and resource allocation solutions.
+              </p>
+            </div>
+          </article>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
+    <section class="slide detail insight" id="slide-insight">
+      <div class="content insight-layout">
+        <div class="insight-left">
+          <h2 class="fade-up">Process Flow</h2>
+          <div class="insight-switch fade-up" role="tablist" aria-label="Step switcher">
+            <button class="insight-btn active" data-insight-index="0">Step 1</button>
+            <span class="insight-arrow" aria-hidden="true">→</span>
+            <button class="insight-btn" data-insight-index="1">Step 2</button>
+            <span class="insight-arrow" aria-hidden="true">→</span>
+            <button class="insight-btn" data-insight-index="2">Step 3</button>
+            <span class="insight-arrow" aria-hidden="true">→</span>
+            <button class="insight-btn" data-insight-index="3">Step 4</button>
+          </div>
+          <div class="insight-text fade-up" id="insight-text">
+            <h3 id="insight-step-title">Step 1 · Simulation Launch</h3>
+            <p id="insight-step-desc">
+              Initialize the experiment, load assets, and validate baseline parameters to ensure reproducible
+              simulation conditions.
+            </p>
+          </div>
+        </div>
+        <div class="insight-right fade-up" id="insight-stage">
+          <div class="insight-track" id="insight-track">
+            <article class="insight-frame">
+              <img src="./assets/image4.png" alt="Simulation launch stage" loading="lazy" />
+            </article>
+            <article class="insight-frame">
+              <img
+                src="https://images.pexels.com/photos/669619/pexels-photo-669619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt="Policy input stage" loading="lazy" />
+            </article>
+            <article class="insight-frame">
+              <img
+                src="https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt="Simulation execution stage" loading="lazy" />
+            </article>
+            <article class="insight-frame">
+              <img src="./assets/image1.jpeg" alt="Report generation stage" loading="lazy" />
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <nav class="pager" id="pager" aria-label="Slide navigation"></nav>
-    <div class="auto-scroll-toggle-wrap" aria-label="Auto scroll switch">
-      <label class="auto-scroll-toggle" for="auto-scroll-toggle">
-        <input type="checkbox" id="auto-scroll-toggle" />
-        <span class="auto-scroll-toggle-slider" aria-hidden="true"></span>
-        <span class="auto-scroll-toggle-text">AUTO</span>
-      </label>
-    </div>
-    <script src="./script.js?v=20260306-16"></script>
-  </body>
+    <section class="slide vision" id="slide-vision">
+      <div class="stars"></div>
+      <div class="content advantage-wrap">
+        <h2 class="fade-up">Advantages</h2>
+        <p class="advantage-lead fade-up">Four Core Advantages with Directly Replaceable Data-Driven Templates</p>
+        <div class="advantage-grid fade-up">
+          <article class="adv-card adv-user">
+            <div class="adv-icon" aria-hidden="true">🫂</div>
+            <h3>User-Friendly</h3>
+            <p>Clear interaction paths with low barrier to entry. Non-technical users can quickly complete simulation
+              configuration and result interpretation.</p>
+            <div class="adv-metric">
+              <strong>85%</strong>
+              <span>Template example: Percentage of users who complete basic solution setup within 30 minutes on first
+                use</span>
+            </div>
+          </article>
+          <article class="adv-card adv-cost">
+            <div class="adv-icon" aria-hidden="true">💲</div>
+            <h3>Cost-Effective</h3>
+            <p>Simulate first, build later. Reduce incorrect site selection and redundant investment by shifting
+              trial-and-error costs to the digital space.</p>
+            <div class="adv-metric">
+              <strong>40%</strong>
+              <span>Template example: Percentage reduction in ineffective infrastructure budget through pre-construction
+                simulation</span>
+            </div>
+          </article>
+          <article class="adv-card adv-green">
+            <div class="adv-icon" aria-hidden="true">♻️</div>
+            <h3>Eco-Friendly</h3>
+            <p>Reduce empty returns and redundant equipment deployment through route optimization and resource
+              coordination, lowering carbon emissions and electronic waste.</p>
+            <div class="adv-metric">
+              <strong>28%</strong>
+              <span>Template example: Carbon emission reduction per order after schedule optimization</span>
+            </div>
+          </article>
+          <article class="adv-card adv-speed">
+            <div class="adv-icon" aria-hidden="true">⚡</div>
+            <h3>Higher Efficiency</h3>
+            <p>End-to-end automated analysis and report generation. Quickly compare results across multiple strategies,
+              shortening decision-making cycle time.</p>
+            <div class="adv-metric">
+              <strong>3.2x</strong>
+              <span>Template example: Solution evaluation and iteration efficiency improvement multiple</span>
+            </div>
+          </article>
+        </div>
+        <p class="advantage-note fade-up">Note: The above data is for template display purposes and can be replaced with
+          project-measured KPIs.</p>
+      </div>
+    </section>
+
+    <section class="slide compare" id="slide-compare">
+      <div class="stars"></div>
+      <div class="content finale-wrap">
+        <h2 class="fade-up">Competitive Comparison</h2>
+        <p class="finale-lead fade-up">Comparison results at a glance: AirGroundLAB achieves full coverage across four
+          core capabilities.</p>
+
+        <div class="finale-layout fade-up">
+          <section class="matrix-panel compare-3d-panel echarts-wheel-zone" aria-label="3D capability comparison">
+            <h3 class="matrix-title">3D Capability Field</h3>
+            <p class="compare-axis-lead">Point position indicates relative capability on X, Y, and Z axes.</p>
+            <div class="compare-axis-tags" aria-label="Axis legend">
+              <span class="compare-axis-chip axis-chip-x">X Physical Fidelity</span>
+              <span class="compare-axis-chip axis-chip-y">Y Logistics Scale</span>
+              <span class="compare-axis-chip axis-chip-z">Z Social Dynamics</span>
+            </div>
+
+            <div class="compare-3d-scene echarts-wheel-zone">
+              <div id="compare-chart3d" aria-label="Interactive 3D capability chart"></div>
+            </div>
+
+            <div class="compare-roi-note">
+              <span class="roi-chip">ROI</span>
+              <p>End-to-end AI decision and ROI analysis is supported only by AirGroundLAB.</p>
+            </div>
+          </section>
+
+          <aside class="action-card" aria-label="AirGroundLAB action card">
+            <p class="action-kicker">AirGroundLAB</p>
+            <h3>Ready for Pilot Validation</h3>
+            <p class="action-summary">Use one integrated workflow to evaluate feasibility, risk, and ROI before
+              committing physical resources.</p>
+            <ul class="action-points" aria-label="Core outcomes">
+              <li>Scenario setup in minutes, no-code operation</li>
+              <li>Decision reports with transparent assumptions</li>
+              <li>Fast team collaboration across terminals</li>
+            </ul>
+            <div class="action-cta-block">
+              <div class="action-cta-copy">
+                <p class="action-cta-title">Try the demo flow</p>
+                <p class="action-cta-desc">Scan when convenient to preview the experience and request a tailored setup.
+                </p>
+              </div>
+              <div class="action-qr-wrap">
+                <img id="finale-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=placeholder"
+                  alt="QR placeholder" loading="lazy" />
+                <p>Scan for demo access</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <footer class="finale-footer fade-up">
+          <div class="footer-left">
+            <img src="./assets/image3.png" alt="The Hong Kong University of Science and Technology (Guangzhou)" />
+          </div>
+          <p class="footer-right">© 2024 AirGroundLAB Team. All rights reserved.</p>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <nav class="pager" id="pager" aria-label="Slide navigation"></nav>
+  <div class="auto-scroll-toggle-wrap" aria-label="Auto scroll switch">
+    <label class="auto-scroll-toggle" for="auto-scroll-toggle">
+      <input type="checkbox" id="auto-scroll-toggle" />
+      <span class="auto-scroll-toggle-slider" aria-hidden="true"></span>
+      <span class="auto-scroll-toggle-text">AUTO</span>
+    </label>
+  </div>
+  <script src="./script.js?v=20260307-01"></script>
+</body>
+
 </html>
-
-
-

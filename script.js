@@ -6,6 +6,9 @@ const chipButtons = document.querySelectorAll(".chip");
 const simPanel = document.querySelector(".sim-panel");
 const simCopy = document.getElementById("sim-copy");
 const fadeNodes = document.querySelectorAll(".fade-up");
+const moduleButtons = Array.from(document.querySelectorAll(".module-btn"));
+const modulePanels = Array.from(document.querySelectorAll(".module-panel"));
+const moduleStage = document.getElementById("module-stage");
 const featureButtons = Array.from(document.querySelectorAll(".switch-btn"));
 const featurePanels = Array.from(document.querySelectorAll(".feature-panel"));
 const featureStage = document.getElementById("feature-stage");
@@ -21,6 +24,8 @@ const vizChartDom = document.getElementById("viz-chart3d");
 
 let activeIndex = 0;
 let wheelLock = false;
+let moduleIndex = 0;
+let moduleTouchStartX = 0;
 let featureIndex = 0;
 let insightIndex = 0;
 let insightTouchStartY = 0;
@@ -224,6 +229,38 @@ function setFeaturePanel(index) {
   featureButtons.forEach((btn, i) => btn.classList.toggle("active", i === featureIndex));
 }
 
+function setModulePanel(index) {
+  if (!modulePanels.length) return;
+  moduleIndex = (index + modulePanels.length) % modulePanels.length;
+  modulePanels.forEach((panel, i) => panel.classList.toggle("active", i === moduleIndex));
+  moduleButtons.forEach((btn, i) => btn.classList.toggle("active", i === moduleIndex));
+}
+
+moduleButtons.forEach((button, i) => {
+  button.addEventListener("click", () => setModulePanel(i));
+});
+
+if (moduleStage && modulePanels.length) {
+  moduleStage.addEventListener(
+    "touchstart",
+    (event) => {
+      moduleTouchStartX = event.changedTouches[0].clientX;
+    },
+    { passive: true }
+  );
+
+  moduleStage.addEventListener(
+    "touchend",
+    (event) => {
+      const endX = event.changedTouches[0].clientX;
+      const deltaX = endX - moduleTouchStartX;
+      if (Math.abs(deltaX) < 40) return;
+      setModulePanel(moduleIndex + (deltaX < 0 ? 1 : -1));
+    },
+    { passive: true }
+  );
+}
+
 featureButtons.forEach((button, i) => {
   button.addEventListener("click", () => setFeaturePanel(i));
 });
@@ -398,6 +435,7 @@ if (insightStage) {
   );
 }
 
+setModulePanel(0);
 setFeaturePanel(0);
 setInsightStep(0, { instant: true });
 
