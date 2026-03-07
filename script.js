@@ -131,6 +131,26 @@ function bindTouchSwitch(element, axis, threshold, onStep) {
   );
 }
 
+function createCyclicSwitcher(options) {
+  const { buttons, getIndex, setIndex } = options;
+  bindIndexedButtons(buttons, setIndex);
+
+  return {
+    prev() {
+      setIndex(getIndex() - 1);
+    },
+    next() {
+      setIndex(getIndex() + 1);
+    }
+  };
+}
+
+function isTextInputLike(element) {
+  if (!(element instanceof HTMLElement)) return false;
+  const tag = element.tagName;
+  return element.isContentEditable || tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+}
+
 function updateDeckScale() {
   if (isCompactLayout()) {
     document.documentElement.style.setProperty("--deck-scale", "1");
@@ -345,6 +365,11 @@ function setInsightStep(index, options = {}) {
 
   const direction = getInsightDirection(prevIndex, nextIndex, insightSteps.length);
   animateInsightText(current, direction);
+}
+
+function getCurrentSlide() {
+  if (!slides.length) return null;
+  return slides[Math.max(0, Math.min(activeIndex, slides.length - 1))] || null;
 }
 
 function buildVizSeriesData() {
@@ -894,6 +919,30 @@ window.addEventListener(
 );
 
 window.addEventListener("keydown", (event) => {
+  if (isTextInputLike(event.target)) return;
+
+  if (["ArrowLeft", "ArrowRight"].includes(event.code)) {
+    const currentSlide = getCurrentSlide();
+    if (currentSlide && !currentSlide.hidden) {
+      const switcherMap = {
+        "slide-modules": moduleSwitcher,
+        "slide-agent": featureSwitcher,
+        "slide-insight": insightSwitcher
+      };
+      const activeSwitcher = switcherMap[currentSlide.id];
+
+      if (activeSwitcher) {
+        event.preventDefault();
+        if (event.code === "ArrowRight") {
+          activeSwitcher.next();
+        } else {
+          activeSwitcher.prev();
+        }
+        return;
+      }
+    }
+  }
+
   if (["ArrowDown", "PageDown", "Space"].includes(event.code)) {
     event.preventDefault();
     goToSlide(activeIndex + 1);
@@ -933,19 +982,41 @@ const fadeObserver = new IntersectionObserver(
 
 fadeNodes.forEach((node) => fadeObserver.observe(node));
 
-bindIndexedButtons(moduleButtons, setModulePanel);
-bindIndexedButtons(featureButtons, setFeaturePanel);
-bindIndexedButtons(insightButtons, setInsightStep);
+const moduleSwitcher = createCyclicSwitcher({
+  buttons: moduleButtons,
+  getIndex: () => moduleIndex,
+  setIndex: setModulePanel
+});
+
+const featureSwitcher = createCyclicSwitcher({
+  buttons: featureButtons,
+  getIndex: () => featureIndex,
+  setIndex: setFeaturePanel
+});
+
+const insightSwitcher = createCyclicSwitcher({
+  buttons: insightButtons,
+  getIndex: () => insightIndex,
+  setIndex: setInsightStep
+});
 
 if (moduleStage && modulePanels.length) {
   bindTouchSwitch(moduleStage, "x", CONFIG.TOUCH_SWITCH_X_THRESHOLD, (delta) => {
-    setModulePanel(moduleIndex + (delta < 0 ? 1 : -1));
+    if (delta < 0) {
+      moduleSwitcher.next();
+      return;
+    }
+    moduleSwitcher.prev();
   });
 }
 
 if (featureStage && featurePanels.length) {
   bindTouchSwitch(featureStage, "x", CONFIG.TOUCH_SWITCH_X_THRESHOLD, (delta) => {
-    setFeaturePanel(featureIndex + (delta < 0 ? 1 : -1));
+    if (delta < 0) {
+      featureSwitcher.next();
+      return;
+    }
+    featureSwitcher.prev();
   });
 }
 
@@ -959,7 +1030,11 @@ if (insightStage) {
       if (Math.abs(event.deltaY) < CONFIG.INSIGHT_WHEEL_MIN_DELTA) return;
 
       insightWheelLock = true;
-      setInsightStep(insightIndex + (event.deltaY > 0 ? 1 : -1));
+      if (event.deltaY > 0) {
+        insightSwitcher.next();
+      } else {
+        insightSwitcher.prev();
+      }
       window.setTimeout(() => {
         insightWheelLock = false;
       }, CONFIG.INSIGHT_WHEEL_LOCK_MS);
@@ -968,7 +1043,11 @@ if (insightStage) {
   );
 
   bindTouchSwitch(insightStage, "y", CONFIG.TOUCH_SWITCH_Y_THRESHOLD, (delta) => {
-    setInsightStep(insightIndex + (delta < 0 ? 1 : -1));
+    if (delta < 0) {
+      insightSwitcher.next();
+      return;
+    }
+    insightSwitcher.prev();
   });
 }
 
