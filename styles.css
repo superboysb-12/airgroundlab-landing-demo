@@ -2690,6 +2690,10 @@ blockquote.fade-up.in:focus-visible {
     grid-template-columns: 1fr;
   }
 
+  #slide-vision .pain-grid {
+    grid-template-columns: 1fr;
+  }
+
   .module-cta {
     width: 100%;
     min-width: 0;
