@@ -19,13 +19,10 @@ const featureStage = document.getElementById("feature-stage");
 
 const businessPanels = Array.from(document.querySelectorAll(".business-panel"));
 const businessStage = document.getElementById("business-stage");
-const businessHeader = document.querySelector(".business-header");
 const businessPrevButton = document.getElementById("ba-prev");
 const businessNextButton = document.getElementById("ba-next");
 const businessNavIndex = document.getElementById("ba-nav-index");
 const businessNavLabel = document.getElementById("ba-nav-label");
-const businessHeaderEyebrow = document.getElementById("business-header-eyebrow");
-const businessHeaderTitle = document.getElementById("business-header-title");
 const businessCompetitionHead = document.getElementById("ba-competition-head");
 const businessCompetitionBody = document.getElementById("ba-competition-body");
 
@@ -61,7 +58,6 @@ let moduleIndex = 0;
 let featureIndex = 0;
 let businessIndex = 0;
 let insightIndex = 0;
-let businessHeaderToken = 0;
 let businessPanelToken = 0;
 let insightWheelLock = false;
 let insightTextToken = 0;
@@ -381,77 +377,8 @@ function setFeaturePanel(index) {
   toggleActiveState(featureButtons, featureIndex);
 }
 
-function renderBusinessHeader(panel) {
-  if (businessHeaderEyebrow) {
-    businessHeaderEyebrow.textContent = panel.dataset.businessEyebrow || "";
-  }
-  if (businessHeaderTitle) {
-    businessHeaderTitle.textContent = panel.dataset.businessHeading || "";
-  }
-}
-
 function getBusinessSlideOffset(direction) {
   return direction > 0 ? -44 : 44;
-}
-
-function animateBusinessHeader(panel, direction) {
-  if (!businessHeader || !businessHeaderEyebrow || !businessHeaderTitle) {
-    renderBusinessHeader(panel);
-    return;
-  }
-
-  const token = ++businessHeaderToken;
-
-  if (typeof businessHeader.getAnimations === "function") {
-    businessHeader.getAnimations().forEach((anim) => anim.cancel());
-  }
-
-  if (typeof businessHeader.animate !== "function") {
-    renderBusinessHeader(panel);
-    return;
-  }
-
-  const outOffset = getBusinessSlideOffset(direction);
-  const inOffset = -outOffset;
-
-  const outAnim = businessHeader.animate(
-    [
-      { opacity: 1, transform: "translateX(0)" },
-      { opacity: 0, transform: `translateX(${outOffset}px)` }
-    ],
-    {
-      duration: 180,
-      easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-      fill: "forwards"
-    }
-  );
-
-  outAnim.finished
-    .catch(() => null)
-    .then(() => {
-      if (token !== businessHeaderToken) return;
-      renderBusinessHeader(panel);
-
-      const inAnim = businessHeader.animate(
-        [
-          { opacity: 0, transform: `translateX(${inOffset}px)` },
-          { opacity: 1, transform: "translateX(0)" }
-        ],
-        {
-          duration: 180,
-          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-          fill: "forwards"
-        }
-      );
-
-      inAnim.finished
-        .catch(() => null)
-        .then(() => {
-          if (token !== businessHeaderToken) return;
-          businessHeader.style.opacity = "";
-          businessHeader.style.transform = "";
-        });
-    });
 }
 
 function animateBusinessPanelTransition(prevPanel, nextPanel, direction) {
@@ -531,7 +458,6 @@ function setBusinessPanel(index) {
 
   if (prevIndex === businessIndex) {
     current.classList.add("active");
-    renderBusinessHeader(current);
     return;
   }
 
@@ -540,8 +466,6 @@ function setBusinessPanel(index) {
   } else {
     current.classList.add("active");
   }
-
-  animateBusinessHeader(current, direction);
 }
 
 function setModulePanel(index) {
