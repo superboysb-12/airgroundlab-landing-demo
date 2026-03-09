@@ -961,6 +961,333 @@ blockquote span {
   font-weight: 500;
 }
 
+.business-analysis {
+  background:
+    radial-gradient(circle at 16% 18%, rgba(64, 126, 255, 0.14), transparent 30%),
+    radial-gradient(circle at 82% 22%, rgba(42, 170, 255, 0.12), transparent 26%),
+    linear-gradient(180deg, #060a12 0%, #03050a 100%);
+}
+
+.business-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--deck-vh);
+}
+
+.business-stage {
+  position: relative;
+  width: min(100%, 1560px);
+  min-height: clamp(700px, calc(var(--deck-vh) * 0.86), 920px);
+  overflow: visible;
+  border: 1px solid rgba(122, 177, 250, 0.32);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(9, 16, 28, 0.94), rgba(5, 9, 17, 0.98)),
+    radial-gradient(circle at top left, rgba(76, 138, 255, 0.14), transparent 36%);
+  box-shadow: var(--shadow);
+}
+
+.business-panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 18px;
+  padding: clamp(26px, 2.4vw, 38px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(28px);
+  transition: opacity 0.36s ease, transform 0.36s ease;
+}
+
+.business-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.business-panel-head {
+  display: grid;
+  gap: 8px;
+  padding-right: 140px;
+}
+
+.business-eyebrow {
+  color: #7fb3ff;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.business-panel-head h3 {
+  font-size: clamp(1.78rem, 2.46vw, 2.62rem);
+  line-height: 1.14;
+  color: #edf5ff;
+}
+
+.ba-visual-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.ba-poster-grid,
+.ba-demand-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ba-poster,
+.ba-demand-card,
+.ba-table-shell,
+.ba-competition-note {
+  margin: 0;
+  border: 1px solid rgba(130, 180, 248, 0.24);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(15, 24, 40, 0.92), rgba(8, 14, 24, 0.95)),
+    radial-gradient(circle at top left, rgba(80, 160, 255, 0.1), transparent 34%);
+  overflow: hidden;
+  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, filter 0.28s ease;
+}
+
+.ba-poster {
+  height: clamp(310px, 43vh, 470px);
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.ba-poster img,
+.ba-demand-card img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center center;
+  transition: transform 0.34s ease, filter 0.34s ease;
+}
+
+.ba-poster img {
+  object-fit: contain;
+}
+
+.ba-demand-copy {
+  padding: 16px 18px 18px;
+}
+
+.ba-brief-label {
+  margin-bottom: 8px;
+  color: #7fb3ff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ba-demand-copy h4 {
+  margin: 0;
+  font-size: clamp(1.1rem, 1.48vw, 1.38rem);
+  color: #eff6ff;
+}
+
+.ba-demand-copy p,
+.ba-competition-note p {
+  color: #bfd2ec;
+  line-height: 1.6;
+}
+
+.ba-demand-copy p {
+  font-size: clamp(0.98rem, 1.08vw, 1.08rem);
+}
+
+.ba-demand-copy > p:last-child {
+  margin-top: 10px;
+}
+
+.ba-demand-card {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
+.ba-demand-card img {
+  height: clamp(228px, 31vh, 340px);
+}
+
+.ba-story-list {
+  margin: 0;
+  padding: 20px 28px 20px 46px;
+  border: 1px solid rgba(130, 180, 248, 0.24);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(15, 24, 40, 0.92), rgba(8, 14, 24, 0.95)),
+    radial-gradient(circle at top left, rgba(80, 160, 255, 0.1), transparent 34%);
+  display: grid;
+  gap: 14px;
+  color: #d8e8fb;
+  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, filter 0.28s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.ba-story-list li {
+  font-size: clamp(1.1rem, 1.22vw, 1.22rem);
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.ba-flag {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 1.05em;
+}
+
+.ba-poster:hover img,
+.ba-demand-card:hover img {
+  transform: scale(1.045);
+  filter: saturate(1.08) contrast(1.03);
+}
+
+.ba-competition-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.ba-table-shell {
+  padding: 22px;
+  width: min(100%, 1320px);
+}
+
+.ba-competition-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #e8f2ff;
+  font-size: clamp(1rem, 1.2vw, 1.24rem);
+}
+
+.ba-competition-table th,
+.ba-competition-table td {
+  padding: 18px 20px;
+  border: 1px solid rgba(140, 182, 240, 0.22);
+  text-align: left;
+  vertical-align: middle;
+  transition: background-color 0.22s ease, border-color 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.ba-competition-table thead th {
+  background: rgba(64, 118, 196, 0.18);
+  color: #f3f8ff;
+}
+
+.ba-competition-table tbody th {
+  color: #d9e8fb;
+  width: 24%;
+}
+
+.ba-competition-table td:last-child,
+.ba-competition-table th:last-child {
+  color: #92d0ff;
+  font-weight: 700;
+}
+
+.ba-competition-table tbody tr:hover th,
+.ba-competition-table tbody tr:hover td {
+  background: rgba(86, 152, 239, 0.14);
+  border-color: rgba(164, 214, 255, 0.48);
+}
+
+.ba-competition-table tbody td:hover,
+.ba-competition-table tbody th:hover {
+  background: rgba(95, 173, 255, 0.24);
+  border-color: rgba(174, 220, 255, 0.7);
+  box-shadow:
+    inset 0 0 0 1px rgba(178, 223, 255, 0.28),
+    0 0 20px rgba(107, 190, 255, 0.18);
+}
+
+.ba-competition-table tbody td:last-child:hover,
+.ba-competition-table tbody tr:hover td:last-child {
+  color: #c8ecff;
+  background: rgba(89, 178, 255, 0.3);
+}
+
+.ba-competition-note {
+  padding: 22px 28px;
+  border-color: rgba(136, 212, 122, 0.45);
+  background:
+    linear-gradient(180deg, rgba(15, 28, 18, 0.92), rgba(10, 20, 13, 0.95)),
+    radial-gradient(circle at 15% 20%, rgba(114, 203, 111, 0.14), transparent 36%);
+  width: min(100%, 1320px);
+  margin: 0 auto;
+}
+
+.ba-competition-note p {
+  font-size: clamp(1.14rem, 1.56vw, 1.46rem);
+  color: #eef8eb;
+}
+
+.ba-stage-nav {
+  position: absolute;
+  top: 26px;
+  right: 26px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ba-nav-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(136, 190, 252, 0.34);
+  border-radius: 999px;
+  background: rgba(8, 18, 34, 0.82);
+  color: #edf5ff;
+  font: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
+}
+
+.ba-nav-btn:hover,
+.ba-nav-btn:focus-visible {
+  background: rgba(43, 99, 176, 0.74);
+  border-color: rgba(160, 210, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.ba-nav-status {
+  min-width: 132px;
+  padding: 8px 12px;
+  border: 1px solid rgba(136, 190, 252, 0.22);
+  border-radius: 14px;
+  background: rgba(8, 18, 34, 0.72);
+  display: grid;
+  gap: 2px;
+}
+
+.ba-nav-index {
+  color: #8ebcff;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.ba-nav-label {
+  color: #eef5ff;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.business-panel-competition {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
 .agent-board {
   display: grid;
   grid-template-columns: 1fr 0.9fr;
@@ -1813,6 +2140,11 @@ blockquote span {
     .adv-card,
     .matrix-panel,
     .action-card,
+    .ba-poster,
+    .ba-demand-card,
+    .ba-story-list,
+    .ba-table-shell,
+    .ba-competition-note,
     blockquote.fade-up.in
   ) {
   transition:
@@ -1836,6 +2168,11 @@ blockquote span {
     .adv-card,
     .matrix-panel,
     .action-card,
+    .ba-poster,
+    .ba-demand-card,
+    .ba-story-list,
+    .ba-table-shell,
+    .ba-competition-note,
     blockquote.fade-up.in
   ):hover {
   transform: translateY(var(--interactive-hover-lift)) scale(var(--interactive-hover-scale));
@@ -1869,6 +2206,11 @@ blockquote span {
     .adv-card,
     .matrix-panel,
     .action-card,
+    .ba-poster,
+    .ba-demand-card,
+    .ba-story-list,
+    .ba-table-shell,
+    .ba-competition-note,
     blockquote.fade-up.in
   ):focus-within {
   transform: translateY(var(--interactive-focus-lift)) scale(var(--interactive-focus-scale));
@@ -2549,7 +2891,22 @@ blockquote.fade-up.in:focus-visible {
     padding-bottom: 18px;
   }
 
+  .business-wrap {
+    height: auto;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+
   .feature-stage {
+    min-height: auto;
+    height: auto;
+    overflow: visible;
+  }
+
+  .business-stage {
+    width: 100%;
     min-height: auto;
     height: auto;
     overflow: visible;
@@ -2587,6 +2944,21 @@ blockquote.fade-up.in:focus-visible {
     height: auto;
     aspect-ratio: 16 / 9;
     overflow: hidden;
+  }
+
+  .business-panel {
+    position: relative;
+    inset: auto;
+    display: none;
+    min-height: auto;
+    opacity: 1;
+    transform: none;
+    transition: none;
+    padding-top: 78px;
+  }
+
+  .business-panel.active {
+    display: grid;
   }
 
   .insight-layout {
@@ -2759,6 +3131,42 @@ blockquote.fade-up.in:focus-visible {
     grid-template-columns: 1fr;
     min-width: 0;
     min-height: auto;
+  }
+
+  .ba-poster-grid,
+  .ba-demand-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ba-poster {
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .business-panel {
+    padding: 18px;
+    gap: 14px;
+  }
+
+  .ba-story-list {
+    padding-left: 34px;
+  }
+
+  .ba-stage-nav {
+    top: 18px;
+    right: 18px;
+  }
+
+  .business-panel-head {
+    padding-right: 0;
+  }
+
+  .ba-table-shell {
+    overflow-x: auto;
+  }
+
+  .ba-competition-table {
+    min-width: 720px;
   }
 
   .feature-panel img {

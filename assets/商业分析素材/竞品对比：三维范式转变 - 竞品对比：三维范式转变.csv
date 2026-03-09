@@ -1,0 +1,4 @@
+Core Dimensions ,AirSim,AnyLogic,NASA UTM,AirGroundLAB（OUR）
+Physical Fidelity,✔️(High),❌(Low/None),❌(Low/None),✔️(High)
+Logistics Network Scale,❌(Single/Micro),✔️(Massive),➖(Air Traffic Only),✔️(Massive)
+Dynamic Social Simulation,❌(Static Env.),➖(Math Logic),❌(No Demand),✔️(Real-time)

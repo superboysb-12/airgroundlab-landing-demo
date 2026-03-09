@@ -17,6 +17,15 @@ const featureButtons = Array.from(document.querySelectorAll(".feature-switch .sw
 const featurePanels = Array.from(document.querySelectorAll(".feature-panel"));
 const featureStage = document.getElementById("feature-stage");
 
+const businessPanels = Array.from(document.querySelectorAll(".business-panel"));
+const businessStage = document.getElementById("business-stage");
+const businessPrevButton = document.getElementById("ba-prev");
+const businessNextButton = document.getElementById("ba-next");
+const businessNavIndex = document.getElementById("ba-nav-index");
+const businessNavLabel = document.getElementById("ba-nav-label");
+const businessCompetitionHead = document.getElementById("ba-competition-head");
+const businessCompetitionBody = document.getElementById("ba-competition-body");
+
 const insightButtons = Array.from(document.querySelectorAll(".insight-btn"));
 const insightTrack = document.getElementById("insight-track");
 const insightText = document.getElementById("insight-text");
@@ -47,6 +56,7 @@ let activeIndex = 0;
 let wheelLock = false;
 let moduleIndex = 0;
 let featureIndex = 0;
+let businessIndex = 0;
 let insightIndex = 0;
 let insightWheelLock = false;
 let insightTextToken = 0;
@@ -271,11 +281,108 @@ function setFeaturePanel(index) {
   toggleActiveState(featureButtons, featureIndex);
 }
 
+function setBusinessPanel(index) {
+  if (!businessPanels.length) return;
+  businessIndex = clampIndex(index, businessPanels.length);
+  toggleActiveState(businessPanels, businessIndex);
+  if (businessNavIndex) {
+    businessNavIndex.textContent = `${String(businessIndex + 1).padStart(2, "0")} / ${String(businessPanels.length).padStart(2, "0")}`;
+  }
+  if (businessNavLabel) {
+    businessNavLabel.textContent = businessPanels[businessIndex].dataset.businessTitle || "";
+  }
+}
+
 function setModulePanel(index) {
   if (!modulePanels.length) return;
   moduleIndex = clampIndex(index, modulePanels.length);
   toggleActiveState(modulePanels, moduleIndex);
   toggleActiveState(moduleButtons, moduleIndex);
+}
+
+function parseCsvLine(line) {
+  return line.split(",").map((cell) => cell.trim());
+}
+
+function normalizeBusinessCsvHeader(value) {
+  if (!value) return "";
+  if (value.includes("AirGroundLAB")) return "AirGroundLAB (OUR)";
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function normalizeBusinessCsvCell(value) {
+  if (!value) return "";
+
+  const knownValues = [
+    "High",
+    "Low/None",
+    "Single/Micro",
+    "Massive",
+    "Air Traffic Only",
+    "Static Env.",
+    "Math Logic",
+    "No Demand",
+    "Real-time"
+  ];
+
+  for (const label of knownValues) {
+    if (value.includes(label)) return label;
+  }
+
+  return value
+    .replace(/[^\x20-\x7E]+/g, " ")
+    .replace(/\)+$/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function renderBusinessCompetitionTable(rows) {
+  if (!businessCompetitionHead || !businessCompetitionBody || !rows.length) return;
+
+  const [headerRow, ...bodyRows] = rows;
+  const normalizedHeaders = headerRow.map(normalizeBusinessCsvHeader);
+  businessCompetitionHead.innerHTML = normalizedHeaders.map((cell) => `<th>${cell}</th>`).join("");
+
+  businessCompetitionBody.innerHTML = bodyRows
+    .map((row) => {
+      const [dimension, ...cells] = row;
+      const normalizedCells = cells.map(normalizeBusinessCsvCell);
+      return `
+        <tr>
+          <th>${dimension}</th>
+          ${normalizedCells.map((cell) => `<td>${cell}</td>`).join("")}
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+async function loadBusinessCompetitionTable() {
+  if (!businessCompetitionBody) return;
+
+  const fallbackRows = [
+    ["Core Dimensions", "AirSim", "AnyLogic", "NASA UTM", "AirGroundLAB (OUR)"],
+    ["Physical Fidelity", "High", "Low/None", "Low/None", "High"],
+    ["Logistics Network Scale", "Single/Micro", "Massive", "Air Traffic Only", "Massive"],
+    ["Dynamic Social Simulation", "Static Env.", "Math Logic", "No Demand", "Real-time"]
+  ];
+
+  try {
+    const response = await fetch("./assets/商业分析素材/竞品对比：三维范式转变 - 竞品对比：三维范式转变.csv");
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const csvText = await response.text();
+    const rows = csvText
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map(parseCsvLine);
+
+    if (rows.length < 2) throw new Error("CSV has no body rows");
+    renderBusinessCompetitionTable(rows);
+  } catch (error) {
+    console.warn("Failed to load business competition CSV, using fallback table.", error);
+    renderBusinessCompetitionTable(fallbackRows);
+  }
 }
 
 function renderInsightText(step) {
@@ -927,6 +1034,7 @@ window.addEventListener("keydown", (event) => {
       const switcherMap = {
         "slide-modules": moduleSwitcher,
         "slide-agent": featureSwitcher,
+        "slide-business": businessSwitcher,
         "slide-insight": insightSwitcher
       };
       const activeSwitcher = switcherMap[currentSlide.id];
@@ -994,6 +1102,15 @@ const featureSwitcher = createCyclicSwitcher({
   setIndex: setFeaturePanel
 });
 
+const businessSwitcher = {
+  prev() {
+    setBusinessPanel(businessIndex - 1);
+  },
+  next() {
+    setBusinessPanel(businessIndex + 1);
+  }
+};
+
 const insightSwitcher = createCyclicSwitcher({
   buttons: insightButtons,
   getIndex: () => insightIndex,
@@ -1018,6 +1135,24 @@ if (featureStage && featurePanels.length) {
     }
     featureSwitcher.prev();
   });
+}
+
+if (businessStage && businessPanels.length) {
+  bindTouchSwitch(businessStage, "x", CONFIG.TOUCH_SWITCH_X_THRESHOLD, (delta) => {
+    if (delta < 0) {
+      businessSwitcher.next();
+      return;
+    }
+    businessSwitcher.prev();
+  });
+}
+
+if (businessPrevButton) {
+  businessPrevButton.addEventListener("click", () => businessSwitcher.prev());
+}
+
+if (businessNextButton) {
+  businessNextButton.addEventListener("click", () => businessSwitcher.next());
 }
 
 if (insightStage) {
@@ -1053,7 +1188,9 @@ if (insightStage) {
 
 setModulePanel(0);
 setFeaturePanel(0);
+setBusinessPanel(0);
 setInsightStep(0, { instant: true });
+loadBusinessCompetitionTable();
 
 initCompareChart();
 initVizChart();
