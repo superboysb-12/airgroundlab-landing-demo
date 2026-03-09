@@ -1159,6 +1159,11 @@ blockquote span {
 
 .ba-demand-card img {
   height: clamp(220px, 29vh, 320px);
+  object-fit: contain;
+  background:
+    radial-gradient(circle at top, rgba(82, 150, 255, 0.14), transparent 42%),
+    linear-gradient(180deg, rgba(10, 18, 32, 0.92), rgba(7, 13, 24, 0.96));
+  padding: 12px;
 }
 
 .ba-story-list {
@@ -1180,9 +1185,25 @@ blockquote span {
 }
 
 .ba-story-list li {
+  display: grid;
+  gap: 4px;
   font-size: clamp(1.1rem, 1.22vw, 1.22rem);
   line-height: 1.6;
   font-weight: 400;
+}
+
+.ba-story-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  color: #f3f8ff;
+  font-size: clamp(1.16rem, 1.32vw, 1.34rem);
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.ba-story-body {
+  color: #d8e8fb;
 }
 
 .ba-flag {
