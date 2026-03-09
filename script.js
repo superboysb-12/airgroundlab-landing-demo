@@ -19,10 +19,13 @@ const featureStage = document.getElementById("feature-stage");
 
 const businessPanels = Array.from(document.querySelectorAll(".business-panel"));
 const businessStage = document.getElementById("business-stage");
+const businessHeader = document.querySelector(".business-header");
 const businessPrevButton = document.getElementById("ba-prev");
 const businessNextButton = document.getElementById("ba-next");
 const businessNavIndex = document.getElementById("ba-nav-index");
 const businessNavLabel = document.getElementById("ba-nav-label");
+const businessHeaderEyebrow = document.getElementById("business-header-eyebrow");
+const businessHeaderTitle = document.getElementById("business-header-title");
 const businessCompetitionHead = document.getElementById("ba-competition-head");
 const businessCompetitionBody = document.getElementById("ba-competition-body");
 
@@ -58,9 +61,12 @@ let moduleIndex = 0;
 let featureIndex = 0;
 let businessIndex = 0;
 let insightIndex = 0;
+let businessHeaderToken = 0;
+let businessPanelToken = 0;
 let insightWheelLock = false;
 let insightTextToken = 0;
 let autoScrollTimer = null;
+let autoScrollTimers = [];
 let compareChart = null;
 let vizChart = null;
 
@@ -222,20 +228,114 @@ function goToSlide(index) {
   activeIndex = target;
   slides[target].scrollIntoView({ behavior: "smooth", block: "start" });
   updatePager(target);
+  
+  // 如果自动滚动开启，调度下一次转换
+  if (autoScrollToggle && autoScrollToggle.checked && !autoScrollToggle.disabled) {
+    stopAutoScroll();
+    // 等待滚动动画完成后再开始计时
+    window.setTimeout(() => {
+      scheduleNextTransition();
+    }, 800);
+  }
 }
 
 function stopAutoScroll() {
-  if (!autoScrollTimer) return;
-  window.clearInterval(autoScrollTimer);
-  autoScrollTimer = null;
+  if (autoScrollTimer) {
+    window.clearTimeout(autoScrollTimer);
+    autoScrollTimer = null;
+  }
+  autoScrollTimers.forEach(window.clearTimeout);
+  autoScrollTimers = [];
+}
+
+function getSlideSwitcherById(slideId) {
+  if (slideId === "slide-modules" && modulePanels.length > 0) {
+    return {
+      totalCount: modulePanels.length,
+      setIndex: setModulePanel,
+      next: () => moduleSwitcher.next(),
+      prev: () => moduleSwitcher.prev()
+    };
+  }
+
+  if (slideId === "slide-agent" && featurePanels.length > 0) {
+    return {
+      totalCount: featurePanels.length,
+      setIndex: setFeaturePanel,
+      next: () => featureSwitcher.next(),
+      prev: () => featureSwitcher.prev()
+    };
+  }
+
+  if (slideId === "slide-business" && businessPanels.length > 0) {
+    return {
+      totalCount: businessPanels.length,
+      setIndex: setBusinessPanel,
+      next: () => businessSwitcher.next(),
+      prev: () => businessSwitcher.prev()
+    };
+  }
+
+  if (slideId === "slide-insight" && insightSteps.length > 0) {
+    return {
+      totalCount: insightSteps.length,
+      setIndex: setInsightStep,
+      next: () => insightSwitcher.next(),
+      prev: () => insightSwitcher.prev()
+    };
+  }
+
+  return null;
+}
+
+function scheduleNextTransition() {
+  if (!autoScrollToggle || !autoScrollToggle.checked) {
+    stopAutoScroll();
+    return;
+  }
+
+  const currentSlide = slides[activeIndex] || null;
+  const isAutoPlayableSlide = currentSlide && ["slide-modules", "slide-agent"].includes(currentSlide.id);
+  const switcher = isAutoPlayableSlide ? getSlideSwitcherById(currentSlide.id) : null;
+  
+  if (switcher && switcher.totalCount > 1) {
+    // 每个模块的停留时间与页面切换时间保持一致
+    const intervalPerModule = CONFIG.AUTO_SCROLL_INTERVAL_MS;
+    const totalTime = intervalPerModule * switcher.totalCount;
+    
+    // 立即显示第一个模块
+    switcher.setIndex(0);
+    
+    // 设置定时器依次切换剩余模块
+    for (let i = 1; i < switcher.totalCount; i++) {
+      const timer = window.setTimeout(() => {
+        if (autoScrollToggle && autoScrollToggle.checked) {
+          switcher.next();
+        }
+      }, intervalPerModule * i);
+      autoScrollTimers.push(timer);
+    }
+    
+    // 所有模块切换完后，切换到下一页
+    autoScrollTimer = window.setTimeout(() => {
+      if (autoScrollToggle && autoScrollToggle.checked) {
+        goToSlide((activeIndex + 1) % slides.length);
+      }
+    }, totalTime);
+  } else {
+    // 当前页面没有模块或只有一个模块，直接等待后切换
+    autoScrollTimer = window.setTimeout(() => {
+      if (autoScrollToggle && autoScrollToggle.checked) {
+        goToSlide((activeIndex + 1) % slides.length);
+      }
+    }, CONFIG.AUTO_SCROLL_INTERVAL_MS);
+  }
 }
 
 function startAutoScroll() {
   stopAutoScroll();
   if (!slides.length) return;
-  autoScrollTimer = window.setInterval(() => {
-    goToSlide((activeIndex + 1) % slides.length);
-  }, CONFIG.AUTO_SCROLL_INTERVAL_MS);
+  scheduleNextTransition();
 }
 
 function syncAutoScrollState() {
@@ -281,16 +381,167 @@ function setFeaturePanel(index) {
   toggleActiveState(featureButtons, featureIndex);
 }
 
+function renderBusinessHeader(panel) {
+  if (businessHeaderEyebrow) {
+    businessHeaderEyebrow.textContent = panel.dataset.businessEyebrow || "";
+  }
+  if (businessHeaderTitle) {
+    businessHeaderTitle.textContent = panel.dataset.businessHeading || "";
+  }
+}
+
+function getBusinessSlideOffset(direction) {
+  return direction > 0 ? -44 : 44;
+}
+
+function animateBusinessHeader(panel, direction) {
+  if (!businessHeader || !businessHeaderEyebrow || !businessHeaderTitle) {
+    renderBusinessHeader(panel);
+    return;
+  }
+
+  const token = ++businessHeaderToken;
+
+  if (typeof businessHeader.getAnimations === "function") {
+    businessHeader.getAnimations().forEach((anim) => anim.cancel());
+  }
+
+  if (typeof businessHeader.animate !== "function") {
+    renderBusinessHeader(panel);
+    return;
+  }
+
+  const outOffset = getBusinessSlideOffset(direction);
+  const inOffset = -outOffset;
+
+  const outAnim = businessHeader.animate(
+    [
+      { opacity: 1, transform: "translateX(0)" },
+      { opacity: 0, transform: `translateX(${outOffset}px)` }
+    ],
+    {
+      duration: 180,
+      easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+      fill: "forwards"
+    }
+  );
+
+  outAnim.finished
+    .catch(() => null)
+    .then(() => {
+      if (token !== businessHeaderToken) return;
+      renderBusinessHeader(panel);
+
+      const inAnim = businessHeader.animate(
+        [
+          { opacity: 0, transform: `translateX(${inOffset}px)` },
+          { opacity: 1, transform: "translateX(0)" }
+        ],
+        {
+          duration: 180,
+          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+          fill: "forwards"
+        }
+      );
+
+      inAnim.finished
+        .catch(() => null)
+        .then(() => {
+          if (token !== businessHeaderToken) return;
+          businessHeader.style.opacity = "";
+          businessHeader.style.transform = "";
+        });
+    });
+}
+
+function animateBusinessPanelTransition(prevPanel, nextPanel, direction) {
+  const token = ++businessPanelToken;
+  const outOffset = getBusinessSlideOffset(direction);
+  const inOffset = -outOffset;
+
+  if (typeof prevPanel.getAnimations === "function") {
+    prevPanel.getAnimations().forEach((anim) => anim.cancel());
+  }
+  if (typeof nextPanel.getAnimations === "function") {
+    nextPanel.getAnimations().forEach((anim) => anim.cancel());
+  }
+
+  prevPanel.classList.add("active");
+  prevPanel.style.zIndex = "3";
+  nextPanel.classList.add("active");
+  nextPanel.style.zIndex = "2";
+
+  if (typeof prevPanel.animate !== "function" || typeof nextPanel.animate !== "function") {
+    prevPanel.classList.remove("active");
+    prevPanel.style.zIndex = "";
+    nextPanel.style.zIndex = "";
+    return;
+  }
+
+  const animationOptions = {
+    duration: 360,
+    easing: "cubic-bezier(0.22, 0.61, 0.36, 1)",
+    fill: "forwards"
+  };
+
+  const outAnim = prevPanel.animate(
+    [
+      { opacity: 1, transform: "translateX(0)" },
+      { opacity: 0, transform: `translateX(${outOffset}px)` }
+    ],
+    animationOptions
+  );
+
+  const inAnim = nextPanel.animate(
+    [
+      { opacity: 0, transform: `translateX(${inOffset}px)` },
+      { opacity: 1, transform: "translateX(0)" }
+    ],
+    animationOptions
+  );
+
+  Promise.all([outAnim.finished.catch(() => null), inAnim.finished.catch(() => null)]).then(() => {
+    if (token !== businessPanelToken) return;
+    prevPanel.classList.remove("active");
+    prevPanel.style.opacity = "";
+    prevPanel.style.transform = "";
+    prevPanel.style.zIndex = "";
+    nextPanel.style.opacity = "";
+    nextPanel.style.transform = "";
+    nextPanel.style.zIndex = "";
+  });
+}
+
 function setBusinessPanel(index) {
   if (!businessPanels.length) return;
-  businessIndex = clampIndex(index, businessPanels.length);
-  toggleActiveState(businessPanels, businessIndex);
+  const prevIndex = businessIndex;
+  const prevPanel = businessPanels[prevIndex] || null;
+  const nextIndex = clampIndex(index, businessPanels.length);
+  const direction = getInsightDirection(prevIndex, nextIndex, businessPanels.length);
+
+  businessIndex = nextIndex;
+  const current = businessPanels[businessIndex];
+
   if (businessNavIndex) {
     businessNavIndex.textContent = `${String(businessIndex + 1).padStart(2, "0")} / ${String(businessPanels.length).padStart(2, "0")}`;
   }
   if (businessNavLabel) {
-    businessNavLabel.textContent = businessPanels[businessIndex].dataset.businessTitle || "";
+    businessNavLabel.textContent = current.dataset.businessTitle || "";
   }
+
+  if (prevIndex === businessIndex) {
+    current.classList.add("active");
+    renderBusinessHeader(current);
+    return;
+  }
+
+  if (prevPanel && prevPanel !== current) {
+    animateBusinessPanelTransition(prevPanel, current, direction);
+  } else {
+    current.classList.add("active");
+  }
+
+  animateBusinessHeader(current, direction);
 }
 
 function setModulePanel(index) {
@@ -1031,13 +1282,7 @@ window.addEventListener("keydown", (event) => {
   if (["ArrowLeft", "ArrowRight"].includes(event.code)) {
     const currentSlide = getCurrentSlide();
     if (currentSlide && !currentSlide.hidden) {
-      const switcherMap = {
-        "slide-modules": moduleSwitcher,
-        "slide-agent": featureSwitcher,
-        "slide-business": businessSwitcher,
-        "slide-insight": insightSwitcher
-      };
-      const activeSwitcher = switcherMap[currentSlide.id];
+      const activeSwitcher = getSlideSwitcherById(currentSlide.id);
 
       if (activeSwitcher) {
         event.preventDefault();

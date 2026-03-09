@@ -226,12 +226,22 @@
     </section>
     <section class="slide detail business-analysis" id="slide-business">
       <div class="content business-wrap">
-        <div class="business-stage fade-up" id="business-stage">
-          <article class="business-panel business-panel-space active" data-business-title="Market Space">
-            <div class="business-panel-head">
-              <p class="business-eyebrow">Business Analysis - Market Space</p>
-              <h3>Global Policy Tailwinds: Unlocking a Trillion-Dollar Market</h3>
+        <div class="business-header fade-up" aria-live="polite">
+          <div class="business-header-main">
+            <p class="business-header-eyebrow" id="business-header-eyebrow">Business Analysis - Market Space</p>
+            <h2 class="business-header-title" id="business-header-title">Global Policy Tailwinds: Unlocking a Trillion-Dollar Market</h2>
+          </div>
+          <div class="ba-stage-nav" aria-label="Business analysis navigation">
+            <button class="ba-nav-btn" id="ba-prev" type="button" aria-label="Previous business page">‹</button>
+            <div class="ba-nav-status">
+              <span class="ba-nav-index" id="ba-nav-index">01 / 03</span>
+              <span class="ba-nav-label" id="ba-nav-label">Market Space</span>
             </div>
+            <button class="ba-nav-btn" id="ba-next" type="button" aria-label="Next business page">›</button>
+          </div>
+        </div>
+        <div class="business-stage fade-up" id="business-stage">
+          <article class="business-panel business-panel-space active" data-business-title="Market Space" data-business-eyebrow="Business Analysis - Market Space" data-business-heading="Global Policy Tailwinds: Unlocking a Trillion-Dollar Market">
             <div class="ba-visual-grid ba-poster-grid">
               <figure class="ba-poster">
                 <img src="./assets/商业分析素材/BA1.1.png" alt="EASA U-space framework visual" loading="lazy" />
@@ -250,11 +260,7 @@
             </ul>
           </article>
 
-          <article class="business-panel business-panel-demand" data-business-title="Market Demand">
-            <div class="business-panel-head">
-              <p class="business-eyebrow">Business Analysis - Market Demand</p>
-              <h3>Billion-Dollar Moves: The Urgent Demand for Simulation Sandboxes</h3>
-            </div>
+          <article class="business-panel business-panel-demand" data-business-title="Market Demand" data-business-eyebrow="Business Analysis - Market Demand" data-business-heading="Billion-Dollar Moves: The Urgent Demand for Simulation Sandboxes">
             <div class="ba-visual-grid ba-demand-grid">
               <article class="ba-demand-card">
                 <img src="./assets/商业分析素材/BA2.1.png" alt="Amazon Prime Air drone delivery" loading="lazy" />
@@ -288,11 +294,7 @@
             </ul>
           </article>
 
-          <article class="business-panel business-panel-competition" data-business-title="Market Competition">
-            <div class="business-panel-head">
-              <p class="business-eyebrow">Business Analysis - Market Competition</p>
-              <h3>The Competitive Edge: A Three-Dimensional Paradigm Shift</h3>
-            </div>
+          <article class="business-panel business-panel-competition" data-business-title="Market Competition" data-business-eyebrow="Business Analysis - Market Competition" data-business-heading="The Competitive Edge: A Three-Dimensional Paradigm Shift">
             <div class="ba-competition-layout">
               <div class="ba-table-shell">
                 <table class="ba-competition-table" id="ba-competition-table">
@@ -313,14 +315,6 @@
               <p>The zero-risk digital twin for a trillion-dollar market: validating large-scale air-ground urban delivery.</p>
             </div>
           </article>
-          <div class="ba-stage-nav" aria-label="Business analysis navigation">
-            <button class="ba-nav-btn" id="ba-prev" type="button" aria-label="Previous business page">‹</button>
-            <div class="ba-nav-status">
-              <span class="ba-nav-index" id="ba-nav-index">01 / 03</span>
-              <span class="ba-nav-label" id="ba-nav-label">Market Space</span>
-            </div>
-            <button class="ba-nav-btn" id="ba-next" type="button" aria-label="Next business page">›</button>
-          </div>
         </div>
       </div>
     </section>
@@ -417,70 +411,6 @@
       </div>
     </section>
 
-    <section class="slide compare" id="slide-compare">
-      <div class="stars"></div>
-      <div class="content finale-wrap">
-        <h2 class="fade-up">Competitive Comparison</h2>
-        <p class="finale-lead fade-up">Comparison results at a glance: AirGroundLAB achieves full coverage across four
-          core capabilities.</p>
-
-        <div class="finale-layout fade-up">
-          <section class="matrix-panel compare-3d-panel echarts-wheel-zone" aria-label="3D capability comparison">
-            <h3 class="matrix-title">3D Capability Field</h3>
-            <p class="compare-axis-lead">Point position indicates relative capability on X, Y, and Z axes.</p>
-            <div class="compare-axis-tags" aria-label="Axis legend">
-              <span class="compare-axis-chip axis-chip-x">X Physical Fidelity</span>
-              <span class="compare-axis-chip axis-chip-y">Y Logistics Scale</span>
-              <span class="compare-axis-chip axis-chip-z">Z Social Dynamics</span>
-            </div>
-
-            <div class="compare-3d-scene echarts-wheel-zone">
-              <div id="compare-chart3d" aria-label="Interactive 3D capability chart"></div>
-            </div>
-
-            <div class="compare-roi-note">
-              <span class="roi-chip">Roi</span>
-              <p>End-to-end Ai decision and Roi analysis is supported only by AirGroundLAB.</p>
-            </div>
-          </section>
-
-          <aside class="action-card" aria-label="AirGroundLAB action card">
-            <p class="action-kicker">AirGroundLAB</p>
-            <h3>Ready for Pilot Validation</h3>
-            <p class="action-summary">Use one integrated workflow to evaluate feasibility, risk, and Roi before
-              committing physical resources.</p>
-            <ul class="action-points" aria-label="Core outcomes">
-              <li>Scenario setup in minutes, no-code operation</li>
-              <li>Decision reports with transparent assumptions</li>
-              <li>Fast team collaboration across terminals</li>
-            </ul>
-            <div class="action-cta-block">
-              <div class="action-cta-copy">
-                <p class="action-cta-title">Try the demo flow</p>
-                <p class="action-cta-desc">Scan when convenient to preview the experience and request a tailored setup.
-                </p>
-              </div>
-              <div class="action-qr-wrap">
-                <img id="finale-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=placeholder"
-                  alt="Qr placeholder" loading="lazy" />
-                <p>Scan for demo access</p>
-              </div>
-            </div>
-          </aside>
-        </div>
-
-        <footer class="finale-footer fade-up">
-          <div class="footer-left">
-            <img src="./assets/images/original/logo.png" alt="The Hong Kong University of Science and Technology (Guangzhou)" />
-          </div>
-          <p class="footer-right">
-            <a href="https://dsa.hkust-gz.edu.cn/research/labs-institutes/metaverse-joint-innovation-laboratory/"
-              target="_blank" rel="noopener noreferrer">© 2024 Hkust(Gz) Metaverse Joint Innovation Laboratory. All
-              rights reserved.</a>
-          </p>
-        </footer>
-      </div>
-    </section>
   </main>
 
   <nav class="pager" id="pager" aria-label="Slide navigation"></nav>
