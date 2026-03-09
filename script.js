@@ -51,6 +51,7 @@ let insightIndex = 0;
 let insightWheelLock = false;
 let insightTextToken = 0;
 let autoScrollTimer = null;
+let autoScrollTimers = [];
 let compareChart = null;
 let vizChart = null;
 
@@ -212,20 +213,105 @@ function goToSlide(index) {
   activeIndex = target;
   slides[target].scrollIntoView({ behavior: "smooth", block: "start" });
   updatePager(target);
+  
+  // 如果自动滚动开启，调度下一次转换
+  if (autoScrollToggle && autoScrollToggle.checked && !autoScrollToggle.disabled) {
+    stopAutoScroll();
+    // 等待滚动动画完成后再开始计时
+    window.setTimeout(() => {
+      scheduleNextTransition();
+    }, 800);
+  }
 }
 
 function stopAutoScroll() {
-  if (!autoScrollTimer) return;
-  window.clearInterval(autoScrollTimer);
-  autoScrollTimer = null;
+  if (autoScrollTimer) {
+    window.clearTimeout(autoScrollTimer);
+    autoScrollTimer = null;
+  }
+  autoScrollTimers.forEach(window.clearTimeout);
+  autoScrollTimers = [];
+}
+
+function getSlideSwitcherById(slideId) {
+  if (slideId === "slide-modules" && modulePanels.length > 0) {
+    return {
+      totalCount: modulePanels.length,
+      setIndex: setModulePanel,
+      next: () => moduleSwitcher.next(),
+      prev: () => moduleSwitcher.prev()
+    };
+  }
+
+  if (slideId === "slide-agent" && featurePanels.length > 0) {
+    return {
+      totalCount: featurePanels.length,
+      setIndex: setFeaturePanel,
+      next: () => featureSwitcher.next(),
+      prev: () => featureSwitcher.prev()
+    };
+  }
+
+  if (slideId === "slide-insight" && insightSteps.length > 0) {
+    return {
+      totalCount: insightSteps.length,
+      setIndex: setInsightStep,
+      next: () => insightSwitcher.next(),
+      prev: () => insightSwitcher.prev()
+    };
+  }
+
+  return null;
+}
+
+function scheduleNextTransition() {
+  if (!autoScrollToggle || !autoScrollToggle.checked) {
+    stopAutoScroll();
+    return;
+  }
+
+  const currentSlide = slides[activeIndex] || null;
+  const isAutoPlayableSlide = currentSlide && ["slide-modules", "slide-agent"].includes(currentSlide.id);
+  const switcher = isAutoPlayableSlide ? getSlideSwitcherById(currentSlide.id) : null;
+  
+  if (switcher && switcher.totalCount > 1) {
+    // 每个模块的停留时间与页面切换时间保持一致
+    const intervalPerModule = CONFIG.AUTO_SCROLL_INTERVAL_MS;
+    const totalTime = intervalPerModule * switcher.totalCount;
+    
+    // 立即显示第一个模块
+    switcher.setIndex(0);
+    
+    // 设置定时器依次切换剩余模块
+    for (let i = 1; i < switcher.totalCount; i++) {
+      const timer = window.setTimeout(() => {
+        if (autoScrollToggle && autoScrollToggle.checked) {
+          switcher.next();
+        }
+      }, intervalPerModule * i);
+      autoScrollTimers.push(timer);
+    }
+    
+    // 所有模块切换完后，切换到下一页
+    autoScrollTimer = window.setTimeout(() => {
+      if (autoScrollToggle && autoScrollToggle.checked) {
+        goToSlide((activeIndex + 1) % slides.length);
+      }
+    }, totalTime);
+  } else {
+    // 当前页面没有模块或只有一个模块，直接等待后切换
+    autoScrollTimer = window.setTimeout(() => {
+      if (autoScrollToggle && autoScrollToggle.checked) {
+        goToSlide((activeIndex + 1) % slides.length);
+      }
+    }, CONFIG.AUTO_SCROLL_INTERVAL_MS);
+  }
 }
 
 function startAutoScroll() {
   stopAutoScroll();
   if (!slides.length) return;
-  autoScrollTimer = window.setInterval(() => {
-    goToSlide((activeIndex + 1) % slides.length);
-  }, CONFIG.AUTO_SCROLL_INTERVAL_MS);
+  scheduleNextTransition();
 }
 
 function syncAutoScrollState() {
@@ -924,12 +1010,7 @@ window.addEventListener("keydown", (event) => {
   if (["ArrowLeft", "ArrowRight"].includes(event.code)) {
     const currentSlide = getCurrentSlide();
     if (currentSlide && !currentSlide.hidden) {
-      const switcherMap = {
-        "slide-modules": moduleSwitcher,
-        "slide-agent": featureSwitcher,
-        "slide-insight": insightSwitcher
-      };
-      const activeSwitcher = switcherMap[currentSlide.id];
+      const activeSwitcher = getSlideSwitcherById(currentSlide.id);
 
       if (activeSwitcher) {
         event.preventDefault();
