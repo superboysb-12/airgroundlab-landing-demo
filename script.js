@@ -28,6 +28,7 @@ const businessCompetitionBody = document.getElementById("ba-competition-body");
 
 const insightButtons = Array.from(document.querySelectorAll(".insight-btn"));
 const insightTrack = document.getElementById("insight-track");
+const insightFrames = Array.from(document.querySelectorAll(".insight-frame"));
 const insightText = document.getElementById("insight-text");
 const insightStepTitle = document.getElementById("insight-step-title");
 const insightStepDesc = document.getElementById("insight-step-desc");
@@ -68,20 +69,24 @@ let vizChart = null;
 
 const insightSteps = [
   {
-    title: "Module 1 - Simulation Launch",
-    desc: "Set mission goals, urban context, and initial constraints. The system bootstraps the digital twin scene and loads baseline operational assumptions."
+    title: "Step 1 · Scenario Initialization",
+    desc: "Define the objective and a 2 km high-density Shanghai zone. The system ingests map data to build the base environment and place merchants, demand hotspots, drone hubs, and smart locker candidates."
   },
   {
-    title: "Module 2 - Policy Input",
-    desc: "Inject policy rules and operating parameters, including low-altitude zoning, speed limits, time windows, and safety boundaries for compliant planning."
+    title: "Step 2 · Strategy Configuration & Routing",
+    desc: "Configure one of three modes: 100% Rider, 100% Drone, or Air-Ground Collaboration. When drones are enabled, set hub and locker coordinates, then run a Greedy baseline to assign each order to the nearest available carrier."
   },
   {
-    title: "Module 3 - Simulation Execution",
-    desc: "Run accelerated multi-agent delivery scenarios with synchronized UAV/UGV behaviors, then observe route dynamics, bottlenecks, and system response in real time."
+    title: "Step 3 · Macro-Network Simulation",
+    desc: "Launch the sandbox and observe the large-scale multi-agent network in real time as orders surge through the system, with ground and aerial units coordinating across the city grid."
   },
   {
-    title: "Module 4 - Report Generation",
-    desc: "Generate end-to-end AI insight reports for strategy comparison, highlighting cost-efficiency tradeoffs, risk hotspots, and deployment recommendations."
+    title: "Step 4 · Comprehensive Evaluation Report",
+    desc: "Generate a decisive report across cost, customer satisfaction, and fulfillment rate to identify the optimal strategy, plus visual analytics for zone baseline, spatiotemporal order flow, and user sentiment/rating distributions."
+  },
+  {
+    title: "Step 5 · High-Fidelity Physical Verification",
+    desc: "Apply winning parameters to the micro-physical twin. Drones run real flight-control and localization logic under dynamic urban wind fields to validate stability, aerodynamic effects, and true battery depletion before deployment."
   }
 ];
 
@@ -107,6 +112,62 @@ function debounce(fn, waitMs) {
 
 function toggleActiveState(nodes, activeIdx) {
   nodes.forEach((node, i) => node.classList.toggle("active", i === activeIdx));
+}
+
+function restartVideoFromStart(video) {
+  if (!(video instanceof HTMLVideoElement)) return;
+
+  try {
+    video.pause();
+    video.currentTime = 0;
+  } catch {
+    // Ignore media timing errors for files still loading metadata.
+  }
+
+  const playPromise = video.play();
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(() => null);
+  }
+}
+
+function syncPanelVideos(panels, activeIdx) {
+  panels.forEach((panel, i) => {
+    const videos = panel.querySelectorAll("video");
+
+    videos.forEach((video) => {
+      if (i === activeIdx) {
+        restartVideoFromStart(video);
+        return;
+      }
+
+      try {
+        video.pause();
+        video.currentTime = 0;
+      } catch {
+        // Ignore media timing errors for files still loading metadata.
+      }
+    });
+  });
+}
+
+function syncSlideVideos(activeSlideIndex) {
+  slides.forEach((slide, i) => {
+    const videos = slide.querySelectorAll("video");
+
+    videos.forEach((video) => {
+      if (i === activeSlideIndex) {
+        restartVideoFromStart(video);
+        return;
+      }
+
+      try {
+        video.pause();
+        video.currentTime = 0;
+      } catch {
+        // Ignore media timing errors for files still loading metadata.
+      }
+    });
+  });
 }
 
 function bindIndexedButtons(buttons, onSelect) {
@@ -222,6 +283,7 @@ function goToSlide(index) {
   if (!slides.length) return;
   const target = Math.max(0, Math.min(index, slides.length - 1));
   activeIndex = target;
+  syncSlideVideos(activeIndex);
   slides[target].scrollIntoView({ behavior: "smooth", block: "start" });
   updatePager(target);
   
@@ -366,6 +428,7 @@ function detectActiveSlide() {
 
   if (current !== activeIndex) {
     activeIndex = Math.max(0, Math.min(current, slides.length - 1));
+    syncSlideVideos(activeIndex);
     updatePager(activeIndex);
   }
 }
@@ -375,6 +438,7 @@ function setFeaturePanel(index) {
   featureIndex = clampIndex(index, featurePanels.length);
   toggleActiveState(featurePanels, featureIndex);
   toggleActiveState(featureButtons, featureIndex);
+  syncPanelVideos(featurePanels, featureIndex);
 }
 
 function getBusinessSlideOffset(direction) {
@@ -473,6 +537,7 @@ function setModulePanel(index) {
   moduleIndex = clampIndex(index, modulePanels.length);
   toggleActiveState(modulePanels, moduleIndex);
   toggleActiveState(moduleButtons, moduleIndex);
+  syncPanelVideos(modulePanels, moduleIndex);
 }
 
 function parseCsvLine(line) {
@@ -639,6 +704,7 @@ function setInsightStep(index, options = {}) {
   insightIndex = nextIndex;
   toggleActiveState(insightButtons, insightIndex);
   insightTrack.style.transform = `translateY(-${(insightIndex * 100) / insightSteps.length}%)`;
+  syncPanelVideos(insightFrames, insightIndex);
 
   if (instant || prevIndex === nextIndex) {
     renderInsightText(current);
@@ -1360,6 +1426,7 @@ setFeaturePanel(0);
 setBusinessPanel(0);
 setInsightStep(0, { instant: true });
 loadBusinessCompetitionTable();
+syncSlideVideos(activeIndex);
 
 initCompareChart();
 initVizChart();

@@ -12,9 +12,7 @@
     rel="stylesheet" />
   <link rel="icon"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020712'/%3E%3Cpath d='M14 40L32 18l18 22' stroke='%233d7dff' stroke-width='6' fill='none'/%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="./styles.css?v=20260307-07" />
-  <script defer src="./assets/vendor/echarts/echarts.min.js"></script>
-  <script defer src="./assets/vendor/echarts/echarts-gl.min.js"></script>
+  <link rel="stylesheet" href="./styles.css?v=20260310-01" />
 </head>
 
 <body>
@@ -85,7 +83,7 @@
         <div class="module-stage fade-up" id="module-stage">
           <article class="module-panel" data-module-index="0">
             <div class="module-visual">
-              <img src="./assets/images/original/module-start-scene.jpg" alt="Road network and route planning board" loading="lazy" />
+              <img src="./assets/images/module-start-scene.webp" alt="Road network and route planning board" loading="lazy" />
             </div>
             <!-- <p class="module-cta">Run the tests</p> -->
           </article>
@@ -97,7 +95,7 @@
           </article>
           <article class="module-panel" data-module-index="2">
             <div class="module-visual">
-              <img src="./assets/images/original/module-make-mistake.png" alt="Demand behavior simulation board" loading="lazy" />
+              <img src="./assets/images/module-make-mistake.webp" alt="Demand behavior simulation board" loading="lazy" />
             </div>
             <p class="module-cta">Make the Mistakes</p>
           </article>
@@ -120,12 +118,6 @@
     <section class="slide detail agent" id="slide-agent">
       <div class="content feature-showcase">
         <h2 class="fade-up">Feature Introduction</h2>
-        <div class="feature-switch fade-up" role="tablist" aria-label="Module Switch">
-          <button class="switch-btn active" data-feature-index="0">Feature 1</button>
-          <button class="switch-btn" data-feature-index="1">Feature 2</button>
-          <button class="switch-btn" data-feature-index="2">Feature 3</button>
-          <button class="switch-btn" data-feature-index="3">Feature 4</button>
-        </div>
         <div class="feature-stage fade-up" id="feature-stage">
           <article class="feature-panel active">
             <video autoplay muted loop playsinline preload="metadata" aria-label="Uav Physics Simulation">
@@ -153,18 +145,18 @@
                 </div>
                 <div class="sim-city-grid">
                   <article class="sim-city-card">
-                    <img src="./assets/images/original/city-geneva.jpg" alt="Geneva simulation module" loading="lazy" />
+                    <img src="./assets/images/city-geneva.webp" alt="Geneva simulation module" loading="lazy" />
                     <h3>Geneva</h3>
                   </article>
                   <article class="sim-city-card">
-                    <img src="./assets/images/original/city-shanghai.jpg" alt="Shanghai simulation module" loading="lazy" />
+                    <img src="./assets/images/city-shanghai.webp" alt="Shanghai simulation module" loading="lazy" />
                     <h3>Shanghai</h3>
                   </article>
                   <article class="sim-city-card">
                     <img
-                      src="https://images.pexels.com/photos/802024/pexels-photo-802024.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                      alt="New York simulation module" loading="lazy" />
-                    <h3>New York</h3>
+                      src="./assets/images/city- Paris.webp"
+                      alt="Paris simulation module" loading="lazy" />
+                    <h3>Paris</h3>
                   </article>
                 </div>
               </div>
@@ -188,14 +180,14 @@
               src="./assets/images/feature-generative-ai-agents.webp"
               alt="Generative Ai Agents" loading="lazy" />
             <div class="feature-copy">
-              <h3>Feature 3 · Generative Ai Agents</h3>
+              <h3>Feature 3 · Generative AI Agents</h3>
               <ul class="feature-bullets">
                 <li>
                   <strong>A "Social Soul":</strong> Replaces static historical data by integrating Large Language
                   Models to create thousands of virtual citizens with unique personalities.
                 </li>
                 <li>
-                  <strong>Dynamic Social Stress-Testing:</strong> Simulates real-world unpredictability, where Ai
+                  <strong>Dynamic Social Stress-Testing:</strong> Simulates real-world unpredictability, where AI
                   residents autonomously place orders during weather changes or leave angry reviews for delayed
                   deliveries.
                 </li>
@@ -203,11 +195,11 @@
             </div>
           </article>
           <article class="feature-panel reverse">
-            <video autoplay muted loop playsinline preload="metadata" aria-label="End-to-End Ai Insights">
+            <video autoplay muted loop playsinline preload="metadata" aria-label="End-to-End AI Insights">
               <source src="./assets/videos/ai-report-optimized.mp4" type="video/mp4" />
             </video>
             <div class="feature-copy">
-              <h3>Feature 4 · End-to-End Ai Insights</h3>
+              <h3>Feature 4 · End-to-End AI Insights</h3>
               <ul class="feature-bullets">
                 <li>
                   <strong>Executive-Level Reports:</strong> Automatically digests complex simulation data to generate
@@ -222,8 +214,15 @@
             </div>
           </article>
         </div>
+        <div class="feature-switch fade-up" role="tablist" aria-label="Module Switch">
+          <button class="switch-btn active" data-feature-index="0">Feature 1</button>
+          <button class="switch-btn" data-feature-index="1">Feature 2</button>
+          <button class="switch-btn" data-feature-index="2">Feature 3</button>
+          <button class="switch-btn" data-feature-index="3">Feature 4</button>
+        </div>
       </div>
     </section>
+
     <section class="slide detail business-analysis" id="slide-business">
       <div class="content business-wrap">
         <div class="business-header fade-up">
@@ -356,46 +355,52 @@
         </div>
       </div>
     </section>
-    <section class="detail insight" id="slide-insight" hidden>
+
+    <section class="slide detail insight" id="slide-insight">
       <div class="content insight-layout">
-        <div class="insight-left">
-          <h2 class="fade-up">Process Flow</h2>
-          <div class="insight-switch fade-up" role="tablist" aria-label="Step switcher">
-            <button class="insight-btn active" data-insight-index="0">Step 1</button>
-            <span class="insight-arrow" aria-hidden="true">→</span>
-            <button class="insight-btn" data-insight-index="1">Step 2</button>
-            <span class="insight-arrow" aria-hidden="true">→</span>
-            <button class="insight-btn" data-insight-index="2">Step 3</button>
-            <span class="insight-arrow" aria-hidden="true">→</span>
-            <button class="insight-btn" data-insight-index="3">Step 4</button>
-          </div>
-          <div class="insight-text fade-up" id="insight-text">
-            <h3 id="insight-step-title">Step 1 · Simulation Launch</h3>
-            <p id="insight-step-desc">
-              Initialize the experiment, load assets, and validate baseline parameters to ensure reproducible
-              simulation conditions.
-            </p>
-          </div>
-        </div>
+        <h2 class="fade-up">Process Flow</h2>
         <div class="insight-right fade-up" id="insight-stage">
           <div class="insight-track" id="insight-track">
             <article class="insight-frame">
-              <img src="" alt="Simulation launch stage" loading="lazy" />
+              <video autoplay muted loop playsinline preload="metadata" aria-label="Scenario initialization stage">
+                <source src="./assets/videos/Scenario%20Initialization-1.mp4" type="video/mp4" />
+              </video>
             </article>
             <article class="insight-frame">
-              <img
-                src="https://images.pexels.com/photos/669619/pexels-photo-669619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt="Policy input stage" loading="lazy" />
+              <video autoplay muted loop playsinline preload="metadata" aria-label="Strategy configuration and routing stage">
+                <source src="./assets/videos/Strategy%20Configuration%20%26%20Routing.mp4" type="video/mp4" />
+              </video>
             </article>
             <article class="insight-frame">
-              <img
-                src="https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt="Simulation execution stage" loading="lazy" />
+              <video autoplay muted loop playsinline preload="metadata" aria-label="Macro-network simulation stage">
+                <source src="./assets/videos/Macro-Network%20Simulation.mp4" type="video/mp4" />
+              </video>
             </article>
             <article class="insight-frame">
-              <img src="./assets/images/ai-report.webp" alt="Report generation stage" loading="lazy" />
+              <video autoplay muted loop playsinline preload="metadata" aria-label="AI report generation stage">
+                <source src="./assets/videos/ai-report-optimized.mp4" type="video/mp4" />
+              </video>
+            </article>
+            <article class="insight-frame">
+              <video autoplay muted loop playsinline preload="metadata" aria-label="High-fidelity physical verification stage">
+                <source src="./assets/videos/High-Fidelity%20Physical%20Verification.mp4" type="video/mp4" />
+              </video>
             </article>
           </div>
+        </div>
+        <div class="insight-switch fade-up" role="tablist" aria-label="Step switcher">
+          <button class="insight-btn active" data-insight-index="0">Step 1</button>
+          <button class="insight-btn" data-insight-index="1">Step 2</button>
+          <button class="insight-btn" data-insight-index="2">Step 3</button>
+          <button class="insight-btn" data-insight-index="3">Step 4</button>
+          <button class="insight-btn" data-insight-index="4">Step 5</button>
+        </div>
+        <div class="insight-text fade-up" id="insight-text">
+          <h3 id="insight-step-title">Step 1 · Scenario Initialization</h3>
+          <p id="insight-step-desc">
+            Define the objective and 2 km Shanghai scope. The engine ingests map data and builds the base scene with
+            merchants, demand hotspots, drone hubs, and smart locker candidates.
+          </p>
         </div>
       </div>
     </section>
@@ -459,7 +464,7 @@
       <span class="auto-scroll-toggle-text">Auto</span>
     </label>
   </div>
-  <script defer src="./script.js?v=20260307-02"></script>
+  <script defer src="./script.js?v=20260310-01"></script>
 </body>
 
 </html>
