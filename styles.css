@@ -990,10 +990,12 @@ blockquote span {
   flex-wrap: wrap;
   justify-content: center;
   align-self: center;
+  position: relative;
+  z-index: 1;
   width: fit-content;
   max-width: 100%;
   gap: 8px;
-  margin-top: clamp(8px, 1.1vh, 14px);
+  margin-top: 0;
 }
 
 .business-header {
@@ -1034,9 +1036,10 @@ blockquote span {
 
 .business-stage {
   position: relative;
+  z-index: 2;
   width: 100%;
-  min-height: clamp(600px, calc(var(--deck-vh) * 0.79), 820px);
-  margin-bottom: 8px;
+  min-height: clamp(640px, calc(var(--deck-vh) * 0.84), 880px);
+  margin-bottom: clamp(30px, 4vh, 56px);
   overflow: visible;
 }
 
@@ -2277,6 +2280,7 @@ blockquote.fade-up.in:focus-visible {
     width: 100%;
     min-height: auto;
     height: auto;
+    margin-bottom: 14px;
     overflow: visible;
   }
 
