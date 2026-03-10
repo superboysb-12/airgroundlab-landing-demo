@@ -60,27 +60,27 @@ let autoScrollTimers = [];
 
 const insightSteps = [
   {
-    title: "Step 1 · Drone & Rider Delivery Strategy Simulation: ShangHai Core Area Scenario",
+    title: "Introduction · Drone & Rider Delivery Strategy Simulation: ShangHai Core Area Scenario",
     desc: "Drone & Rider Delivery Strategy Simulation: ShangHai Core Area Scenario."
   },
   {
-    title: "Step 2 · Scenario Initialization",
+    title: "Step 1 · Scenario Initialization",
     desc: "Define the objective and a 2 km high-density Shanghai zone. The system ingests map data to build the base environment and place merchants, demand hotspots, drone hubs, and smart locker candidates."
   },
   {
-    title: "Step 3 · Strategy Configuration & Routing",
+    title: "Step 2 · Strategy Configuration & Routing",
     desc: "Configure one of three modes: 100% Rider, 100% Drone, or Air-Ground Collaboration. When drones are enabled, set hub and locker coordinates, then run a Greedy baseline to assign each order to the nearest available carrier."
   },
   {
-    title: "Step 4 · Macro-Network Simulation",
+    title: "Step 3 · Macro-Network Simulation",
     desc: "Launch the sandbox and observe the large-scale multi-agent network in real time as orders surge through the system, with ground and aerial units coordinating across the city grid."
   },
   {
-    title: "Step 5 · Comprehensive Evaluation Report",
+    title: "Step 4 · Comprehensive Evaluation Report",
     desc: "Generate a decisive report across cost, customer satisfaction, and fulfillment rate to identify the optimal strategy, plus visual analytics for zone baseline, spatiotemporal order flow, and user sentiment/rating distributions."
   },
   {
-    title: "Step 6 · High-Fidelity Physical Verification",
+    title: "Step 5 · High-Fidelity Physical Verification",
     desc: "Apply winning parameters to the micro-physical twin. Drones run real flight-control and localization logic under dynamic urban wind fields to validate stability, aerodynamic effects, and true battery depletion before deployment."
   }
 ];

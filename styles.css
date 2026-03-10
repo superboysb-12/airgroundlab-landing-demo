@@ -263,8 +263,8 @@ h3,
 .hero-left .subtitle {
   max-width: 44ch;
   margin-top: 26px;
-  font-size: var(--subtitle-size);
-  line-height: 1.56;
+  font-size: clamp(1.9rem, 3.9vw, 3.35rem);
+  line-height: 1.22;
 }
 
 .slogan-glow {
@@ -280,8 +280,8 @@ h3,
   margin-top: 20px;
   max-width: 56ch;
   color: #d7e8ff;
-  font-size: var(--subtitle-size);
-  line-height: 1.54;
+  font-size: clamp(1.45rem, 2.75vw, 2.3rem);
+  line-height: 1.38;
 }
 
 .problem {
@@ -2152,6 +2152,23 @@ main .slide :is(
   ) {
   font-family: var(--content-font-family);
   font-size: var(--content-font-size);
+}
+
+/* First slide only: force larger hero copy independent from global body text normalization. */
+#slide-cover .hero-left .subtitle,
+#slide-cover .hero-left .subtitle.slogan-glow {
+  font-family: var(--content-font-family);
+  font-size: clamp(1.58rem, 3.08vw, 2.62rem);
+  line-height: 1.24;
+  max-width: 38ch;
+}
+
+#slide-cover .hero-left .hero-detail,
+#slide-cover .hero-detail {
+  font-family: var(--content-font-family);
+  font-size: clamp(1.24rem, 2.14vw, 1.9rem);
+  line-height: 1.42;
+  max-width: 46ch;
 }
 
 @keyframes fly {
