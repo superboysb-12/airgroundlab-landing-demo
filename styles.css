@@ -1498,7 +1498,7 @@ blockquote span {
 }
 
 .insight-track {
-  height: 500%;
+  height: 600%;
   display: flex;
   flex-direction: column;
   transition: transform 0.56s cubic-bezier(0.22, 0.62, 0.3, 1);
@@ -1507,7 +1507,7 @@ blockquote span {
 
 .insight-frame {
   position: relative;
-  min-height: 20%;
+  min-height: 16.6667%;
   background: #05070c;
 }
 
