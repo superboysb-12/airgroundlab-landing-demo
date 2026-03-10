@@ -975,12 +975,24 @@ blockquote span {
 }
 
 .business-wrap {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  align-items: start;
-  justify-items: stretch;
-  gap: clamp(12px, 1.5vh, 20px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 14px;
   height: var(--deck-vh);
+  padding-top: clamp(18px, calc(var(--deck-vh) * 0.03), 36px);
+  padding-bottom: clamp(14px, calc(var(--deck-vh) * 0.024), 28px);
+}
+
+.business-switch {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-self: center;
+  width: fit-content;
+  max-width: 100%;
+  gap: 8px;
 }
 
 .business-header {
@@ -1029,7 +1041,8 @@ blockquote span {
 .business-panel {
   position: absolute;
   inset: 0;
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 0;
   opacity: 0;
   pointer-events: none;
@@ -1047,9 +1060,10 @@ blockquote span {
 .business-panel-shell {
   width: 100%;
   display: grid;
-  align-content: start;
+  height: 100%;
+  align-content: center;
   gap: clamp(16px, 1.8vh, 24px);
-  padding-top: clamp(8px, 0.6vw, 12px);
+  padding-top: 0;
 }
 
 .business-panel-body {
@@ -1224,7 +1238,7 @@ blockquote span {
 }
 
 .ba-table-shell {
-  padding: 22px 30px;
+  padding: 28px 38px;
   width: 100%;
   align-self: center;
 }
@@ -1233,12 +1247,12 @@ blockquote span {
   width: 100%;
   border-collapse: collapse;
   color: #e8f2ff;
-  font-size: clamp(1rem, 1.2vw, 1.24rem);
+  font-size: clamp(1.12rem, 1.36vw, 1.44rem);
 }
 
 .ba-competition-table th,
 .ba-competition-table td {
-  padding: 18px 20px;
+  padding: 22px 24px;
   border: 1px solid rgba(140, 182, 240, 0.22);
   text-align: left;
   vertical-align: middle;

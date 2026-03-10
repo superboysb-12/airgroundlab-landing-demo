@@ -18,11 +18,7 @@ const featurePanels = Array.from(document.querySelectorAll(".feature-panel"));
 const featureStage = document.getElementById("feature-stage");
 
 const businessPanels = Array.from(document.querySelectorAll(".business-panel"));
-const businessStage = document.getElementById("business-stage");
-const businessPrevButton = document.getElementById("ba-prev");
-const businessNextButton = document.getElementById("ba-next");
-const businessNavIndex = document.getElementById("ba-nav-index");
-const businessNavLabel = document.getElementById("ba-nav-label");
+const businessButtons = Array.from(document.querySelectorAll(".business-switch .switch-btn"));
 const businessCompetitionHead = document.getElementById("ba-competition-head");
 const businessCompetitionBody = document.getElementById("ba-competition-body");
 
@@ -495,15 +491,9 @@ function setBusinessPanel(index) {
   const direction = getInsightDirection(prevIndex, nextIndex, businessPanels.length);
 
   businessIndex = nextIndex;
+  toggleActiveState(businessButtons, businessIndex);
+
   const current = businessPanels[businessIndex];
-
-  if (businessNavIndex) {
-    businessNavIndex.textContent = `${String(businessIndex + 1).padStart(2, "0")} / ${String(businessPanels.length).padStart(2, "0")}`;
-  }
-  if (businessNavLabel) {
-    businessNavLabel.textContent = current.dataset.businessTitle || "";
-  }
-
   if (prevIndex === businessIndex) {
     current.classList.add("active");
     return;
@@ -534,8 +524,18 @@ function normalizeBusinessCsvHeader(value) {
   return value.replace(/\s+/g, " ").trim();
 }
 
-function normalizeBusinessCsvCell(value) {
-  if (!value) return "";
+function parseBusinessCompetitionCell(value) {
+  if (!value) {
+    return { icon: "", className: "", text: "" };
+  }
+
+  const normalizedValue = value.replace(/\s+/g, " ").trim();
+  const statusMap = [
+    { tokens: ["✔️", "✅", "✔", "✓"], icon: "✅", className: "check" },
+    { tokens: ["❌", "✖", "✕", "×"], icon: "❌", className: "cross" },
+    { tokens: ["➖", "−", "—", "-"], icon: "➖", className: "neutral" }
+  ];
+  const matchedStatus = statusMap.find(({ tokens }) => tokens.some((token) => normalizedValue.includes(token)));
 
   const knownValues = [
     "High",
@@ -550,14 +550,39 @@ function normalizeBusinessCsvCell(value) {
   ];
 
   for (const label of knownValues) {
-    if (value.includes(label)) return label;
+    if (normalizedValue.includes(label)) {
+      return {
+        icon: matchedStatus ? matchedStatus.icon : "",
+        className: matchedStatus ? matchedStatus.className : "",
+        text: label
+      };
+    }
   }
 
-  return value
-    .replace(/[^\x20-\x7E]+/g, " ")
-    .replace(/\)+$/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
+  return {
+    icon: matchedStatus ? matchedStatus.icon : "",
+    className: matchedStatus ? matchedStatus.className : "",
+    text: normalizedValue
+      .replace(/[✔✅✓❌✖✕×➖−—-]/g, "")
+      .replace(/[()]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+  };
+}
+
+function renderBusinessCompetitionCell(cell) {
+  const statusMarkup = cell.icon
+    ? `<span class="ba-cell-status ba-cell-status-${cell.className}" aria-hidden="true">${cell.icon}</span>`
+    : "";
+
+  return `
+    <td class="ba-competition-cell">
+      <span class="ba-cell-content">
+        ${statusMarkup}
+        <span class="ba-cell-text">${cell.text}</span>
+      </span>
+    </td>
+  `;
 }
 
 function renderBusinessCompetitionTable(rows) {
@@ -570,11 +595,11 @@ function renderBusinessCompetitionTable(rows) {
   businessCompetitionBody.innerHTML = bodyRows
     .map((row) => {
       const [dimension, ...cells] = row;
-      const normalizedCells = cells.map(normalizeBusinessCsvCell);
+      const normalizedCells = cells.map(parseBusinessCompetitionCell);
       return `
         <tr>
           <th>${dimension}</th>
-          ${normalizedCells.map((cell) => `<td>${cell}</td>`).join("")}
+          ${normalizedCells.map((cell) => renderBusinessCompetitionCell(cell)).join("")}
         </tr>
       `;
     })
@@ -586,9 +611,9 @@ async function loadBusinessCompetitionTable() {
 
   const fallbackRows = [
     ["Core Dimensions", "AirSim", "AnyLogic", "NASA UTM", "AirGroundLAB (OUR)"],
-    ["Physical Fidelity", "High", "Low/None", "Low/None", "High"],
-    ["Logistics Network Scale", "Single/Micro", "Massive", "Air Traffic Only", "Massive"],
-    ["Dynamic Social Simulation", "Static Env.", "Math Logic", "No Demand", "Real-time"]
+    ["Physical Fidelity", "✔️(High)", "❌(Low/None)", "❌(Low/None)", "✔️(High)"],
+    ["Logistics Network Scale", "❌(Single/Micro)", "✔️(Massive)", "➖(Air Traffic Only)", "✔️(Massive)"],
+    ["Dynamic Social Simulation", "❌(Static Env.)", "➖(Math Logic)", "❌(No Demand)", "✔️(Real-time)"]
   ];
 
   try {
@@ -809,14 +834,11 @@ const featureSwitcher = createCyclicSwitcher({
   setIndex: setFeaturePanel
 });
 
-const businessSwitcher = {
-  prev() {
-    setBusinessPanel(businessIndex - 1);
-  },
-  next() {
-    setBusinessPanel(businessIndex + 1);
-  }
-};
+const businessSwitcher = createCyclicSwitcher({
+  buttons: businessButtons,
+  getIndex: () => businessIndex,
+  setIndex: setBusinessPanel
+});
 
 const insightSwitcher = createCyclicSwitcher({
   buttons: insightButtons,
@@ -842,24 +864,6 @@ if (featureStage && featurePanels.length) {
     }
     featureSwitcher.prev();
   });
-}
-
-if (businessStage && businessPanels.length) {
-  bindTouchSwitch(businessStage, "x", CONFIG.TOUCH_SWITCH_X_THRESHOLD, (delta) => {
-    if (delta < 0) {
-      businessSwitcher.next();
-      return;
-    }
-    businessSwitcher.prev();
-  });
-}
-
-if (businessPrevButton) {
-  businessPrevButton.addEventListener("click", () => businessSwitcher.prev());
-}
-
-if (businessNextButton) {
-  businessNextButton.addEventListener("click", () => businessSwitcher.next());
 }
 
 if (insightStage) {
