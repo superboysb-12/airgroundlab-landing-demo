@@ -17,17 +17,9 @@ const featureButtons = Array.from(document.querySelectorAll(".feature-switch .sw
 const featurePanels = Array.from(document.querySelectorAll(".feature-panel"));
 const featureStage = document.getElementById("feature-stage");
 
-const businessPanels = Array.from(document.querySelectorAll(".business-panel"));
-const businessStage = document.getElementById("business-stage");
-const businessPrevButton = document.getElementById("ba-prev");
-const businessNextButton = document.getElementById("ba-next");
-const businessNavIndex = document.getElementById("ba-nav-index");
-const businessNavLabel = document.getElementById("ba-nav-label");
-const businessCompetitionHead = document.getElementById("ba-competition-head");
-const businessCompetitionBody = document.getElementById("ba-competition-body");
-
 const insightButtons = Array.from(document.querySelectorAll(".insight-btn"));
 const insightTrack = document.getElementById("insight-track");
+const insightFrames = Array.from(document.querySelectorAll(".insight-frame"));
 const insightText = document.getElementById("insight-text");
 const insightStepTitle = document.getElementById("insight-step-title");
 const insightStepDesc = document.getElementById("insight-step-desc");
@@ -56,9 +48,7 @@ let activeIndex = 0;
 let wheelLock = false;
 let moduleIndex = 0;
 let featureIndex = 0;
-let businessIndex = 0;
 let insightIndex = 0;
-let businessPanelToken = 0;
 let insightWheelLock = false;
 let insightTextToken = 0;
 let autoScrollTimer = null;
@@ -68,20 +58,24 @@ let vizChart = null;
 
 const insightSteps = [
   {
-    title: "Module 1 - Simulation Launch",
-    desc: "Set mission goals, urban context, and initial constraints. The system bootstraps the digital twin scene and loads baseline operational assumptions."
+    title: "Step 1 · Scenario Initialization",
+    desc: "Define the objective and a 2 km high-density Shanghai zone. The system ingests map data to build the base environment and place merchants, demand hotspots, drone hubs, and smart locker candidates."
   },
   {
-    title: "Module 2 - Policy Input",
-    desc: "Inject policy rules and operating parameters, including low-altitude zoning, speed limits, time windows, and safety boundaries for compliant planning."
+    title: "Step 2 · Strategy Configuration & Routing",
+    desc: "Configure one of three modes: 100% Rider, 100% Drone, or Air-Ground Collaboration. When drones are enabled, set hub and locker coordinates, then run a Greedy baseline to assign each order to the nearest available carrier."
   },
   {
-    title: "Module 3 - Simulation Execution",
-    desc: "Run accelerated multi-agent delivery scenarios with synchronized UAV/UGV behaviors, then observe route dynamics, bottlenecks, and system response in real time."
+    title: "Step 3 · Macro-Network Simulation",
+    desc: "Launch the sandbox and observe the large-scale multi-agent network in real time as orders surge through the system, with ground and aerial units coordinating across the city grid."
   },
   {
-    title: "Module 4 - Report Generation",
-    desc: "Generate end-to-end AI insight reports for strategy comparison, highlighting cost-efficiency tradeoffs, risk hotspots, and deployment recommendations."
+    title: "Step 4 · Comprehensive Evaluation Report",
+    desc: "Generate a decisive report across cost, customer satisfaction, and fulfillment rate to identify the optimal strategy, plus visual analytics for zone baseline, spatiotemporal order flow, and user sentiment/rating distributions."
+  },
+  {
+    title: "Step 5 · High-Fidelity Physical Verification",
+    desc: "Apply winning parameters to the micro-physical twin. Drones run real flight-control and localization logic under dynamic urban wind fields to validate stability, aerodynamic effects, and true battery depletion before deployment."
   }
 ];
 
@@ -107,6 +101,62 @@ function debounce(fn, waitMs) {
 
 function toggleActiveState(nodes, activeIdx) {
   nodes.forEach((node, i) => node.classList.toggle("active", i === activeIdx));
+}
+
+function restartVideoFromStart(video) {
+  if (!(video instanceof HTMLVideoElement)) return;
+
+  try {
+    video.pause();
+    video.currentTime = 0;
+  } catch {
+    // Ignore media timing errors for files still loading metadata.
+  }
+
+  const playPromise = video.play();
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(() => null);
+  }
+}
+
+function syncPanelVideos(panels, activeIdx) {
+  panels.forEach((panel, i) => {
+    const videos = panel.querySelectorAll("video");
+
+    videos.forEach((video) => {
+      if (i === activeIdx) {
+        restartVideoFromStart(video);
+        return;
+      }
+
+      try {
+        video.pause();
+        video.currentTime = 0;
+      } catch {
+        // Ignore media timing errors for files still loading metadata.
+      }
+    });
+  });
+}
+
+function syncSlideVideos(activeSlideIndex) {
+  slides.forEach((slide, i) => {
+    const videos = slide.querySelectorAll("video");
+
+    videos.forEach((video) => {
+      if (i === activeSlideIndex) {
+        restartVideoFromStart(video);
+        return;
+      }
+
+      try {
+        video.pause();
+        video.currentTime = 0;
+      } catch {
+        // Ignore media timing errors for files still loading metadata.
+      }
+    });
+  });
 }
 
 function bindIndexedButtons(buttons, onSelect) {
@@ -222,6 +272,7 @@ function goToSlide(index) {
   if (!slides.length) return;
   const target = Math.max(0, Math.min(index, slides.length - 1));
   activeIndex = target;
+  syncSlideVideos(activeIndex);
   slides[target].scrollIntoView({ behavior: "smooth", block: "start" });
   updatePager(target);
   
@@ -260,15 +311,6 @@ function getSlideSwitcherById(slideId) {
       setIndex: setFeaturePanel,
       next: () => featureSwitcher.next(),
       prev: () => featureSwitcher.prev()
-    };
-  }
-
-  if (slideId === "slide-business" && businessPanels.length > 0) {
-    return {
-      totalCount: businessPanels.length,
-      setIndex: setBusinessPanel,
-      next: () => businessSwitcher.next(),
-      prev: () => businessSwitcher.prev()
     };
   }
 
@@ -366,6 +408,7 @@ function detectActiveSlide() {
 
   if (current !== activeIndex) {
     activeIndex = Math.max(0, Math.min(current, slides.length - 1));
+    syncSlideVideos(activeIndex);
     updatePager(activeIndex);
   }
 }
@@ -375,97 +418,7 @@ function setFeaturePanel(index) {
   featureIndex = clampIndex(index, featurePanels.length);
   toggleActiveState(featurePanels, featureIndex);
   toggleActiveState(featureButtons, featureIndex);
-}
-
-function getBusinessSlideOffset(direction) {
-  return direction > 0 ? -44 : 44;
-}
-
-function animateBusinessPanelTransition(prevPanel, nextPanel, direction) {
-  const token = ++businessPanelToken;
-  const outOffset = getBusinessSlideOffset(direction);
-  const inOffset = -outOffset;
-
-  if (typeof prevPanel.getAnimations === "function") {
-    prevPanel.getAnimations().forEach((anim) => anim.cancel());
-  }
-  if (typeof nextPanel.getAnimations === "function") {
-    nextPanel.getAnimations().forEach((anim) => anim.cancel());
-  }
-
-  prevPanel.classList.add("active");
-  prevPanel.style.zIndex = "3";
-  nextPanel.classList.add("active");
-  nextPanel.style.zIndex = "2";
-
-  if (typeof prevPanel.animate !== "function" || typeof nextPanel.animate !== "function") {
-    prevPanel.classList.remove("active");
-    prevPanel.style.zIndex = "";
-    nextPanel.style.zIndex = "";
-    return;
-  }
-
-  const animationOptions = {
-    duration: 360,
-    easing: "cubic-bezier(0.22, 0.61, 0.36, 1)",
-    fill: "forwards"
-  };
-
-  const outAnim = prevPanel.animate(
-    [
-      { opacity: 1, transform: "translateX(0)" },
-      { opacity: 0, transform: `translateX(${outOffset}px)` }
-    ],
-    animationOptions
-  );
-
-  const inAnim = nextPanel.animate(
-    [
-      { opacity: 0, transform: `translateX(${inOffset}px)` },
-      { opacity: 1, transform: "translateX(0)" }
-    ],
-    animationOptions
-  );
-
-  Promise.all([outAnim.finished.catch(() => null), inAnim.finished.catch(() => null)]).then(() => {
-    if (token !== businessPanelToken) return;
-    prevPanel.classList.remove("active");
-    prevPanel.style.opacity = "";
-    prevPanel.style.transform = "";
-    prevPanel.style.zIndex = "";
-    nextPanel.style.opacity = "";
-    nextPanel.style.transform = "";
-    nextPanel.style.zIndex = "";
-  });
-}
-
-function setBusinessPanel(index) {
-  if (!businessPanels.length) return;
-  const prevIndex = businessIndex;
-  const prevPanel = businessPanels[prevIndex] || null;
-  const nextIndex = clampIndex(index, businessPanels.length);
-  const direction = getInsightDirection(prevIndex, nextIndex, businessPanels.length);
-
-  businessIndex = nextIndex;
-  const current = businessPanels[businessIndex];
-
-  if (businessNavIndex) {
-    businessNavIndex.textContent = `${String(businessIndex + 1).padStart(2, "0")} / ${String(businessPanels.length).padStart(2, "0")}`;
-  }
-  if (businessNavLabel) {
-    businessNavLabel.textContent = current.dataset.businessTitle || "";
-  }
-
-  if (prevIndex === businessIndex) {
-    current.classList.add("active");
-    return;
-  }
-
-  if (prevPanel && prevPanel !== current) {
-    animateBusinessPanelTransition(prevPanel, current, direction);
-  } else {
-    current.classList.add("active");
-  }
+  syncPanelVideos(featurePanels, featureIndex);
 }
 
 function setModulePanel(index) {
@@ -473,91 +426,7 @@ function setModulePanel(index) {
   moduleIndex = clampIndex(index, modulePanels.length);
   toggleActiveState(modulePanels, moduleIndex);
   toggleActiveState(moduleButtons, moduleIndex);
-}
-
-function parseCsvLine(line) {
-  return line.split(",").map((cell) => cell.trim());
-}
-
-function normalizeBusinessCsvHeader(value) {
-  if (!value) return "";
-  if (value.includes("AirGroundLAB")) return "AirGroundLAB (OUR)";
-  return value.replace(/\s+/g, " ").trim();
-}
-
-function normalizeBusinessCsvCell(value) {
-  if (!value) return "";
-
-  const knownValues = [
-    "High",
-    "Low/None",
-    "Single/Micro",
-    "Massive",
-    "Air Traffic Only",
-    "Static Env.",
-    "Math Logic",
-    "No Demand",
-    "Real-time"
-  ];
-
-  for (const label of knownValues) {
-    if (value.includes(label)) return label;
-  }
-
-  return value
-    .replace(/[^\x20-\x7E]+/g, " ")
-    .replace(/\)+$/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function renderBusinessCompetitionTable(rows) {
-  if (!businessCompetitionHead || !businessCompetitionBody || !rows.length) return;
-
-  const [headerRow, ...bodyRows] = rows;
-  const normalizedHeaders = headerRow.map(normalizeBusinessCsvHeader);
-  businessCompetitionHead.innerHTML = normalizedHeaders.map((cell) => `<th>${cell}</th>`).join("");
-
-  businessCompetitionBody.innerHTML = bodyRows
-    .map((row) => {
-      const [dimension, ...cells] = row;
-      const normalizedCells = cells.map(normalizeBusinessCsvCell);
-      return `
-        <tr>
-          <th>${dimension}</th>
-          ${normalizedCells.map((cell) => `<td>${cell}</td>`).join("")}
-        </tr>
-      `;
-    })
-    .join("");
-}
-
-async function loadBusinessCompetitionTable() {
-  if (!businessCompetitionBody) return;
-
-  const fallbackRows = [
-    ["Core Dimensions", "AirSim", "AnyLogic", "NASA UTM", "AirGroundLAB (OUR)"],
-    ["Physical Fidelity", "High", "Low/None", "Low/None", "High"],
-    ["Logistics Network Scale", "Single/Micro", "Massive", "Air Traffic Only", "Massive"],
-    ["Dynamic Social Simulation", "Static Env.", "Math Logic", "No Demand", "Real-time"]
-  ];
-
-  try {
-    const response = await fetch("./assets/商业分析素材/竞品对比：三维范式转变 - 竞品对比：三维范式转变.csv");
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const csvText = await response.text();
-    const rows = csvText
-      .split(/\r?\n/)
-      .map((line) => line.trim())
-      .filter(Boolean)
-      .map(parseCsvLine);
-
-    if (rows.length < 2) throw new Error("CSV has no body rows");
-    renderBusinessCompetitionTable(rows);
-  } catch (error) {
-    console.warn("Failed to load business competition CSV, using fallback table.", error);
-    renderBusinessCompetitionTable(fallbackRows);
-  }
+  syncPanelVideos(modulePanels, moduleIndex);
 }
 
 function renderInsightText(step) {
@@ -639,6 +508,7 @@ function setInsightStep(index, options = {}) {
   insightIndex = nextIndex;
   toggleActiveState(insightButtons, insightIndex);
   insightTrack.style.transform = `translateY(-${(insightIndex * 100) / insightSteps.length}%)`;
+  syncPanelVideos(insightFrames, insightIndex);
 
   if (instant || prevIndex === nextIndex) {
     renderInsightText(current);
@@ -1271,15 +1141,6 @@ const featureSwitcher = createCyclicSwitcher({
   setIndex: setFeaturePanel
 });
 
-const businessSwitcher = {
-  prev() {
-    setBusinessPanel(businessIndex - 1);
-  },
-  next() {
-    setBusinessPanel(businessIndex + 1);
-  }
-};
-
 const insightSwitcher = createCyclicSwitcher({
   buttons: insightButtons,
   getIndex: () => insightIndex,
@@ -1304,24 +1165,6 @@ if (featureStage && featurePanels.length) {
     }
     featureSwitcher.prev();
   });
-}
-
-if (businessStage && businessPanels.length) {
-  bindTouchSwitch(businessStage, "x", CONFIG.TOUCH_SWITCH_X_THRESHOLD, (delta) => {
-    if (delta < 0) {
-      businessSwitcher.next();
-      return;
-    }
-    businessSwitcher.prev();
-  });
-}
-
-if (businessPrevButton) {
-  businessPrevButton.addEventListener("click", () => businessSwitcher.prev());
-}
-
-if (businessNextButton) {
-  businessNextButton.addEventListener("click", () => businessSwitcher.next());
 }
 
 if (insightStage) {
@@ -1357,9 +1200,8 @@ if (insightStage) {
 
 setModulePanel(0);
 setFeaturePanel(0);
-setBusinessPanel(0);
 setInsightStep(0, { instant: true });
-loadBusinessCompetitionTable();
+syncSlideVideos(activeIndex);
 
 initCompareChart();
 initVizChart();
