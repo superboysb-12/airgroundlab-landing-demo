@@ -993,6 +993,7 @@ blockquote span {
   width: fit-content;
   max-width: 100%;
   gap: 8px;
+  margin-top: clamp(8px, 1.1vh, 14px);
 }
 
 .business-header {
@@ -1034,7 +1035,8 @@ blockquote span {
 .business-stage {
   position: relative;
   width: 100%;
-  min-height: clamp(560px, calc(var(--deck-vh) * 0.76), 800px);
+  min-height: clamp(600px, calc(var(--deck-vh) * 0.79), 820px);
+  margin-bottom: 8px;
   overflow: visible;
 }
 
