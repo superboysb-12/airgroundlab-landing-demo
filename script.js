@@ -326,7 +326,7 @@ function scheduleNextTransition() {
   }
 
   const currentSlide = slides[activeIndex] || null;
-  const isAutoPlayableSlide = currentSlide && ["slide-modules", "slide-agent"].includes(currentSlide.id);
+  const isAutoPlayableSlide = currentSlide && ["slide-modules", "slide-agent", "slide-business", "slide-insight"].includes(currentSlide.id);
   const switcher = isAutoPlayableSlide ? getSlideSwitcherById(currentSlide.id) : null;
   
   if (switcher && switcher.totalCount > 1) {
